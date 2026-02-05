@@ -79,14 +79,37 @@
             font-size: 28px;
         }
 
+        /* صندوق الخدمة */
         .service-box {
             background: white;
             margin: 15px;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* قائمة الخدمات */
+        .service-box ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .service-box ul li {
+            background: #e17c1b;
+            color: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
             font-size: 18px;
-            line-height: 1.8;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .service-box ul li i {
+            font-size: 20px;
         }
 
         footer {
@@ -131,14 +154,16 @@
     </section>
 
     <div class="service-box">
-        • خدمات طلابية  
-        • خدمات حكومية  
-        • خدمات منصات  
-        • كتابة وتنسيق ملفات  
-        • تصميم بسيط  
-        • تعبئة نماذج  
-        • إنشاء حسابات  
-        • خدمات إلكترونية متنوعة  
+        <ul>
+            <li><i class="fa-solid fa-graduation-cap"></i> خدمات طلابية</li>
+            <li><i class="fa-solid fa-building-columns"></i> خدمات حكومية</li>
+            <li><i class="fa-solid fa-globe"></i> خدمات منصات</li>
+            <li><i class="fa-solid fa-file-lines"></i> كتابة وتنسيق ملفات</li>
+            <li><i class="fa-solid fa-pen-nib"></i> تصميم بسيط</li>
+            <li><i class="fa-solid fa-file-circle-check"></i> تعبئة نماذج</li>
+            <li><i class="fa-solid fa-user-plus"></i> إنشاء حسابات</li>
+            <li><i class="fa-solid fa-laptop"></i> خدمات إلكترونية متنوعة</li>
+        </ul>
     </div>
 
     <footer>
