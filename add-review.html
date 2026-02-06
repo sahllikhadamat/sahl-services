@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة تعليق – سهل للخدمات</title>
+    <title>إضافة تعليق</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,7 +25,7 @@
         }
 
         header img {
-            height: 55px;
+            height: 70px;
         }
 
         .menu-btn {
@@ -50,7 +50,8 @@
         .sidebar a {
             padding: 12px 25px;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 600;
             color: white;
             display: block;
             transition: 0.3s;
@@ -69,19 +70,15 @@
             color: white;
         }
 
-        .title {
+        h1 {
             text-align: center;
-            padding: 25px;
-        }
-
-        .title h1 {
             color: #27415d;
-            font-size: 28px;
+            margin-top: 25px;
         }
 
         .form-box {
             background: white;
-            margin: 15px;
+            margin: 20px;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -90,37 +87,39 @@
         label {
             font-size: 18px;
             font-weight: 600;
-            color: #27415d;
+            color: #333;
         }
 
-        select, textarea, button {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             margin-top: 8px;
             margin-bottom: 18px;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
             font-family: 'Cairo';
         }
 
+        textarea {
+            height: 140px;
+            resize: none;
+        }
+
         button {
+            width: 100%;
+            padding: 14px;
             background-color: #e17c1b;
             color: white;
-            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
             font-weight: 700;
             cursor: pointer;
-            border: none;
         }
 
         button:hover {
             background-color: #c96b17;
-        }
-
-        .warning {
-            color: red;
-            font-size: 16px;
-            display: none;
         }
 
         footer {
@@ -128,7 +127,7 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 20px;
+            margin-top: 30px;
         }
     </style>
 
@@ -141,86 +140,90 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        function checkLength() {
-            let text = document.getElementById("comment").value;
-            let warning = document.getElementById("warning");
+        function saveReview() {
+            let name = document.getElementById("name").value;
+            let gender = document.getElementById("gender").value;
+            let rating = document.getElementById("rating").value;
+            let message = document.getElementById("message").value;
 
-            let words = text.trim().split(/\s+/).length;
-
-            if (words > 300) {
-                warning.style.display = "block";
-            } else {
-                warning.style.display = "none";
+            if (message.length > 300) {
+                alert("الحد الأقصى للكتابة هو 300 كلمة");
+                return;
             }
+
+            let review = {
+                name: name,
+                gender: gender,
+                rating: rating,
+                message: message,
+                date: new Date().toLocaleDateString()
+            };
+
+            let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+            reviews.push(review);
+            localStorage.setItem("reviews", JSON.stringify(reviews));
+
+            alert("تم إرسال تعليقك بنجاح!");
+            window.location.href = "clients.html";
         }
     </script>
 
 </head>
 <body>
 
-    <<div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeSidebar()">×</span>
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
 
-    <a href="home.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
-    <a href="about.html" style="font-size:22px; font-weight:600;">من نحن</a>
-    <a href="services.html" style="font-size:22px; font-weight:600;">الخدمات</a>
-    <a href="clients.html" style="font-size:22px; font-weight:600;">آراء العملاء</a>
-    <a href="add-review.html" style="font-size:22px; font-weight:600;">إضافة تعليق</a>
-    <a href="contact.html" style="font-size:22px; font-weight:600;">تواصل معنا</a>
-</div>
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
 
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+    </header>
 
-   <img src="logo.png" alt="شعار سهل للخدمات" style="height:90px;">
-
-
-    <section class="title">
-        <h1>إضافة تعليق</h1>
-    </section>
+    <h1>إضافة تعليق</h1>
 
     <div class="form-box">
 
-        <label>اختر الخدمة:</label>
-        <select>
-            <option>تصميم سيرة ذاتية</option>
-            <option>تصميم منشور</option>
-            <option>تصميم بوست</option>
-            <option>تصميم فيديو</option>
-            <option>تصميم طعام</option>
-            <option>تصميم شهادات شكر</option>
+        <label>الاسم</label>
+        <input type="text" id="name" placeholder="اكتب اسمك">
 
-            <option>دورات تدريبية</option>
-            <option>بحوث</option>
-            <option>أوراق عمل</option>
-            <option>مهام أدائية</option>
-            <option>ملف إنجاز</option>
-            <option>مشروع تخرج</option>
-            <option>عروض تقديمية</option>
-
-            <option>ساعات تطوعية</option>
-            <option>إنشاء متجر سلة</option>
-            <option>إصدار وثيقة العمل الحر</option>
-            <option>إصدار رخصة فال العقارية</option>
+        <label>الجنس</label>
+        <select id="gender">
+            <option value="ذكر">ذكر</option>
+            <option value="أنثى">أنثى</option>
         </select>
 
-        <label>الجنس:</label>
-<select id="gender">
-    <option value="ذكر">ذكر</option>
-    <option value="أنثى">أنثى</option>
-</select>
+        <label>التقييم</label>
+        <select id="rating">
+            <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+            <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+            <option value="⭐⭐⭐">⭐⭐⭐</option>
+            <option value="⭐⭐">⭐⭐</option>
+            <option value="⭐">⭐</option>
+        </select>
 
+        <label>التعليق (حد أقصى 300 كلمة)</label>
+        <textarea id="message" maxlength="300" placeholder="اكتب تعليقك هنا..."></textarea>
 
-        <label>اكتب تعليقك (حد أقصى 300 كلمة):</label>
-        <textarea id="comment" rows="6" oninput="checkLength()"></textarea>
-
-        <p id="warning" class="warning">⚠ الحد الأقصى هو 300 كلمة</p>
-
-        <button>إرسال</button>
+        <button onclick="saveReview()">إرسال</button>
 
     </div>
 
     <footer>
-        © 2024 سهل للخدمات – جميع الحقوق محفوظة
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
     </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
 </body>
 </html>
