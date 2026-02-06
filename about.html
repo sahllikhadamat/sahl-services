@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عن المتجر – سهل للخدمات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 55px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #e17c1b;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .title {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .title h1 {
+            color: #27415d;
+            font-size: 30px;
+        }
+
+        .section-box {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-box h2 {
+            color: #e17c1b;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .section-box p, .section-box ul {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .section-box ul {
+            padding-right: 20px;
+        }
+
+        .section-box ul li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+        <a href="home.html">الرئيسية</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="contact.html">تواصل معنا</a>
+        <a href="about.html">عن المتجر</a>
+    </div>
+
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <section class="title">
+        <h1>نبذة عن سهل للخدمات</h1>
+    </section>
+
+    <div class="section-box">
+        <h2>من نحن</h2>
+        <p>
+            سهل للخدمات هو متجر إلكتروني متخصص في تقديم الخدمات الرقمية والطلابـية والحكومية باحترافية عالية.  
+            تأسس عام 2024 وموثق من المركز السعودي للأعمال برقم: <strong>0000151464</strong>.  
+            نحرص على توفير حلول سريعة، دقيقة، وبجودة ممتازة، مع دعم متواصل لضمان رضا العميل.  
+            هدفنا هو تسهيل إنجاز الخدمات الإلكترونية بطريقة آمنة وموثوقة.
+        </p>
+    </div>
+
+    <div class="section-box">
+        <h2>رؤيتنا</h2>
+        <p>
+            أن نكون الوجهة الأولى للخدمات الإلكترونية والطلابـية في المملكة،  
+            من خلال تقديم خدمات موثوقة، سريعة، وبجودة عالية تلبي احتياجات العملاء.
+        </p>
+    </div>
+
+    <div class="section-box">
+        <h2>قيمنا</h2>
+        <ul>
+            <li>الجودة أولًا</li>
+            <li>السرعة في الإنجاز</li>
+            <li>الدقة في العمل</li>
+            <li>الشفافية والموثوقية</li>
+            <li>الخصوصية وحماية بيانات العملاء</li>
+        </ul>
+    </div>
+
+    <footer>
+        © 2024 سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+</body>
+</html>
