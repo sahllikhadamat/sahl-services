@@ -110,40 +110,60 @@
             color: #e17c1b;
             margin-bottom: 8px;
         }
+    </style>
+</head>
 
-        /* ⭐ تصغير المقاسات في الجوال */
-        @media (max-width: 480px) {
-            .welcome h1 {
-                font-size: 20px;
-            }
+<body>
 
-            .circle-btn {
-                width: 90px;
-                height: 90px;
-                font-size: 13px;
-            }
+<header>
+    <img src="logo.png.png" alt="شعار سهل للخدمات">
+    <i class="fas fa-bars menu-btn" onclick="openSidebar()"></i>
+</header>
 
-            .circle-btn i {
-                font-size: 22px;
-            }
+<div id="sidebar" class="sidebar">
+    <i class="fas fa-times close-btn" onclick="closeSidebar()"></i>
+    <a href="index.html">الرئيسية</a>
+    <a href="services.html">الخدمات</a>
+    <a href="clients.html">آراء العملاء</a>
+    <a href="add-review.html">إضافة تعليق</a>
+    <a href="contact.html">تواصل معنا</a>
+</div>
 
-            header img {
-                height: 55px;
-            }
-        }
+<div class="welcome">
+    <h1>مرحبًا بكم في سهل للخدمات</h1>
+</div>
 
-        .section-box {
-            background: white;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
+<div class="circle-buttons">
+    <a class="circle-btn" href="services.html">
+        <i class="fas fa-briefcase"></i>
+        الخدمات
+    </a>
 
-        .section-box h2 {
-            color: #e17c1b;
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
+    <a class="circle-btn" href="clients.html">
+        <i class="fas fa-users"></i>
+        العملاء
+    </a>
 
-        .section
+    <a class="circle-btn" href="add-review.html">
+        <i class="fas fa-comment"></i>
+        إضافة تعليق
+    </a>
+
+    <a class="circle-btn" href="contact.html">
+        <i class="fas fa-envelope"></i>
+        تواصل معنا
+    </a>
+</div>
+
+<script>
+function openSidebar() {
+    document.getElementById("sidebar").style.width = "250px";
+}
+
+function closeSidebar() {
+    document.getElementById("sidebar").style.width = "0";
+}
+</script>
+
+</body>
+</html>
