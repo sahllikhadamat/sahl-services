@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الشكاوي والاقتراحات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 70px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #e17c1b;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #27415d;
+            margin-top: 25px;
+        }
+
+        .form-box {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
+        }
+
+        textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #e17c1b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c96b17;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 30px;
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        function sendToWhatsApp() {
+            let name = document.getElementById("name").value;
+            let type = document.getElementById("type").value;
+            let message = document.getElementById("message").value;
+
+            if (message.length > 300) {
+                alert("الحد الأقصى للكتابة هو 300 كلمة");
+                return;
+            }
+
+            let phone = "966532225735"; // ← رقمك جاهز
+
+            let text = `الاسم: ${name}%0Aالنوع: ${type}%0Aالرسالة:%0A${message}`;
+
+            window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+        }
+    </script>
+
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
+
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <h1>الشكاوي والاقتراحات</h1>
+
+    <div class="form-box">
+
+        <label>الاسم</label>
+        <input type="text" id="name" placeholder="اكتب اسمك">
+
+        <label>نوع الرسالة</label>
+        <select id="type">
+            <option value="شكوى">شكوى</option>
+            <option value="اقتراح">اقتراح</option>
+        </select>
+
+        <label>الرسالة (حد أقصى 300 كلمة)</label>
+        <textarea id="message" maxlength="300" placeholder="اكتب رسالتك هنا..."></textarea>
+
+        <button onclick="sendToWhatsApp()">إرسال عبر واتساب</button>
+
+    </div>
+
+    <footer>
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
