@@ -79,37 +79,29 @@
             font-size: 28px;
         }
 
-        /* صندوق الخدمة */
-        .service-box {
-            background: white;
-            margin: 15px;
+        /* كروت التصنيفات */
+        .cards {
             padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 12px 0;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        /* قائمة الخدمات */
-        .service-box ul {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-
-        .service-box ul li {
-            background: #e17c1b;
-            color: white;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 10px;
-            font-size: 18px;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
+            justify-content: space-between;
+            font-size: 20px;
+            color: #27415d;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .service-box ul li i {
-            font-size: 20px;
+        .card i {
+            font-size: 26px;
+            color: #e17c1b;
         }
 
         footer {
@@ -150,20 +142,26 @@
     </header>
 
     <section class="title">
-        <h1>خدماتنا</h1>
+        <h1>تصنيفات الخدمات</h1>
     </section>
 
-    <div class="service-box">
-        <ul>
-            <li><i class="fa-solid fa-graduation-cap"></i> خدمات طلابية</li>
-            <li><i class="fa-solid fa-building-columns"></i> خدمات حكومية</li>
-            <li><i class="fa-solid fa-globe"></i> خدمات منصات</li>
-            <li><i class="fa-solid fa-file-lines"></i> كتابة وتنسيق ملفات</li>
-            <li><i class="fa-solid fa-pen-nib"></i> تصميم بسيط</li>
-            <li><i class="fa-solid fa-file-circle-check"></i> تعبئة نماذج</li>
-            <li><i class="fa-solid fa-user-plus"></i> إنشاء حسابات</li>
-            <li><i class="fa-solid fa-laptop"></i> خدمات إلكترونية متنوعة</li>
-        </ul>
+    <div class="cards">
+
+        <a href="design-services.html" class="card">
+            خدمات التصميم
+            <i class="fa-solid fa-pen-nib"></i>
+        </a>
+
+        <a href="education-services.html" class="card">
+            التعليم والمهام
+            <i class="fa-solid fa-graduation-cap"></i>
+        </a>
+
+        <a href="e-services.html" class="card">
+            الخدمات الإلكترونية
+            <i class="fa-solid fa-laptop"></i>
+        </a>
+
     </div>
 
     <footer>
