@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تواصل معنا – سهل للخدمات</title>
+    <title>سهل للخدمات – الرئيسية</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,7 +25,7 @@
         }
 
         header img {
-            height: 55px;
+            height: 70px;
         }
 
         .menu-btn {
@@ -50,7 +50,8 @@
         .sidebar a {
             padding: 12px 25px;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 600;
             color: white;
             display: block;
             transition: 0.3s;
@@ -69,17 +70,69 @@
             color: white;
         }
 
-        .title {
+        .welcome {
             text-align: center;
-            padding: 25px;
+            padding: 30px 20px;
         }
 
-        .title h1 {
+        .welcome h1 {
             color: #27415d;
-            font-size: 30px;
+            font-size: 26px;
+            line-height: 1.6;
         }
 
-        .form-box {
+        .circle-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            padding: 20px;
+        }
+
+        .circle-btn {
+            width: 110px;
+            height: 110px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #27415d;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .circle-btn i {
+            font-size: 26px;
+            color: #e17c1b;
+            margin-bottom: 8px;
+        }
+
+        /* ⭐ تصغير المقاسات في الجوال */
+        @media (max-width: 480px) {
+            .welcome h1 {
+                font-size: 20px;
+            }
+
+            .circle-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 13px;
+            }
+
+            .circle-btn i {
+                font-size: 22px;
+            }
+
+            header img {
+                height: 55px;
+            }
+        }
+
+        .section-box {
             background: white;
             margin: 15px;
             padding: 20px;
@@ -87,147 +140,10 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        label {
-            font-size: 18px;
-            font-weight: 600;
-            color: #27415d;
+        .section-box h2 {
+            color: #e17c1b;
+            font-size: 22px;
+            margin-bottom: 10px;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 18px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Cairo';
-        }
-
-        .whatsapp-btn {
-            background-color: #25D366;
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .whatsapp-btn:hover {
-            background-color: #1ebe5d;
-        }
-
-        footer {
-            background-color: #27415d;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            margin-top: 20px;
-        }
-    </style>
-
-    <script>
-        function openSidebar() {
-            document.getElementById("sidebar").style.width = "250px";
-        }
-
-        function closeSidebar() {
-            document.getElementById("sidebar").style.width = "0";
-        }
-
-        function sendWhatsApp() {
-            let name = document.getElementById("name").value;
-            let phone = document.getElementById("phone").value;
-            let service = document.getElementById("service").value;
-            let message = document.getElementById("message").value;
-
-            let text =
-                "مرحبًا، لدي استفسار:\n" +
-                "الاسم: " + name + "\n" +
-                "رقم الجوال: " + phone + "\n" +
-                "الخدمة المطلوبة: " + service + "\n" +
-                "الرسالة: " + message;
-
-            let url = "https://wa.me/966532225735?text=" + encodeURIComponent(text);
-
-            window.open(url, "_blank");
-        }
-    </script>
-
-</head>
-<body>
-
-<div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeSidebar()">×</span>
-
-    <a href="home.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
-    <a href="about.html" style="font-size:22px; font-weight:600;">من نحن</a>
-    <a href="services.html" style="font-size:22px; font-weight:600;">الخدمات</a>
-    <a href="clients.html" style="font-size:22px; font-weight:600;">آراء العملاء</a>
-    <a href="add-review.html" style="font-size:22px; font-weight:600;">إضافة تعليق</a>
-    <a href="contact.html" style="font-size:22px; font-weight:600;">تواصل معنا</a>
-</div>
-
-
-    <header>
-        <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo.png.png" alt="شعار سهل للخدمات">
-    </header>
-
-    <section class="title">
-        <h1>تواصل معنا</h1>
-    </section>
-
-    <div class="form-box">
-
-        <label>الاسم:</label>
-        <input type="text" id="name">
-
-        <label>رقم الجوال:</label>
-        <input type="number" id="phone">
-
-        <label>اختر نوع الخدمة:</label>
-        <select id="service">
-            <option>تصميم سيرة ذاتية</option>
-            <option>تصميم منشور</option>
-            <option>تصميم بوست</option>
-            <option>تصميم فيديو</option>
-            <option>تصميم طعام</option>
-            <option>تصميم شهادات شكر</option>
-
-            <option>دورات تدريبية</option>
-            <option>بحوث</option>
-            <option>أوراق عمل</option>
-            <option>مهام أدائية</option>
-            <option>ملف إنجاز</option>
-            <option>مشروع تخرج</option>
-            <option>عروض تقديمية</option>
-
-            <option>ساعات تطوعية</option>
-            <option>إنشاء متجر سلة</option>
-            <option>إصدار وثيقة العمل الحر</option>
-            <option>إصدار رخصة فال العقارية</option>
-        </select>
-
-        <label>الرسالة:</label>
-        <textarea id="message" rows="5"></textarea>
-
-        <button class="whatsapp-btn" onclick="sendWhatsApp()">
-            تواصل عبر واتساب
-        </button>
-
-    </div>
-
-    <footer>
-        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
-    </footer>
-
-    <script>
-        document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-
-</body>
-</html>
+        .section
