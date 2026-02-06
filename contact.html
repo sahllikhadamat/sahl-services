@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تواصل معنا – سهل للخدمات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 55px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #e17c1b;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .title {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .title h1 {
+            color: #27415d;
+            font-size: 30px;
+        }
+
+        .form-box {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #27415d;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1ebe5d;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        function sendWhatsApp() {
+            let name = document.getElementById("name").value;
+            let phone = document.getElementById("phone").value;
+            let service = document.getElementById("service").value;
+            let message = document.getElementById("message").value;
+
+            let text =
+                "مرحبًا، لدي استفسار:\n" +
+                "الاسم: " + name + "\n" +
+                "رقم الجوال: " + phone + "\n" +
+                "الخدمة المطلوبة: " + service + "\n" +
+                "الرسالة: " + message;
+
+            let url = "https://wa.me/966532225735?text=" + encodeURIComponent(text);
+
+            window.open(url, "_blank");
+        }
+    </script>
+
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+        <a href="home.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
+
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <section class="title">
+        <h1>تواصل معنا</h1>
+    </section>
+
+    <div class="form-box">
+
+        <label>الاسم:</label>
+        <input type="text" id="name">
+
+        <label>رقم الجوال:</label>
+        <input type="number" id="phone">
+
+        <label>اختر نوع الخدمة:</label>
+        <select id="service">
+            <option>تصميم سيرة ذاتية</option>
+            <option>تصميم منشور</option>
+            <option>تصميم بوست</option>
+            <option>تصميم فيديو</option>
+            <option>تصميم طعام</option>
+            <option>تصميم شهادات شكر</option>
+
+            <option>دورات تدريبية</option>
+            <option>بحوث</option>
+            <option>أوراق عمل</option>
+            <option>مهام أدائية</option>
+            <option>ملف إنجاز</option>
+            <option>مشروع تخرج</option>
+            <option>عروض تقديمية</option>
+
+            <option>ساعات تطوعية</option>
+            <option>إنشاء متجر سلة</option>
+            <option>إصدار وثيقة العمل الحر</option>
+            <option>إصدار رخصة فال العقارية</option>
+        </select>
+
+        <label>الرسالة:</label>
+        <textarea id="message" rows="5"></textarea>
+
+        <button class="whatsapp-btn" onclick="sendWhatsApp()">
+            تواصل عبر واتساب
+        </button>
+
+    </div>
+
+    <footer>
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
