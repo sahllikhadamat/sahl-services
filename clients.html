@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آراء العملاء – سهل للخدمات</title>
+    <title>آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,7 +25,7 @@
         }
 
         header img {
-            height: 55px;
+            height: 70px;
         }
 
         .menu-btn {
@@ -50,7 +50,8 @@
         .sidebar a {
             padding: 12px 25px;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 600;
             color: white;
             display: block;
             transition: 0.3s;
@@ -69,20 +70,21 @@
             color: white;
         }
 
-        .title {
+        h1 {
             text-align: center;
-            padding: 25px;
-        }
-
-        .title h1 {
             color: #27415d;
-            font-size: 28px;
+            margin-top: 25px;
         }
 
-        /* صندوق التعليق */
+        .reviews-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .review-box {
             background: white;
-            margin: 15px;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -91,13 +93,12 @@
         .review-header {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 10px;
         }
 
         .review-header i {
-            font-size: 24px;
+            font-size: 28px;
             color: #e17c1b;
         }
 
@@ -107,10 +108,23 @@
             color: #27415d;
         }
 
-        .review-text {
+        .review-rating {
             font-size: 18px;
+            color: #e17c1b;
+            margin-bottom: 8px;
+        }
+
+        .review-message {
+            font-size: 16px;
             color: #333;
-            line-height: 1.7;
+            line-height: 1.6;
+        }
+
+        .review-date {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #777;
+            text-align: left;
         }
 
         footer {
@@ -118,7 +132,7 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 20px;
+            margin-top: 30px;
         }
     </style>
 
@@ -130,44 +144,70 @@
         function closeSidebar() {
             document.getElementById("sidebar").style.width = "0";
         }
+
+        function loadReviews() {
+            let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+            let container = document.getElementById("reviews");
+
+            if (reviews.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#777;'>لا توجد تعليقات حتى الآن.</p>";
+                return;
+            }
+
+            reviews.forEach(r => {
+                let genderIcon = r.gender === "ذكر" ? "fa-mars" : "fa-venus";
+
+                let box = `
+                    <div class="review-box">
+                        <div class="review-header">
+                            <i class="fa-solid ${genderIcon}"></i>
+                            <span class="review-name">${r.name}</span>
+                        </div>
+
+                        <div class="review-rating">${r.rating}</div>
+
+                        <div class="review-message">${r.message}</div>
+
+                        <div class="review-date">📅 ${r.date}</div>
+                    </div>
+                `;
+
+                container.innerHTML += box;
+            });
+        }
     </script>
 
 </head>
-<body>
+<body onload="loadReviews()">
 
     <div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeSidebar()">×</span>
+        <span class="close-btn" onclick="closeSidebar()">×</span>
 
-    <a href="home.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
-    <a href="about.html" style="font-size:22px; font-weight:600;">من نحن</a>
-    <a href="services.html" style="font-size:22px; font-weight:600;">الخدمات</a>
-    <a href="clients.html" style="font-size:22px; font-weight:600;">آراء العملاء</a>
-    <a href="add-review.html" style="font-size:22px; font-weight:600;">إضافة تعليق</a>
-    <a href="contact.html" style="font-size:22px; font-weight:600;">تواصل معنا</a>
-</div>
-
-
-<img src="logo.png" alt="شعار سهل للخدمات" style="height:90px;">
-
-
-    <section class="title">
-        <h1>آراء العملاء</h1>
-    </section>
-
-    <!-- مثال على تعليق (تقدرين تضيفين أكثر بنفس الشكل) -->
-    <div class="review-box">
-        <div class="review-header">
-            <i class="fa-solid fa-user"></i>
-            <span class="review-name">اسم العميل</span>
-        </div>
-        <p class="review-text">
-            هذا مثال على تعليق عميل. يمكنك إضافة التعليقات الحقيقية هنا بعد جمعها من صفحة إضافة تعليق.
-        </p>
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="contact.html">تواصل معنا</a>
     </div>
 
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <h1>آراء العملاء</h1>
+
+    <div class="reviews-container" id="reviews"></div>
+
     <footer>
-        © 2024 سهل للخدمات – جميع الحقوق محفوظة
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
     </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
 </body>
 </html>
