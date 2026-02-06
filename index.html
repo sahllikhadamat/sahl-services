@@ -1,10 +1,238 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=home.html">
-    <title>سهل للخدمات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سهل للخدمات – الرئيسية</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 55px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #e17c1b;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .welcome h1 {
+            color: #27415d;
+            font-size: 28px;
+            line-height: 1.6;
+        }
+
+        .circle-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            padding: 20px;
+        }
+
+        .circle-btn {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #27415d;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .circle-btn i {
+            font-size: 28px;
+            color: #e17c1b;
+            margin-bottom: 8px;
+        }
+
+        .section-box {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-box h2 {
+            color: #e17c1b;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .section-box ul {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.8;
+            padding-right: 20px;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+
 </head>
 <body>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
+
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <section class="welcome">
+        <h1>
+            مرحبًا بك في <strong>سهل للخدمات</strong>  
+            <br>
+            وجهتك الأولى للخدمات الرقمية والطلابـية والحكومية.
+        </h1>
+    </section>
+
+    <div class="circle-buttons">
+
+        <a href="services.html" class="circle-btn">
+            <i class="fa-solid fa-list"></i>
+            الخدمات
+        </a>
+
+        <a href="clients.html" class="circle-btn">
+            <i class="fa-solid fa-comments"></i>
+            آراء العملاء
+        </a>
+
+        <a href="add-review.html" class="circle-btn">
+            <i class="fa-solid fa-pen"></i>
+            إضافة تعليق
+        </a>
+
+        <a href="contact.html" class="circle-btn">
+            <i class="fa-solid fa-phone"></i>
+            تواصل معنا
+        </a>
+
+        <a href="about.html" class="circle-btn">
+            <i class="fa-solid fa-circle-info"></i>
+            من نحن
+        </a>
+
+    </div>
+
+    <div class="section-box">
+        <h2>خدماتنا</h2>
+        <ul>
+            <li>خدمات التصميم</li>
+            <li>التعليم والمهام</li>
+            <li>الخدمات الإلكترونية</li>
+        </ul>
+    </div>
+
+    <div class="section-box">
+        <h2>لماذا نحن؟</h2>
+        <ul>
+            <li>جودة عالية في تنفيذ الخدمات</li>
+            <li>سرعة في الإنجاز</li>
+            <li>موثوقية وشفافية</li>
+            <li>دعم مستمر للعملاء</li>
+        </ul>
+    </div>
+
+    <footer>
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
 </body>
 </html>
