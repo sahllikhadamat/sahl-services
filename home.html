@@ -15,6 +15,7 @@
             background-color: #f7f7f7;
         }
 
+        /* الهيدر */
         header {
             background-color: #27415d;
             color: white;
@@ -25,15 +26,17 @@
         }
 
         header img {
-            height: 70px;
+            height: 60px;
+            border-radius: 50%;
         }
 
         .menu-btn {
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
             color: white;
         }
 
+        /* القائمة الجانبية */
         .sidebar {
             height: 100%;
             width: 0;
@@ -48,13 +51,12 @@
         }
 
         .sidebar a {
-            padding: 12px 25px;
+            padding: 15px 25px;
             text-decoration: none;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: white;
             display: block;
-            transition: 0.3s;
         }
 
         .sidebar a:hover {
@@ -70,9 +72,10 @@
             color: white;
         }
 
+        /* قسم الترحيب */
         .welcome {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 20px;
         }
 
         .welcome h1 {
@@ -81,6 +84,7 @@
             line-height: 1.6;
         }
 
+        /* الأيقونات الدائرية */
         .circle-buttons {
             display: flex;
             flex-wrap: wrap;
@@ -94,7 +98,7 @@
             height: 110px;
             background-color: white;
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -106,64 +110,154 @@
         }
 
         .circle-btn i {
-            font-size: 26px;
+            font-size: 30px;
             color: #e17c1b;
             margin-bottom: 8px;
         }
-    </style>
-</head>
 
+        /* أقسام إضافية */
+        .section-box {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-box h2 {
+            color: #e17c1b;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .section-box p {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+        }
+
+        /* الجوال */
+        @media (max-width: 480px) {
+            .circle-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 13px;
+            }
+
+            .circle-btn i {
+                font-size: 24px;
+            }
+
+            header img {
+                height: 50px;
+            }
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+
+</head>
 <body>
 
-<header>
-    <img src="logo.png.png" alt="شعار سهل للخدمات">
-    <i class="fas fa-bars menu-btn" onclick="openSidebar()"></i>
-</header>
+    <!-- القائمة الجانبية -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
 
-<div id="sidebar" class="sidebar">
-    <i class="fas fa-times close-btn" onclick="closeSidebar()"></i>
-    <a href="index.html">الرئيسية</a>
-    <a href="services.html">الخدمات</a>
-    <a href="clients.html">آراء العملاء</a>
-    <a href="add-review.html">إضافة تعليق</a>
-    <a href="contact.html">تواصل معنا</a>
-</div>
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
 
-<div class="welcome">
-    <h1>مرحبًا بكم في سهل للخدمات</h1>
-</div>
+    <!-- الهيدر -->
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo.png" alt="شعار سهل للخدمات">
+    </header>
 
-<div class="circle-buttons">
-    <a class="circle-btn" href="services.html">
-        <i class="fas fa-briefcase"></i>
-        الخدمات
-    </a>
+    <!-- الترحيب -->
+    <section class="welcome">
+        <h1>مرحبًا بك في سهل للخدمات<br>نقدم لك خدمات رقمية وطلابية وحكومية باحترافية عالية</h1>
+    </section>
 
-    <a class="circle-btn" href="clients.html">
-        <i class="fas fa-users"></i>
-        العملاء
-    </a>
+    <!-- الأيقونات -->
+    <div class="circle-buttons">
 
-    <a class="circle-btn" href="add-review.html">
-        <i class="fas fa-comment"></i>
-        إضافة تعليق
-    </a>
+        <a href="services.html" class="circle-btn">
+            <i class="fa-solid fa-briefcase"></i>
+            الخدمات
+        </a>
 
-    <a class="circle-btn" href="contact.html">
-        <i class="fas fa-envelope"></i>
-        تواصل معنا
-    </a>
-</div>
+        <a href="about.html" class="circle-btn">
+            <i class="fa-solid fa-circle-info"></i>
+            من نحن
+        </a>
 
-<script>
-function openSidebar() {
-    document.getElementById("sidebar").style.width = "250px";
-}
+        <a href="clients.html" class="circle-btn">
+            <i class="fa-solid fa-comments"></i>
+            آراء العملاء
+        </a>
 
-function closeSidebar() {
-    document.getElementById("sidebar").style.width = "0";
-}
-</script>
+        <a href="complaints.html" class="circle-btn">
+            <i class="fa-solid fa-pen-to-square"></i>
+            الشكاوي
+        </a>
+
+        <a href="contact.html" class="circle-btn">
+            <i class="fa-solid fa-phone"></i>
+            تواصل معنا
+        </a>
+
+        <a href="add-review.html" class="circle-btn">
+            <i class="fa-solid fa-star"></i>
+            إضافة تعليق
+        </a>
+
+    </div>
+
+    <!-- نبذة -->
+    <div class="section-box">
+        <h2>نبذة عن المتجر</h2>
+        <p>
+            سهل للخدمات هو متجر متخصص في تقديم الخدمات الرقمية والطلابية والحكومية باحترافية عالية.
+            نحرص على الجودة، السرعة، والدقة في إنجاز جميع الطلبات.
+        </p>
+    </div>
+
+    <!-- مميزات -->
+    <div class="section-box">
+        <h2>لماذا نحن؟</h2>
+        <p>
+            ✔ سرعة في الإنجاز  
+            ✔ جودة عالية  
+            ✔ دعم مستمر  
+            ✔ أسعار مناسبة  
+            ✔ تعامل احترافي  
+        </p>
+    </div>
+
+    <footer>
+        © 2026 سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
 
 </body>
 </html>
