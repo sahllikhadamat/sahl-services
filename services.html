@@ -79,7 +79,6 @@
             font-size: 28px;
         }
 
-        /* كروت التصنيفات */
         .cards {
             padding: 20px;
         }
@@ -126,10 +125,10 @@
 </head>
 <body>
 
-   <div id="sidebar" class="sidebar">
+<div id="sidebar" class="sidebar">
     <span class="close-btn" onclick="closeSidebar()">×</span>
 
-    <a href="home.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
+    <a href="index.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
     <a href="about.html" style="font-size:22px; font-weight:600;">من نحن</a>
     <a href="services.html" style="font-size:22px; font-weight:600;">الخدمات</a>
     <a href="clients.html" style="font-size:22px; font-weight:600;">آراء العملاء</a>
@@ -137,38 +136,37 @@
     <a href="contact.html" style="font-size:22px; font-weight:600;">تواصل معنا</a>
 </div>
 
+<header>
+    <span class="menu-btn" onclick="openSidebar()">☰</span>
+    <img src="logo.png.png" alt="شعار سهل للخدمات">
+</header>
 
-    <header>
-        <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo.png.png" alt="شعار سهل للخدمات">
-    </header>
+<section class="title">
+    <h1>تصنيفات الخدمات</h1>
+</section>
 
-    <section class="title">
-        <h1>تصنيفات الخدمات</h1>
-    </section>
+<div class="cards">
 
-    <div class="cards">
+    <a href="design-services.html" class="card">
+        خدمات التصميم
+        <i class="fa-solid fa-pen-nib"></i>
+    </a>
 
-        <a href="design-services.html" class="card">
-            خدمات التصميم
-            <i class="fa-solid fa-pen-nib"></i>
-        </a>
+    <a href="education-services.html" class="card">
+        التعليم والمهام
+        <i class="fa-solid fa-graduation-cap"></i>
+    </a>
 
-        <a href="education-services.html" class="card">
-            التعليم والمهام
-            <i class="fa-solid fa-graduation-cap"></i>
-        </a>
+    <a href="e-services.html" class="card">
+        الخدمات الإلكترونية
+        <i class="fa-solid fa-laptop"></i>
+    </a>
 
-        <a href="e-services.html" class="card">
-            الخدمات الإلكترونية
-            <i class="fa-solid fa-laptop"></i>
-        </a>
+</div>
 
-    </div>
-
-    <footer>
-        © 2024 سهل للخدمات – جميع الحقوق محفوظة
-    </footer>
+<footer>
+    © 2024 سهل للخدمات – جميع الحقوق محفوظة
+</footer>
 
 </body>
 </html>
