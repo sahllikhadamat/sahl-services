@@ -99,15 +99,23 @@
             color: gray;
         }
 
-        .delete-btn {
+        .delete-btn, .edit-btn {
             margin-top: 10px;
-            background: #c0392b;
-            color: white;
             padding: 8px 12px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #c0392b;
+        }
+
+        .edit-btn {
+            background: #e17c1b;
+            margin-right: 10px;
         }
 
         footer {
@@ -162,7 +170,7 @@
     <!-- ⭐ Firebase + Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc }
+        import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc }
             from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -177,6 +185,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        const currentUserId = localStorage.getItem("userId");
+
         async function loadReviews() {
             const reviewsList = document.getElementById("reviewsList");
             reviewsList.innerHTML = "";
@@ -185,6 +195,8 @@
             querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
 
+                const isOwner = data.userId === currentUserId;
+
                 const item = `
                     <div class="review-box">
                         <h3>${data.name} (${data.gender})</h3>
@@ -192,9 +204,14 @@
                         <p>${data.message}</p>
                         <div class="date">${new Date(data.date).toLocaleDateString()}</div>
 
-                        <button class="delete-btn" onclick="deleteReview('${docSnap.id}')">
-                            حذف التعليق
-                        </button>
+                        ${
+                            isOwner
+                            ? `
+                                <button class="delete-btn" onclick="deleteReview('${docSnap.id}')">حذف</button>
+                                <button class="edit-btn" onclick="editReview('${docSnap.id}', '${data.message}')">تعديل</button>
+                              `
+                            : ""
+                        }
                     </div>
                 `;
 
@@ -203,11 +220,24 @@
         }
 
         window.deleteReview = async function(id) {
-            if (!confirm("هل أنت متأكد من حذف هذا التعليق؟")) return;
+            if (!confirm("هل أنت متأكد من حذف تعليقك؟")) return;
 
             await deleteDoc(doc(db, "reviews", id));
 
-            alert("تم حذف التعليق");
+            alert("تم حذف تعليقك");
+            location.reload();
+        };
+
+        window.editReview = async function(id, oldMessage) {
+            const newMessage = prompt("اكتب التعديل الجديد:", oldMessage);
+
+            if (!newMessage || newMessage.trim() === "") return;
+
+            await updateDoc(doc(db, "reviews", id), {
+                message: newMessage.trim()
+            });
+
+            alert("تم تعديل تعليقك");
             location.reload();
         };
 
