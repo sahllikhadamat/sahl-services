@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من نحن – سهل للخدمات</title>
+    <title>سهل للخدمات – من نحن</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -15,7 +15,6 @@
             background-color: #f7f7f7;
         }
 
-        /* الهيدر */
         header {
             background-color: #27415d;
             color: white;
@@ -36,7 +35,6 @@
             color: white;
         }
 
-        /* القائمة الجانبية */
         .sidebar {
             height: 100%;
             width: 0;
@@ -72,33 +70,22 @@
             color: white;
         }
 
-        /* المحتوى */
-        .title {
-            text-align: center;
-            padding: 25px;
-        }
-
-        .title h1 {
-            color: #27415d;
-            font-size: 28px;
-        }
-
-        .section-box {
-            background: white;
+        .section {
+            background-color: white;
             margin: 15px;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
 
-        .section-box h2 {
-            color: #e17c1b;
-            font-size: 22px;
-            margin-bottom: 10px;
+        .section h1 {
+            font-size: 26px;
+            color: #27415d;
+            margin-top: 0;
         }
 
-        .section-box p, .section-box ul {
-            font-size: 17px;
+        .section p {
+            font-size: 16px;
             color: #333;
             line-height: 1.8;
         }
@@ -109,6 +96,7 @@
             text-align: center;
             padding: 12px;
             margin-top: 20px;
+            font-size: 14px;
         }
     </style>
 
@@ -144,41 +132,49 @@
         <img src="logo.png" alt="شعار سهل للخدمات">
     </header>
 
-    <section class="title">
-        <h1>نبذة عن سهل للخدمات</h1>
+    <!-- المحتوى -->
+    <section class="section">
+        <h1 id="about_title">من نحن</h1>
+        <p id="about_text">
+            نحن في سهل للخدمات نسعى لتقديم أفضل الحلول الرقمية والطلابية والحكومية بكل احترافية وجودة.
+        </p>
     </section>
 
-    <div class="section-box">
-        <h2>من نحن</h2>
-        <p>
-            سهل للخدمات هو متجر إلكتروني متخصص في تقديم الخدمات الرقمية والطلابية والحكومية باحترافية عالية.
-            تأسس عام 2024 وموثق من المركز السعودي للأعمال برقم: <strong>0000151464</strong>.
-            نحرص على توفير حلول سريعة، دقيقة، وبجودة ممتازة، مع دعم متواصل لضمان رضا العميل.
-        </p>
-    </div>
-
-    <div class="section-box">
-        <h2>رؤيتنا</h2>
-        <p>
-            أن نكون الوجهة الأولى للخدمات الإلكترونية والطلابية في المملكة،
-            من خلال تقديم خدمات موثوقة، سريعة، وبجودة عالية تلبي احتياجات العملاء.
-        </p>
-    </div>
-
-    <div class="section-box">
-        <h2>قيمنا</h2>
-        <ul>
-            <li>الجودة أولًا</li>
-            <li>السرعة في الإنجاز</li>
-            <li>الدقة في العمل</li>
-            <li>الشفافية والموثوقية</li>
-            <li>الخصوصية وحماية بيانات العملاء</li>
-        </ul>
-    </div>
-
     <footer>
-        © 2024 سهل للخدمات – جميع الحقوق محفوظة
+        © 2026 سهل للخدمات – جميع الحقوق محفوظة
     </footer>
+
+    <!-- ربط Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadAboutContent() {
+            const ref = doc(db, "siteContent", "about");
+            const snap = await getDoc(ref);
+
+            if (snap.exists()) {
+                const data = snap.data();
+
+                if (data.title) document.getElementById("about_title").innerHTML = data.title;
+                if (data.text) document.getElementById("about_text").innerHTML = data.text;
+            }
+        }
+
+        loadAboutContent();
+    </script>
 
 </body>
 </html>
