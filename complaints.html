@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الشكاوي والاقتراحات</title>
+    <title>سهل للخدمات – الشكاوي والاقتراحات</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,11 +25,12 @@
         }
 
         header img {
-            height: 70px;
+            height: 60px;
+            border-radius: 50%;
         }
 
         .menu-btn {
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
             color: white;
         }
@@ -48,13 +49,12 @@
         }
 
         .sidebar a {
-            padding: 12px 25px;
+            padding: 15px 25px;
             text-decoration: none;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: white;
             display: block;
-            transition: 0.3s;
         }
 
         .sidebar a:hover {
@@ -70,56 +70,43 @@
             color: white;
         }
 
-        h1 {
-            text-align: center;
-            color: #27415d;
-            margin-top: 25px;
-        }
-
-        .form-box {
-            background: white;
-            margin: 20px;
+        .section {
+            background-color: white;
+            margin: 15px;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
 
-        label {
-            font-size: 18px;
-            font-weight: 600;
+        .section h1 {
+            font-size: 26px;
+            color: #27415d;
+            margin-top: 0;
+        }
+
+        .section p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .complaint-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        }
+
+        .complaint-box div {
+            margin-bottom: 12px;
+            font-size: 16px;
             color: #333;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Cairo';
-        }
-
-        textarea {
-            height: 140px;
-            resize: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #e17c1b;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #c96b17;
+        .complaint-box i {
+            color: #e17c1b;
+            margin-left: 8px;
         }
 
         footer {
@@ -127,7 +114,8 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 30px;
+            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
 
@@ -139,28 +127,12 @@
         function closeSidebar() {
             document.getElementById("sidebar").style.width = "0";
         }
-
-        function sendToWhatsApp() {
-            let name = document.getElementById("name").value;
-            let type = document.getElementById("type").value;
-            let message = document.getElementById("message").value;
-
-            if (message.length > 300) {
-                alert("الحد الأقصى للكتابة هو 300 كلمة");
-                return;
-            }
-
-            let phone = "966532225735";
-
-            let text = `الاسم: ${name}%0Aالنوع: ${type}%0Aالرسالة:%0A${message}`;
-
-            window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
-        }
     </script>
 
 </head>
 <body>
 
+    <!-- القائمة الجانبية -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="closeSidebar()">×</span>
 
@@ -168,42 +140,65 @@
         <a href="about.html">من نحن</a>
         <a href="services.html">الخدمات</a>
         <a href="clients.html">آراء العملاء</a>
-        <a href="add-review.html">إضافة تعليق</a>
         <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="add-review.html">إضافة تعليق</a>
         <a href="contact.html">تواصل معنا</a>
     </div>
 
+    <!-- الهيدر -->
     <header>
         <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+        <img src="logo.png" alt="شعار سهل للخدمات">
     </header>
 
-    <h1>الشكاوي والاقتراحات</h1>
+    <!-- المحتوى -->
+    <section class="section">
+        <h1 id="complaints_title">الشكاوي والاقتراحات</h1>
+        <p id="complaints_text">
+            يسعدنا استقبال ملاحظاتكم واقتراحاتكم لتحسين جودة خدماتنا.
+        </p>
 
-    <div class="form-box">
-
-        <label>الاسم</label>
-        <input type="text" id="name" placeholder="اكتب اسمك">
-
-        <label>نوع الرسالة</label>
-        <select id="type">
-            <option value="شكوى">شكوى</option>
-            <option value="اقتراح">اقتراح</option>
-        </select>
-
-        <label>الرسالة (حد أقصى 300 كلمة)</label>
-        <textarea id="message" maxlength="300" placeholder="اكتب رسالتك هنا..."></textarea>
-
-        <button onclick="sendToWhatsApp()">إرسال عبر واتساب</button>
-
-    </div>
+        <div class="complaint-box" id="complaints_info">
+            <div><i class="fa-solid fa-envelope"></i> example@email.com</div>
+            <div><i class="fa-brands fa-whatsapp"></i> 0500000000</div>
+        </div>
+    </section>
 
     <footer>
-        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+        © 2026 سهل للخدمات – جميع الحقوق محفوظة
     </footer>
 
-    <script>
-        document.getElementById("year").textContent = new Date().getFullYear();
+    <!-- ربط Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadComplaintsContent() {
+            const ref = doc(db, "siteContent", "complaints");
+            const snap = await getDoc(ref);
+
+            if (snap.exists()) {
+                const data = snap.data();
+
+                if (data.title) document.getElementById("complaints_title").innerHTML = data.title;
+                if (data.text) document.getElementById("complaints_text").innerHTML = data.text;
+                if (data.info) document.getElementById("complaints_info").innerHTML = data.info;
+            }
+        }
+
+        loadComplaintsContent();
     </script>
 
 </body>
