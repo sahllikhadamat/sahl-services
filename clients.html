@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آراء العملاء</title>
+    <title>سهل للخدمات – آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
@@ -24,11 +25,12 @@
         }
 
         header img {
-            height: 70px;
+            height: 60px;
+            border-radius: 50%;
         }
 
         .menu-btn {
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
             color: white;
         }
@@ -47,13 +49,12 @@
         }
 
         .sidebar a {
-            padding: 12px 25px;
+            padding: 15px 25px;
             text-decoration: none;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: white;
             display: block;
-            transition: 0.3s;
         }
 
         .sidebar a:hover {
@@ -69,53 +70,45 @@
             color: white;
         }
 
-        h1 {
-            text-align: center;
-            color: #27415d;
-            margin-top: 25px;
-        }
-
-        .review-box {
-            background: white;
+        .section {
+            background-color: white;
             margin: 15px;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        }
+
+        .section h1 {
+            font-size: 26px;
+            color: #27415d;
+            margin-top: 0;
+        }
+
+        .section p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .review-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-right: 4px solid #e17c1b;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
 
         .review-box h3 {
             margin: 0;
+            font-size: 18px;
             color: #27415d;
         }
 
-        .review-box .rating {
-            color: #e17c1b;
-            font-size: 22px;
-            margin: 5px 0;
-        }
-
-        .review-box .date {
-            font-size: 14px;
-            color: gray;
-        }
-
-        .delete-btn, .edit-btn {
-            margin-top: 10px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-        }
-
-        .delete-btn {
-            background: #c0392b;
-        }
-
-        .edit-btn {
-            background: #e17c1b;
-            margin-right: 10px;
+        .review-box p {
+            margin: 8px 0 0;
+            font-size: 15px;
+            color: #333;
         }
 
         footer {
@@ -123,37 +116,10 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 30px;
+            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
-</head>
-
-<body>
-
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="closeSidebar()">×</span>
-
-        <a href="index.html">الرئيسية</a>
-        <a href="about.html">من نحن</a>
-        <a href="services.html">الخدمات</a>
-        <a href="clients.html">آراء العملاء</a>
-        <a href="add-review.html">إضافة تعليق</a>
-        <a href="complaints.html">الشكاوي والاقتراحات</a>
-        <a href="contact.html">تواصل معنا</a>
-    </div>
-
-    <header>
-        <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
-    </header>
-
-    <h1>آراء العملاء</h1>
-
-    <div id="reviewsList"></div>
-
-    <footer>
-        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
-    </footer>
 
     <script>
         function openSidebar() {
@@ -163,15 +129,50 @@
         function closeSidebar() {
             document.getElementById("sidebar").style.width = "0";
         }
-
-        document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
-    <!-- ⭐ Firebase + Firestore -->
+</head>
+<body>
+
+    <!-- القائمة الجانبية -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
+
+    <!-- الهيدر -->
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <!-- المحتوى -->
+    <section class="section">
+        <h1 id="clients_title">آراء العملاء</h1>
+        <p id="clients_intro">
+            هنا تجدون آراء عملائنا الكرام وتجاربهم معنا.
+        </p>
+
+        <div id="reviews_container">
+            <!-- سيتم تحميل التعليقات من Firestore -->
+        </div>
+    </section>
+
+    <footer>
+        © 2026 سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+    <!-- ربط Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc }
-            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
@@ -185,63 +186,42 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const currentUserId = localStorage.getItem("userId");
+        async function loadClientsContent() {
+            // تحميل النصوص من لوحة التحكم
+            const ref = doc(db, "siteContent", "clients");
+            const snap = await getDoc(ref);
 
-        async function loadReviews() {
-            const reviewsList = document.getElementById("reviewsList");
-            reviewsList.innerHTML = "";
+            if (snap.exists()) {
+                const data = snap.data();
 
-            const querySnapshot = await getDocs(collection(db, "reviews"));
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
+                if (data.title) document.getElementById("clients_title").innerHTML = data.title;
+                if (data.intro) document.getElementById("clients_intro").innerHTML = data.intro;
+            }
 
-                const isOwner = data.userId === currentUserId;
+            // تحميل التعليقات من Firestore
+            const reviewsRef = collection(db, "reviews");
+            const reviewsSnap = await getDocs(reviewsRef);
 
-                const item = `
-                    <div class="review-box">
-                        <h3>${data.name} (${data.gender})</h3>
-                        <div class="rating">${data.rating}</div>
-                        <p>${data.message}</p>
-                        <div class="date">${new Date(data.date).toLocaleDateString()}</div>
+            const container = document.getElementById("reviews_container");
+            container.innerHTML = "";
 
-                        ${
-                            isOwner
-                            ? `
-                                <button class="delete-btn" onclick="deleteReview('${docSnap.id}')">حذف</button>
-                                <button class="edit-btn" onclick="editReview('${docSnap.id}', '${data.message}')">تعديل</button>
-                              `
-                            : ""
-                        }
-                    </div>
+            reviewsSnap.forEach(docSnap => {
+                const r = docSnap.data();
+
+                const box = document.createElement("div");
+                box.className = "review-box";
+
+                box.innerHTML = `
+                    <h3>${r.name || "مستخدم"}</h3>
+                    <p>${r.rating || ""}</p>
+                    <p>${r.message || ""}</p>
                 `;
 
-                reviewsList.innerHTML += item;
+                container.appendChild(box);
             });
         }
 
-        window.deleteReview = async function(id) {
-            if (!confirm("هل أنت متأكد من حذف تعليقك؟")) return;
-
-            await deleteDoc(doc(db, "reviews", id));
-
-            alert("تم حذف تعليقك");
-            location.reload();
-        };
-
-        window.editReview = async function(id, oldMessage) {
-            const newMessage = prompt("اكتب التعديل الجديد:", oldMessage);
-
-            if (!newMessage || newMessage.trim() === "") return;
-
-            await updateDoc(doc(db, "reviews", id), {
-                message: newMessage.trim()
-            });
-
-            alert("تم تعديل تعليقك");
-            location.reload();
-        };
-
-        loadReviews();
+        loadClientsContent();
     </script>
 
 </body>
