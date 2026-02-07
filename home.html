@@ -72,14 +72,14 @@
             color: white;
         }
 
-        /* المحتوى */
+        /* البطل (الهيرو) */
         .hero {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px 20px;
         }
 
         .hero h1 {
-            font-size: 32px;
+            font-size: 28px;
             color: #27415d;
             margin-bottom: 10px;
         }
@@ -87,22 +87,74 @@
         .hero p {
             font-size: 18px;
             color: #333;
+            margin: 0;
         }
 
-        .btn-main {
-            display: inline-block;
-            padding: 14px 25px;
-            background-color: #e17c1b;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 10px;
+        /* شبكة الأيقونات */
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 25px 15px 10px;
+        }
+
+        .icon-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
             text-decoration: none;
-            margin-top: 20px;
+            color: #27415d;
+            font-weight: 600;
+            font-size: 15px;
         }
 
-        .btn-main:hover {
-            background-color: #c96d18;
+        .icon-card i {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #e17c1b;
+        }
+
+        .section {
+            background-color: white;
+            margin: 10px 15px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        }
+
+        .section h2 {
+            font-size: 20px;
+            color: #27415d;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            margin: 0;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .why-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .why-list li {
+            margin-bottom: 6px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .why-list li::before {
+            content: "✓ ";
+            color: #e17c1b;
+            font-weight: 700;
         }
 
         footer {
@@ -110,7 +162,8 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 40px;
+            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
 
@@ -146,12 +199,59 @@
         <img src="logo.png" alt="شعار سهل للخدمات">
     </header>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- الهيرو -->
     <section class="hero">
-        <h1>مرحبًا بك في سهل للخدمات</h1>
-        <p>نقدم لك جميع الخدمات الإلكترونية، التصميم، التعليم، والمهام بكل احترافية وسهولة.</p>
+        <h1>مرحباً بك في سهل للخدمات</h1>
+        <p>نقدم لك خدمات رقمية وطلابية وحكومية باحترافية عالية</p>
+    </section>
 
-        <a href="services.html" class="btn-main">استعراض الخدمات</a>
+    <!-- الأيقونات -->
+    <section class="icons-grid">
+        <a href="add-review.html" class="icon-card">
+            <i class="fa-regular fa-comment-dots"></i>
+            إضافة تعليق
+        </a>
+        <a href="contact.html" class="icon-card">
+            <i class="fa-solid fa-headset"></i>
+            تواصل معنا
+        </a>
+        <a href="complaints.html" class="icon-card">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            الشكاوي
+        </a>
+        <a href="clients.html" class="icon-card">
+            <i class="fa-solid fa-users"></i>
+            آراء العملاء
+        </a>
+        <a href="about.html" class="icon-card">
+            <i class="fa-solid fa-circle-info"></i>
+            من نحن
+        </a>
+        <a href="services.html" class="icon-card">
+            <i class="fa-solid fa-list-check"></i>
+            الخدمات
+        </a>
+    </section>
+
+    <!-- نبذة عن المتجر -->
+    <section class="section">
+        <h2>نبذة عن المتجر</h2>
+        <p>
+            سهل للخدمات هو متجر متخصص في تقديم الخدمات الرقمية والطلابية والحكومية باحترافية عالية.
+            نحرص على الجودة، السرعة، والدقة في إنجاز جميع الطلبات.
+        </p>
+    </section>
+
+    <!-- لماذا نحن؟ -->
+    <section class="section">
+        <h2>لماذا نحن؟</h2>
+        <ul class="why-list">
+            <li>سرعة في الإنجاز</li>
+            <li>جودة عالية</li>
+            <li>دعم مستمر</li>
+            <li>أسعار مناسبة</li>
+            <li>تعامل احترافي</li>
+        </ul>
     </section>
 
     <footer>
