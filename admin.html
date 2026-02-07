@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم التعليقات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .login-box, .admin-box {
+            background: white;
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
+        }
+
+        button {
+            padding: 10px 16px;
+            background-color: #e17c1b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c96b17;
+        }
+
+        .review-box {
+            background: #fff;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .name {
+            font-weight: 700;
+            color: #27415d;
+        }
+
+        .rating {
+            color: #e17c1b;
+        }
+
+        .date {
+            font-size: 13px;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .message {
+            margin-top: 10px;
+        }
+
+        .delete-btn {
+            margin-top: 10px;
+            background: #c0392b;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        لوحة تحكم التعليقات (المالك فقط)
+    </header>
+
+    <!-- صندوق تسجيل الدخول -->
+    <div class="login-box" id="loginBox">
+        <p class="info">هذه الصفحة خاصة بالمالك فقط. أدخلي كلمة السر للدخول.</p>
+        <label>كلمة السر</label>
+        <input type="password" id="adminPassword" placeholder="أدخلي كلمة السر">
+        <button onclick="login()">دخول</button>
+    </div>
+
+    <!-- صندوق الإدارة -->
+    <div class="admin-box" id="adminBox" style="display:none;">
+        <h2>جميع التعليقات</h2>
+        <p class="info">يمكنك حذف أي تعليق من هنا، وسيختفي مباشرة من الموقع.</p>
+        <div id="reviewsList"></div>
+    </div>
+
+    <!-- Firebase + Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc }
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ⭐ غيّري كلمة السر هنا لو حبيتي
+        const ADMIN_PASSWORD = "sahl2025";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // دالة تسجيل الدخول
+        window.login = async function () {
+            const inputPass = document.getElementById("adminPassword").value.trim();
+
+            if (inputPass !== ADMIN_PASSWORD) {
+                alert("كلمة السر غير صحيحة");
+                return;
+            }
+
+            // إخفاء صندوق الدخول وإظهار لوحة التحكم
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("adminBox").style.display = "block";
+
+            // تحميل التعليقات
+            loadReviews();
+        };
+
+        async function loadReviews() {
+            const reviewsList = document.getElementById("reviewsList");
+            reviewsList.innerHTML = "جاري التحميل...";
+
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            reviewsList.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                reviewsList.innerHTML = "<p>لا توجد تعليقات حتى الآن.</p>";
+                return;
+            }
+
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+
+                const item = document.createElement("div");
+                item.className = "review-box";
+
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span class="name">${data.name || "بدون اسم"} (${data.gender || "-"})</span>
+                        <span class="rating">${data.rating || ""}</span>
+                    </div>
+                    <div class="date">${data.date ? new Date(data.date).toLocaleString() : ""}</div>
+                    <div class="message">${data.message || ""}</div>
+                    <button class="delete-btn">حذف هذا التعليق</button>
+                `;
+
+                const deleteBtn = item.querySelector(".delete-btn");
+                deleteBtn.addEventListener("click", async () => {
+                    if (!confirm("هل أنت متأكدة من حذف هذا التعليق؟")) return;
+
+                    await deleteDoc(doc(db, "reviews", docSnap.id));
+                    alert("تم حذف التعليق");
+                    item.remove();
+                });
+
+                reviewsList.appendChild(item);
+            });
+        }
+    </script>
+
+</body>
+</html>
