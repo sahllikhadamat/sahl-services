@@ -6,6 +6,7 @@
     <title>آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
@@ -98,6 +99,17 @@
             color: gray;
         }
 
+        .delete-btn {
+            margin-top: 10px;
+            background: #c0392b;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
         footer {
             background-color: #27415d;
             color: white;
@@ -150,7 +162,7 @@
     <!-- ⭐ Firebase + Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs } 
+        import { getFirestore, collection, getDocs, deleteDoc, doc }
             from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -170,8 +182,8 @@
             reviewsList.innerHTML = "";
 
             const querySnapshot = await getDocs(collection(db, "reviews"));
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
 
                 const item = `
                     <div class="review-box">
@@ -179,12 +191,25 @@
                         <div class="rating">${data.rating}</div>
                         <p>${data.message}</p>
                         <div class="date">${new Date(data.date).toLocaleDateString()}</div>
+
+                        <button class="delete-btn" onclick="deleteReview('${docSnap.id}')">
+                            حذف التعليق
+                        </button>
                     </div>
                 `;
 
                 reviewsList.innerHTML += item;
             });
         }
+
+        window.deleteReview = async function(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا التعليق؟")) return;
+
+            await deleteDoc(doc(db, "reviews", id));
+
+            alert("تم حذف التعليق");
+            location.reload();
+        };
 
         loadReviews();
     </script>
