@@ -77,12 +77,6 @@
             width: 70px;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-
         .sidebar a {
             display: block;
             padding: 14px 20px;
@@ -155,32 +149,63 @@
     <!-- منطقة المحتوى -->
     <div class="content" id="contentArea">
 
-        <div id="comments" class="section">
-            <h1>قسم التعليقات</h1>
-            <p>سيتم إضافة نظام التعليقات هنا في المرحلة التالية.</p>
+        <!-- قسم التعليقات -->
+        <div id="comments" class="section active">
+            <h1>إدارة التعليقات</h1>
+
+            <div style="margin: 15px 0;">
+                <input id="searchInput" type="text" placeholder="بحث بالاسم أو بالكلمة…" 
+                    style="padding:10px;width:60%;border-radius:8px;border:1px solid #ccc;">
+                
+                <select id="filterRating" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="">كل التقييمات</option>
+                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                    <option value="⭐⭐⭐">⭐⭐⭐</option>
+                    <option value="⭐⭐">⭐⭐</option>
+                    <option value="⭐">⭐</option>
+                </select>
+
+                <select id="sortOrder" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="newest">الأحدث أولاً</option>
+                    <option value="oldest">الأقدم أولاً</option>
+                </select>
+
+                <button onclick="loadComments()" 
+                        style="padding:10px 15px;background:#e17c1b;color:white;border:none;border-radius:8px;">
+                    تحديث
+                </button>
+            </div>
+
+            <div id="commentsList"></div>
         </div>
 
+        <!-- قسم تعديل الصفحات -->
         <div id="contentEdit" class="section">
             <h1>تعديل محتوى الصفحات</h1>
-            <p>سيتم إضافة نظام تعديل الصفحات هنا.</p>
+            <p>سيتم إضافة نظام تعديل الصفحات في المرحلة القادمة.</p>
         </div>
 
+        <!-- قسم الإحصائيات -->
         <div id="stats" class="section">
             <h1>إحصائيات الزوار</h1>
-            <p>سيتم إضافة الرسم البياني والإحصائيات هنا.</p>
+            <p>سيتم إضافة الرسم البياني والإحصائيات في المرحلة القادمة.</p>
         </div>
 
+        <!-- قسم الإعدادات -->
         <div id="settings" class="section">
             <h1>الإعدادات</h1>
-            <p>سيتم إضافة إعدادات لوحة التحكم هنا.</p>
+            <p>سيتم إضافة إعدادات لوحة التحكم لاحقًا.</p>
         </div>
 
     </div>
 
-    <script>
+    <!-- سكربت -->
+    <script type="module">
+
+        /* تسجيل الدخول */
         const ADMIN_PASSWORD = "sahl 911";
 
-        // تسجيل الدخول
         function login() {
             const pass = document.getElementById("passwordInput").value.trim();
             if (pass === ADMIN_PASSWORD) {
@@ -191,28 +216,140 @@
             }
         }
 
-        // التحقق من الجلسة
         if (sessionStorage.getItem("adminLogged") === "true") {
             document.getElementById("loginScreen").style.display = "none";
         }
 
-        // تسجيل الخروج
         function logout() {
             sessionStorage.removeItem("adminLogged");
             location.reload();
         }
 
-        // إظهار الأقسام
         function showSection(id) {
             document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
             document.getElementById(id).classList.add("active");
         }
 
-        // القائمة الجانبية
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("collapsed");
             document.getElementById("contentArea").classList.toggle("collapsed");
         }
+
+        /* Firebase */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc }
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        /* تحميل التعليقات */
+        async function loadComments() {
+            const list = document.getElementById("commentsList");
+            list.innerHTML = "جاري التحميل…";
+
+            const search = document.getElementById("searchInput").value.trim();
+            const filterRating = document.getElementById("filterRating").value;
+            const sortOrder = document.getElementById("sortOrder").value;
+
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            let reviews = [];
+
+            querySnapshot.forEach(docSnap => {
+                let data = docSnap.data();
+                data.id = docSnap.id;
+                reviews.push(data);
+            });
+
+            // بحث
+            if (search) {
+                reviews = reviews.filter(r =>
+                    r.name.includes(search) ||
+                    r.message.includes(search)
+                );
+            }
+
+            // فلترة
+            if (filterRating) {
+                reviews = reviews.filter(r => r.rating === filterRating);
+            }
+
+            // ترتيب
+            reviews.sort((a, b) => {
+                if (sortOrder === "newest") {
+                    return new Date(b.date) - new Date(a.date);
+                } else {
+                    return new Date(a.date) - new Date(b.date);
+                }
+            });
+
+            // عرض
+            list.innerHTML = "";
+            reviews.forEach(r => {
+                const box = document.createElement("div");
+                box.style = `
+                    background: light-dark(#fff,#333);
+                    padding:15px;
+                    margin:10px 0;
+                    border-radius:10px;
+                    border:1px solid #ccc;
+                `;
+
+                box.innerHTML = `
+                    <h3>${r.name} (${r.gender}) — ${r.rating}</h3>
+                    <p>${r.message}</p>
+                    <small>${new Date(r.date).toLocaleString()}</small>
+                    <br><br>
+
+                    <button onclick="deleteComment('${r.id}')" 
+                        style="background:#c0392b;color:white;padding:8px 12px;border:none;border-radius:6px;">
+                        حذف
+                    </button>
+
+                    <button onclick="editComment('${r.id}', '${r.message.replace(/'/g, "\\'")}')" 
+                        style="background:#2980b9;color:white;padding:8px 12px;border:none;border-radius:6px;">
+                        تعديل
+                    </button>
+                `;
+
+                list.appendChild(box);
+            });
+        }
+
+        /* حذف تعليق */
+        async function deleteComment(id) {
+            if (!confirm("هل تريدين حذف هذا التعليق؟")) return;
+
+            await deleteDoc(doc(db, "reviews", id));
+            alert("تم حذف التعليق");
+            loadComments();
+        }
+
+        /* تعديل تعليق */
+        async function editComment(id, oldMessage) {
+            const newMessage = prompt("اكتبي النص الجديد:", oldMessage);
+            if (!newMessage) return;
+
+            await updateDoc(doc(db, "reviews", id), {
+                message: newMessage
+            });
+
+            alert("تم تعديل التعليق");
+            loadComments();
+        }
+
+        /* تحميل التعليقات عند فتح الصفحة */
+        loadComments();
+
     </script>
 
 </body>
