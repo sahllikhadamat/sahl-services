@@ -3,216 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم التعليقات</title>
+    <title>لوحة التحكم</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            color-scheme: light dark;
+        }
+
         body {
             margin: 0;
             font-family: 'Cairo', sans-serif;
-            background-color: #f7f7f7;
+            display: flex;
+            background-color: light-dark(#f5f5f5, #1e1e1e);
+            color: light-dark(#000, #fff);
         }
 
-        header {
-            background-color: #27415d;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
+        /* شاشة تسجيل الدخول */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: light-dark(#f5f5f5, #1e1e1e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .login-box, .admin-box {
-            background: white;
-            margin: 20px auto;
-            max-width: 600px;
-            padding: 20px;
+        .login-box {
+            background: light-dark(#fff, #2c2c2c);
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 320px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            text-align: center;
         }
 
-        label {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input[type="password"] {
+        .login-box input {
             width: 100%;
             padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 18px;
+            margin-top: 12px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
-            font-family: 'Cairo';
         }
 
-        button {
-            padding: 10px 16px;
-            background-color: #e17c1b;
-            color: white;
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #e17c1b;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #c96b17;
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 240px;
+            background: light-dark(#ffffff, #2c2c2c);
+            height: 100vh;
+            border-left: 1px solid light-dark(#ddd, #444);
+            transition: 0.3s;
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding-top: 20px;
         }
 
-        .review-box {
-            background: #fff;
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+        .sidebar.collapsed {
+            width: 70px;
         }
 
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
         }
 
-        .name {
-            font-weight: 700;
-            color: #27415d;
+        .sidebar a {
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: inherit;
+            font-size: 18px;
+            border-bottom: 1px solid light-dark(#eee, #444);
+            transition: 0.2s;
         }
 
-        .rating {
-            color: #e17c1b;
+        .sidebar a:hover {
+            background: light-dark(#f0f0f0, #3a3a3a);
         }
 
-        .date {
-            font-size: 13px;
-            color: gray;
-            margin-top: 5px;
-        }
-
-        .message {
-            margin-top: 10px;
-        }
-
-        .delete-btn {
-            margin-top: 10px;
-            background: #c0392b;
+        .toggle-btn {
+            position: absolute;
+            left: -35px;
+            top: 20px;
+            background: #e17c1b;
             color: white;
-            padding: 6px 10px;
-            border: none;
+            padding: 8px 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
         }
 
-        .info {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 10px;
+        /* منطقة المحتوى */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-right: 240px;
+            transition: 0.3s;
+        }
+
+        .content.collapsed {
+            margin-right: 70px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        لوحة تحكم التعليقات (المالك فقط)
-    </header>
-
-    <!-- صندوق تسجيل الدخول -->
-    <div class="login-box" id="loginBox">
-        <p class="info">هذه الصفحة خاصة بالمالك فقط. أدخلي كلمة السر للدخول.</p>
-        <label>كلمة السر</label>
-        <input type="password" id="adminPassword" placeholder="أدخلي كلمة السر">
-        <button onclick="login()">دخول</button>
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2>تسجيل الدخول</h2>
+            <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
+            <button onclick="login()">دخول</button>
+        </div>
     </div>
 
-    <!-- صندوق الإدارة -->
-    <div class="admin-box" id="adminBox" style="display:none;">
-        <h2>جميع التعليقات</h2>
-        <p class="info">يمكنك حذف أي تعليق من هنا، وسيختفي مباشرة من الموقع.</p>
-        <div id="reviewsList"></div>
+    <!-- القائمة الجانبية -->
+    <div class="sidebar" id="sidebar">
+        <div class="toggle-btn" onclick="toggleSidebar()">≡</div>
+
+        <a href="#" onclick="showSection('comments')">التعليقات</a>
+        <a href="#" onclick="showSection('contentEdit')">تعديل الصفحات</a>
+        <a href="#" onclick="showSection('stats')">الإحصائيات</a>
+        <a href="#" onclick="showSection('settings')">الإعدادات</a>
+        <a href="#" onclick="logout()">تسجيل الخروج</a>
     </div>
 
-    <!-- Firebase + Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc }
-            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <!-- منطقة المحتوى -->
+    <div class="content" id="contentArea">
 
-        // ⭐ غيّري كلمة السر هنا لو حبيتي
-        const ADMIN_PASSWORD = "sahl2025";
+        <div id="comments" class="section">
+            <h1>قسم التعليقات</h1>
+            <p>سيتم إضافة نظام التعليقات هنا في المرحلة التالية.</p>
+        </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
+        <div id="contentEdit" class="section">
+            <h1>تعديل محتوى الصفحات</h1>
+            <p>سيتم إضافة نظام تعديل الصفحات هنا.</p>
+        </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        <div id="stats" class="section">
+            <h1>إحصائيات الزوار</h1>
+            <p>سيتم إضافة الرسم البياني والإحصائيات هنا.</p>
+        </div>
 
-        // دالة تسجيل الدخول
-        window.login = async function () {
-            const inputPass = document.getElementById("adminPassword").value.trim();
+        <div id="settings" class="section">
+            <h1>الإعدادات</h1>
+            <p>سيتم إضافة إعدادات لوحة التحكم هنا.</p>
+        </div>
 
-            if (inputPass !== ADMIN_PASSWORD) {
-                alert("كلمة السر غير صحيحة");
-                return;
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "sahl 911";
+
+        // تسجيل الدخول
+        function login() {
+            const pass = document.getElementById("passwordInput").value.trim();
+            if (pass === ADMIN_PASSWORD) {
+                sessionStorage.setItem("adminLogged", "true");
+                document.getElementById("loginScreen").style.display = "none";
+            } else {
+                alert("كلمة المرور غير صحيحة");
             }
+        }
 
-            // إخفاء صندوق الدخول وإظهار لوحة التحكم
-            document.getElementById("loginBox").style.display = "none";
-            document.getElementById("adminBox").style.display = "block";
+        // التحقق من الجلسة
+        if (sessionStorage.getItem("adminLogged") === "true") {
+            document.getElementById("loginScreen").style.display = "none";
+        }
 
-            // تحميل التعليقات
-            loadReviews();
-        };
+        // تسجيل الخروج
+        function logout() {
+            sessionStorage.removeItem("adminLogged");
+            location.reload();
+        }
 
-        async function loadReviews() {
-            const reviewsList = document.getElementById("reviewsList");
-            reviewsList.innerHTML = "جاري التحميل...";
+        // إظهار الأقسام
+        function showSection(id) {
+            document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+        }
 
-            const querySnapshot = await getDocs(collection(db, "reviews"));
-            reviewsList.innerHTML = "";
-
-            if (querySnapshot.empty) {
-                reviewsList.innerHTML = "<p>لا توجد تعليقات حتى الآن.</p>";
-                return;
-            }
-
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-
-                const item = document.createElement("div");
-                item.className = "review-box";
-
-                item.innerHTML = `
-                    <div class="review-header">
-                        <span class="name">${data.name || "بدون اسم"} (${data.gender || "-"})</span>
-                        <span class="rating">${data.rating || ""}</span>
-                    </div>
-                    <div class="date">${data.date ? new Date(data.date).toLocaleString() : ""}</div>
-                    <div class="message">${data.message || ""}</div>
-                    <button class="delete-btn">حذف هذا التعليق</button>
-                `;
-
-                const deleteBtn = item.querySelector(".delete-btn");
-                deleteBtn.addEventListener("click", async () => {
-                    if (!confirm("هل أنت متأكدة من حذف هذا التعليق؟")) return;
-
-                    await deleteDoc(doc(db, "reviews", docSnap.id));
-                    alert("تم حذف التعليق");
-                    item.remove();
-                });
-
-                reviewsList.appendChild(item);
-            });
+        // القائمة الجانبية
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("contentArea").classList.toggle("collapsed");
         }
     </script>
 
