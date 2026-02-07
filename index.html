@@ -201,8 +201,8 @@
 
     <!-- الهيرو -->
     <section class="hero">
-        <h1>مرحباً بك في سهل للخدمات</h1>
-        <p>نقدم لك خدمات رقمية وطلابية وحكومية باحترافية عالية</p>
+        <h1 id="home_title">مرحباً بك في سهل للخدمات</h1>
+        <p id="home_subtitle">نقدم لك خدمات رقمية وطلابية وحكومية باحترافية عالية</p>
     </section>
 
     <!-- الأيقونات -->
@@ -236,7 +236,7 @@
     <!-- نبذة عن المتجر -->
     <section class="section">
         <h2>نبذة عن المتجر</h2>
-        <p>
+        <p id="home_paragraph">
             سهل للخدمات هو متجر متخصص في تقديم الخدمات الرقمية والطلابية والحكومية باحترافية عالية.
             نحرص على الجودة، السرعة، والدقة في إنجاز جميع الطلبات.
         </p>
@@ -245,7 +245,7 @@
     <!-- لماذا نحن؟ -->
     <section class="section">
         <h2>لماذا نحن؟</h2>
-        <ul class="why-list">
+        <ul class="why-list" id="home_why">
             <li>سرعة في الإنجاز</li>
             <li>جودة عالية</li>
             <li>دعم مستمر</li>
@@ -257,6 +257,40 @@
     <footer>
         © 2026 سهل للخدمات – جميع الحقوق محفوظة
     </footer>
+
+    <!-- ربط Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadHomeContent() {
+            const ref = doc(db, "siteContent", "home");
+            const snap = await getDoc(ref);
+
+            if (snap.exists()) {
+                const data = snap.data();
+
+                if (data.title) document.getElementById("home_title").innerHTML = data.title;
+                if (data.subtitle) document.getElementById("home_subtitle").innerHTML = data.subtitle;
+                if (data.paragraph) document.getElementById("home_paragraph").innerHTML = data.paragraph;
+                if (data.why) document.getElementById("home_why").innerHTML = data.why;
+            }
+        }
+
+        loadHomeContent();
+    </script>
 
 </body>
 </html>
