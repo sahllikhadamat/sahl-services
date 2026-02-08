@@ -137,7 +137,64 @@
             padding: 12px;
             margin-top: 30px;
         }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
     </style>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, collection, addDoc, getDocs 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadOrdersCount() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "orders"));
+                document.getElementById("ordersCount").textContent =
+                    "عدد الطلبات المنجزة: " + querySnapshot.size;
+            } catch (e) {
+                console.error("Error loading count: ", e);
+                document.getElementById("ordersCount").textContent =
+                    "عدد الطلبات المنجزة: -";
+            }
+        }
+
+        window.loadOrdersCount = loadOrdersCount;
+
+        async function saveOrderToFirebase(orderData) {
+            try {
+                await addDoc(collection(db, "orders"), orderData);
+                await loadOrdersCount();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+
+        window.saveOrderToFirebase = saveOrderToFirebase;
+    </script>
 
     <script>
         function openSidebar() {
@@ -148,10 +205,96 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        function sendOrder() {
+        const servicesByCategory = {
+            "خدمات التصميم": [
+                "تصميم سيرة ذاتية ( الغة  العربية فقط )",
+                "تصميم سيرة ذاتية ( الغة الانجليزية فقط )",
+                "تصميم سيرة ذاتية ( الغة العربي - الانجليزي  )",
+                "تصميم منشور ( العدد 1)",
+                "تصميم بوست (العدد 1)",
+                "تصميم فيديو ( المدة 1د)",
+                "تصميم فيديو ( المدة 2د)",
+                "تصميم فيديو ( المدة 3د)",
+                "تصميم فيديو ( المدة 4د)",
+                "تصميم فيديو ( المدة5د)",
+                "تصميم قائمة طعام ( عدد الصفحات 1 -5 صفحات)",
+                "تصميم شهادات شكر ( عدد الشهادات من 1-5 )",
+                "تصميم شهادات شكر ( عدد الشهادات من 1-10 )",
+                "تصميم شهادات شكر ( عدد الشهادات من 1-20)"
+            ],
+            "التعليم والمهام": [
+                "دورات تدريبية ( دروب )",
+                "دورات تدريبية ( إثرائي  )",
+                "دورات تدريبية (  إبعاد  )",
+                "دورات تدريبية ( إدراك  )",
+                "دورات تدريبية ( معهد الأدارة )",
+                "دورات تدريبية (ذكاء الاصطناعي سماي  )",
+                "دورات تدريبية ( المعهد الوطني التربوي  )",
+                "بحوث (  صفحتين)",
+                "بحوث (  5صفحات )",
+                "بحوث ( 8صفحات )",
+                "بحوث ( 10صفحات )",
+                "بحوث ( 15صفحات )",
+                "أوراق عمل ( ورقة  )",
+                "أوراق عمل ( ورقتين   )",
+                "أوراق عمل ( أورق 3 )",
+                "أوراق عمل ( أورق4 )",
+                "أوراق عمل ( أورق 5 )",
+                "أوراق عمل ( أورق 8 )",
+                "أوراق عمل ( أورق 10 )",
+                "مهام أدائية",
+                "ملف إنجاز ( صفحات 5)",
+                "ملف إنجاز ( صفحات8)",
+                "ملف إنجاز ( صفحات 10)",
+                "ملف إنجاز ( صفحات 15)",
+                "ملف إنجاز ( صفحات20)",
+                "مشروع تخرج( صفحات 5)",
+                "مشروع تخرج( صفحات 10)",
+                "مشروع تخرج( صفحات 15)",
+                "مشروع تخرج( صفحات 20)",
+                "عروض تقديمية( صفحات 5)",
+                "عروض تقديمية( صفحات 10)",
+                "عروض تقديمية( صفحات 15)"
+            ],
+            "الخدمات الإلكترونية": [
+                "ساعات تطوعية (40س)",
+                "ساعات تطوعية (45س)",
+                "ساعات تطوعية (50س)",
+                "ساعات تطوعية (55س)",
+                "ساعات تطوعية (60س)",
+                "ساعات تطوعية (70س)",
+                "ساعات تطوعية (80س)",
+                "ساعات تطوعية (90س)",
+                "ساعات تطوعية (100س)",
+                "ساعات تطوعية (120س)",
+                "ساعات تطوعية (150س)",
+                "ساعات تطوعية (200س)",
+                "إنشاء متجر سلة",
+                "إصدار وثيقة العمل الحر ( دون شهادات )",
+                "إصدار وثيقة العمل الحر ( إضافة شهادات )",
+                "إصدار رخصة فال العقارية"
+            ]
+        };
+
+        function updateDetailsOptions() {
+            const category = document.getElementById("category").value;
+            const detailsSelect = document.getElementById("serviceDetails");
+            detailsSelect.innerHTML = '<option value="">اختر تفاصيل الخدمة</option>';
+
+            if (servicesByCategory[category]) {
+                servicesByCategory[category].forEach(item => {
+                    const opt = document.createElement("option");
+                    opt.value = item;
+                    opt.textContent = item;
+                    detailsSelect.appendChild(opt);
+                });
+            }
+        }
+
+        async function sendOrder() {
             let name = document.getElementById("name").value.trim();
-            let service = document.getElementById("service").value;
-            let details = document.getElementById("details").value.trim();
+            let category = document.getElementById("category").value;
+            let serviceDetails = document.getElementById("serviceDetails").value;
             let note = document.getElementById("note").value.trim();
             let know = document.getElementById("know").value;
             let discount = document.getElementById("discount").value.trim();
@@ -159,7 +302,7 @@
             let agree1 = document.getElementById("agree1").checked;
             let agree2 = document.getElementById("agree2").checked;
 
-            if (!name || !service || !details) {
+            if (!name || !category || !serviceDetails) {
                 alert("الرجاء تعبئة جميع الحقول المطلوبة");
                 return;
             }
@@ -169,16 +312,28 @@
                 return;
             }
 
+            const orderData = {
+                name,
+                category,
+                serviceDetails,
+                note: note || "",
+                know,
+                discount: discount || "",
+                createdAt: new Date().toISOString()
+            };
+
+            if (window.saveOrderToFirebase) {
+                window.saveOrderToFirebase(orderData);
+            }
+
             let phone = "966532225735";
 
             let text =
 `طلب جديد من موقع سهل للخدمات:
 
 الاسم: ${name}
-الخدمة المطلوبة: ${service}
-
-تفاصيل الخدمة:
-${details}
+التصنيف: ${category}
+تفاصيل الخدمة: ${serviceDetails}
 
 ملاحظة:
 ${note || "لا يوجد"}
@@ -193,6 +348,12 @@ ${discount || "لا يوجد"}
 
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
         }
+
+        window.onload = function () {
+            if (window.loadOrdersCount) {
+                window.loadOrdersCount();
+            }
+        };
     </script>
 
 </head>
@@ -218,23 +379,25 @@ ${discount || "لا يوجد"}
 
     <h1>طلب خدمة</h1>
 
-    <div class="counter">عدد الطلبات المنجزة: 124</div>
+    <div class="counter" id="ordersCount">عدد الطلبات المنجزة: ...</div>
 
     <div class="form-box">
 
         <label>الاسم</label>
         <input type="text" id="name" placeholder="اكتب اسمك">
 
-        <label>نوع الخدمة</label>
-        <select id="service">
-            <option value="">اختر نوع الخدمة</option>
+        <label>تصنيف الخدمة</label>
+        <select id="category" onchange="updateDetailsOptions()">
+            <option value="">اختر التصنيف</option>
             <option value="خدمات التصميم">خدمات التصميم</option>
             <option value="التعليم والمهام">التعليم والمهام</option>
             <option value="الخدمات الإلكترونية">الخدمات الإلكترونية</option>
         </select>
 
         <label>تفاصيل الخدمة</label>
-        <textarea id="details" placeholder="اكتب تفاصيل الخدمة المطلوبة..."></textarea>
+        <select id="serviceDetails">
+            <option value="">اختر تفاصيل الخدمة</option>
+        </select>
 
         <label>ملاحظة (اختياري – 300 كلمة)</label>
         <textarea id="note" maxlength="300" placeholder="اكتب ملاحظتك هنا..."></textarea>
@@ -251,13 +414,13 @@ ${discount || "لا يوجد"}
         <label>كود الخصم (اختياري)</label>
         <input type="text" id="discount" placeholder="مثال: SAHL10">
 
-        <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
-            <input type="checkbox" id="agree1" style="width:20px; height:20px;">
+        <div class="checkbox-row">
+            <input type="checkbox" id="agree1">
             <label for="agree1">أوافق على الشروط والأحكام</label>
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
-            <input type="checkbox" id="agree2" style="width:20px; height:20px;">
+        <div class="checkbox-row">
+            <input type="checkbox" id="agree2">
             <label for="agree2">أقر بأن جميع المعلومات صحيحة</label>
         </div>
 
