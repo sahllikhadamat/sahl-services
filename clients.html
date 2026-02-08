@@ -6,6 +6,7 @@
     <title>آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
@@ -86,6 +87,9 @@
         .review-box h3 {
             margin: 0;
             color: #27415d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .service-type {
@@ -197,9 +201,13 @@
 
                 const canEdit = data.deviceId === myDeviceId;
 
+                const genderIcon = data.gender === "ذكر"
+                    ? '<i class="fa-solid fa-person" style="color:#27415d;"></i>'
+                    : '<i class="fa-solid fa-person-dress" style="color:#e17c1b;"></i>';
+
                 const item = `
                     <div class="review-box">
-                        <h3>${data.name} (${data.gender})</h3>
+                        <h3>${genderIcon} ${data.name}</h3>
 
                         <p class="service-type">نوع الخدمة: ${data.serviceType || "غير محدد"}</p>
 
