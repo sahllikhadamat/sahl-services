@@ -156,48 +156,57 @@
     </style>
 
     <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getFirestore, collection, addDoc, getDocs 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+    authDomain: "sahl-services-94183.firebaseapp.com",
+    projectId: "sahl-services-94183",
+    storageBucket: "sahl-services-94183.firebasestorage.app",
+    messagingSenderId: "926677469615",
+    appId: "1:926677469615:web:6ba21a1e73752f5271875a"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-        async function loadOrdersCount() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "orders"));
-                document.getElementById("ordersCount").textContent =
-                    "عدد الطلبات المنجزة: " + querySnapshot.size;
-            } catch (e) {
-                document.getElementById("ordersCount").textContent =
-                    "عدد الطلبات المنجزة: -";
-            }
-        }
+  document.getElementById("orderForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        window.loadOrdersCount = loadOrdersCount;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const category = document.getElementById("category").value;
+    const serviceDetails = document.getElementById("serviceDetails").value;
+    const note = document.getElementById("note").value;
+    const discount = document.getElementById("discount").value;
+    const know = document.getElementById("know").value;
 
-        async function saveOrderToFirebase(orderData) {
-            try {
-                await addDoc(collection(db, "orders"), orderData);
-                await loadOrdersCount();
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
+    try {
+      await addDoc(collection(db, "orders"), {
+        name,
+        phone,
+        category,
+        serviceDetails,
+        note,
+        discount,
+        know,
+        status: "قيد المراجعة",
+        createdAt: serverTimestamp()
+      });
 
-        window.saveOrderToFirebase = saveOrderToFirebase;
-    </script>
+      alert("تم إرسال الطلب بنجاح");
+      document.getElementById("orderForm").reset();
+
+    } catch (error) {
+      alert("حدث خطأ أثناء إرسال الطلب");
+      console.log(error);
+    }
+  });
+</script>
+
 
     <script>
         function openSidebar() {
