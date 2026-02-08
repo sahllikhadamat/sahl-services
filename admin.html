@@ -1,198 +1,156 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم – سهل للخدمات</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم – سهل للخدمات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:'Cairo',sans-serif;background:#f4f4f4;display:flex}
+    .sidebar{width:260px;background:#27415d;color:#fff;height:100vh;position:fixed;left:0;top:0;padding-top:20px}
+    .sidebar h2{text-align:center;margin-bottom:30px;font-size:24px}
+    .sidebar a{display:block;padding:15px 25px;color:#fff;text-decoration:none;font-size:18px;border-bottom:1px solid rgba(255,255,255,.1);cursor:pointer}
+    .sidebar a:hover,.sidebar a.active{background:#e17c1b}
+    .content{margin-left:260px;padding:25px;width:calc(100% - 260px)}
+    h1{color:#27415d;margin-bottom:20px}
+    .cards{display:flex;gap:20px;flex-wrap:wrap}
+    .card{background:#fff;padding:20px;border-radius:12px;width:220px;box-shadow:0 2px 6px rgba(0,0,0,.1);text-align:center}
+    .card h3{margin:0;color:#27415d}
+    .card p{font-size:28px;margin-top:10px;color:#e17c1b}
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;margin-top:20px}
+    th,td{padding:12px;border-bottom:1px solid #eee;text-align:center;font-size:14px}
+    th{background:#27415d;color:#fff}
+    tr.accepted{background:#d4edda}
+    button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-family:'Cairo';font-size:13px}
+    .accept-btn{background:#28a745;color:#fff}
+    .delete-btn{background:#dc3545;color:#fff}
+    .whatsapp-btn{background:#25d366;color:#fff}
+    .details-btn{background:#6c757d;color:#fff}
+    .section{display:none}
+    .section.active{display:block}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:999}
+    .modal-content{background:#fff;padding:20px;width:90%;max-width:450px;border-radius:10px;position:relative}
+    .close-modal{position:absolute;top:10px;left:15px;cursor:pointer;font-size:22px;color:#333}
+    .modal-content h3{margin-top:0;color:#27415d}
+    .modal-row{margin-bottom:8px;font-size:15px}
+    .stars{color:#ffc107;font-size:18px}
+  </style>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Firebase + المنطق -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, getDocs, updateDoc, deleteDoc, doc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-        }
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background-color: #27415d;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding-top: 20px;
-        }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
+    // عناصر عامة
+    const totalOrdersEl = () => document.getElementById("totalOrders");
+    const acceptedOrdersEl = () => document.getElementById("acceptedOrders");
+    const complaintsCountEl = () => document.getElementById("complaintsCount");
+    const reviewsCountEl = () => document.getElementById("reviewsCount");
 
-        .sidebar a {
-            display: block;
-            padding: 15px 25px;
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+    async function loadDashboardStats() {
+      const ordersSnap = await getDocs(collection(db, "orders"));
+      const complaintsSnap = await getDocs(collection(db, "complaints"));
+      const reviewsSnap = await getDocs(collection(db, "reviews"));
 
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #e17c1b;
-        }
+      let total = 0, accepted = 0;
+      ordersSnap.forEach(d => {
+        total++;
+        if (d.data().status === "مقبول") accepted++;
+      });
 
-        /* Content */
-        .content {
-            margin-left: 260px;
-            padding: 25px;
-            width: calc(100% - 260px);
-        }
+      totalOrdersEl().textContent = total;
+      acceptedOrdersEl().textContent = accepted;
+      complaintsCountEl().textContent = complaintsSnap.size;
+      reviewsCountEl().textContent = reviewsSnap.size;
+    }
 
-        h1 {
-            color: #27415d;
-            margin-bottom: 20px;
-        }
+    async function loadOrders() {
+      const tbody = document.getElementById("ordersTableBody");
+      tbody.innerHTML = "";
+      const snap = await getDocs(collection(db, "orders"));
+      snap.forEach(d => {
+        const data = d.data();
+        const tr = document.createElement("tr");
+        if (data.status === "مقبول") tr.classList.add("accepted");
+        tr.innerHTML = `
+          <td>${data.name || ""}</td>
+          <td>${data.phone || ""}</td>
+          <td>${data.category || ""}</td>
+          <td>${data.serviceDetails || ""}</td>
+          <td>${data.status || ""}</td>
+          <td>
+            <button class="details-btn" onclick="openOrderDetails('${d.id}')">تفاصيل</button>
+            <button class="whatsapp-btn" onclick="sendWhatsApp('${data.phone || ""}','${(data.serviceDetails || "").replace(/'/g,"&#39;")}')">واتساب</button>
+            <button class="accept-btn" onclick="acceptOrder('${d.id}')">قبول</button>
+            <button class="delete-btn" onclick="deleteOrder('${d.id}','orders')">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-        /* Dashboard Cards */
-        .cards {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+    async function loadReviews() {
+      const tbody = document.getElementById("reviewsTableBody");
+      tbody.innerHTML = "";
+      const snap = await getDocs(collection(db, "reviews"));
+      snap.forEach(d => {
+        const data = d.data();
+        const stars = "★★★★★".slice(0, data.rating || 0);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data.name || ""}</td>
+          <td><span class="stars">${stars}</span></td>
+          <td>${(data.comment || "").slice(0,30)}${(data.comment||"").length>30?"...":""}</td>
+          <td>${(data.createdAt || "").split("T")[0]}</td>
+          <td>
+            <button class="details-btn" onclick="openReviewDetails('${d.id}')">تفاصيل</button>
+            <button class="delete-btn" onclick="deleteOrder('${d.id}','reviews')">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            width: 220px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-align: center;
-        }
+    async function loadComplaints() {
+      const tbody = document.getElementById("complaintsTableBody");
+      tbody.innerHTML = "";
+      const snap = await getDocs(collection(db, "complaints"));
+      snap.forEach(d => {
+        const data = d.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data.name || ""}</td>
+          <td>${data.phone || ""}</td>
+          <td>${data.type || ""}</td>
+          <td>${(data.message || "").slice(0,30)}${(data.message||"").length>30?"...":""}</td>
+          <td>${(data.createdAt || "").split("T")[0]}</td>
+          <td>
+            <button class="details-btn" onclick="openComplaintDetails('${d.id}')">تفاصيل</button>
+            <button class="delete-btn" onclick="deleteOrder('${d.id}','complaints')">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-        .card h3 {
-            margin: 0;
-            color: #27415d;
-        }
-
-        .card p {
-            font-size: 28px;
-            margin-top: 10px;
-            color: #e17c1b;
-        }
-
-        /* Orders Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-        }
-
-        th {
-            background-color: #27415d;
-            color: white;
-        }
-
-        tr.accepted {
-            background-color: #d4edda;
-        }
-
-        button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Cairo';
-        }
-
-        .accept-btn { background-color: #28a745; color: white; }
-        .delete-btn { background-color: #dc3545; color: white; }
-        .whatsapp-btn { background-color: #25d366; color: white; }
-
-        /* Hidden sections */
-        .section { display: none; }
-        .section.active { display: block; }
-    </style>
-
-    <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getFirestore, collection, getDocs, updateDoc, deleteDoc, doc 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function loadDashboardStats() {
-            const orders = await getDocs(collection(db, "orders"));
-            let total = 0, accepted = 0, complaints = 0, reviews = 0;
-
-            orders.forEach(doc => {
-                total++;
-                if (doc.data().status === "مقبول") accepted++;
-            });
-
-            document.getElementById("totalOrders").textContent = total;
-            document.getElementById("acceptedOrders").textContent = accepted;
-            document.getElementById("complaintsCount").textContent = complaints;
-            document.getElementById("reviewsCount").textContent = reviews;
-        }
-
-        async function loadOrders() {
-            const tableBody = document.getElementById("ordersTableBody");
-            tableBody.innerHTML = "";
-
-            const querySnapshot = await getDocs(collection(db, "orders"));
-
-            querySnapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                const row = document.createElement("tr");
-
-                if (data.status === "مقبول") row.classList.add("accepted");
-
-                row.innerHTML = `
-                    <td>${data.name}</td>
-                    <td>${data.phone}</td>
-                    <td>${data.category}</td>
-                    <td>${data.serviceDetails}</td>
-                    <td>${data.status}</td>
-                    <td>
-                        <button class="whatsapp-btn" onclick="sendWhatsApp('${data.phone}', '${data.serviceDetails}')">واتساب</button>
-                        <button class="accept-btn" onclick="acceptOrder('${docSnap.id}')">قبول</button>
-                        <button class="delete-btn" onclick="deleteOrder('${docSnap.id}')">حذف</button>
-                    </td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-        }
-
-        window.sendWhatsApp = function(phone, service) {
-            const msg =
+    // دوال عامة متاحة في window
+    window.sendWhatsApp = function(phone, service) {
+      if (!phone) return;
+      const msg =
 `السلام عليكم، معك فريق سهل للخدمات.
 بخصوص طلبك:
 
@@ -200,121 +158,254 @@
 رقم الجوال: ${phone}
 
 نود إبلاغك بأنه تم قبول طلبك وسنتواصل معك لإكمال التفاصيل.`;
+      const num = phone.startsWith("0") ? "966"+phone.slice(1) : phone;
+      window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,"_blank");
+    };
 
-            window.open(`https://wa.me/966${phone.slice(1)}?text=${encodeURIComponent(msg)}`, "_blank");
-        };
+    window.acceptOrder = async function(id) {
+      await updateDoc(doc(db,"orders",id),{status:"مقبول"});
+      await loadOrders();
+      await loadDashboardStats();
+    };
 
-        window.acceptOrder = async function(id) {
-            await updateDoc(doc(db, "orders", id), { status: "مقبول" });
-            loadOrders();
-            loadDashboardStats();
-        };
+    window.deleteOrder = async function(id, col) {
+      if (!confirm("هل أنت متأكد من الحذف؟")) return;
+      await deleteDoc(doc(db,col,id));
+      if (col==="orders") await loadOrders();
+      if (col==="reviews") await loadReviews();
+      if (col==="complaints") await loadComplaints();
+      await loadDashboardStats();
+    };
 
-        window.deleteOrder = async function(id) {
-            await deleteDoc(doc(db, "orders", id));
-            loadOrders();
-            loadDashboardStats();
-        };
+    // تفاصيل الطلب
+    window.openOrderDetails = async function(id){
+      const snap = await getDocs(collection(db,"orders"));
+      let data=null;
+      snap.forEach(d=>{if(d.id===id)data=d.data();});
+      if(!data)return;
+      document.getElementById("orderDetailsName").textContent = data.name||"";
+      document.getElementById("orderDetailsPhone").textContent = data.phone||"";
+      document.getElementById("orderDetailsCategory").textContent = data.category||"";
+      document.getElementById("orderDetailsService").textContent = data.serviceDetails||"";
+      document.getElementById("orderDetailsNote").textContent = data.note||"-";
+      document.getElementById("orderDetailsDiscount").textContent = data.discount||"-";
+      document.getElementById("orderDetailsKnow").textContent = data.know||"-";
+      document.getElementById("orderDetailsStatus").textContent = data.status||"";
+      document.getElementById("orderDetailsDate").textContent = (data.createdAt||"").replace("T"," ").slice(0,16);
+      document.getElementById("orderDetailsAcceptBtn").onclick = async ()=>{await window.acceptOrder(id);closeModal('orderDetailsModal');};
+      document.getElementById("orderDetailsDeleteBtn").onclick = async ()=>{await window.deleteOrder(id,'orders');closeModal('orderDetailsModal');};
+      document.getElementById("orderDetailsWhatsBtn").onclick = ()=>window.sendWhatsApp(data.phone||"",data.serviceDetails||"");
+      openModal('orderDetailsModal');
+    };
 
-        window.onload = () => {
-            loadDashboardStats();
-            loadOrders();
-        };
-    </script>
+    // تفاصيل التقييم
+    window.openReviewDetails = async function(id){
+      const snap = await getDocs(collection(db,"reviews"));
+      let data=null;
+      snap.forEach(d=>{if(d.id===id)data=d.data();});
+      if(!data)return;
+      const stars = "★★★★★".slice(0,data.rating||0);
+      document.getElementById("reviewDetailsName").textContent = data.name||"";
+      document.getElementById("reviewDetailsStars").textContent = stars;
+      document.getElementById("reviewDetailsComment").textContent = data.comment||"";
+      document.getElementById("reviewDetailsDate").textContent = (data.createdAt||"").replace("T"," ").slice(0,16);
+      document.getElementById("reviewDetailsDeleteBtn").onclick = async ()=>{await window.deleteOrder(id,'reviews');closeModal('reviewDetailsModal');};
+      openModal('reviewDetailsModal');
+    };
 
-    <script>
-        function showSection(id) {
-            document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-            document.getElementById(id).classList.add("active");
+    // تفاصيل الشكوى
+    window.openComplaintDetails = async function(id){
+      const snap = await getDocs(collection(db,"complaints"));
+      let data=null;
+      snap.forEach(d=>{if(d.id===id)data=d.data();});
+      if(!data)return;
+      document.getElementById("complaintDetailsName").textContent = data.name||"";
+      document.getElementById("complaintDetailsPhone").textContent = data.phone||"";
+      document.getElementById("complaintDetailsType").textContent = data.type||"";
+      document.getElementById("complaintDetailsMessage").textContent = data.message||"";
+      document.getElementById("complaintDetailsDate").textContent = (data.createdAt||"").replace("T"," ").slice(0,16);
+      document.getElementById("complaintDetailsDeleteBtn").onclick = async ()=>{await window.deleteOrder(id,'complaints');closeModal('complaintDetailsModal');};
+      openModal('complaintDetailsModal');
+    };
 
-            document.querySelectorAll(".sidebar a").forEach(a => a.classList.remove("active"));
-            document.getElementById("btn-" + id).classList.add("active");
-        }
-    </script>
+    window.addEventListener("load", async ()=>{
+      await loadDashboardStats();
+      await loadOrders();
+      await loadReviews();
+      await loadComplaints();
+    });
+  </script>
 
+  <script>
+    function showSection(id){
+      document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
+      const btn=document.getElementById("btn-"+id);
+      if(btn)btn.classList.add("active");
+    }
+    function openModal(id){
+      const m=document.getElementById(id);
+      if(m)m.style.display="flex";
+    }
+    function closeModal(id){
+      const m=document.getElementById(id);
+      if(m)m.style.display="none";
+    }
+  </script>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>لوحة التحكم</h2>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>لوحة التحكم</h2>
+    <a id="btn-dashboard" class="active" onclick="showSection('dashboard')">الرئيسية</a>
+    <a id="btn-orders" onclick="showSection('orders')">الطلبات</a>
+    <a id="btn-reviews" onclick="showSection('reviews')">آراء العملاء</a>
+    <a id="btn-complaints" onclick="showSection('complaints')">الشكاوي</a>
+    <a id="btn-users" onclick="showSection('users')">المستخدمين</a>
+    <a id="btn-logout" onclick="alert('تم تسجيل الخروج')">تسجيل خروج</a>
+  </div>
 
-        <a id="btn-dashboard" class="active" onclick="showSection('dashboard')">الرئيسية</a>
-        <a id="btn-orders" onclick="showSection('orders')">الطلبات</a>
-        <a id="btn-reviews" onclick="showSection('reviews')">آراء العملاء</a>
-        <a id="btn-complaints" onclick="showSection('complaints')">الشكاوي</a>
-        <a id="btn-users" onclick="showSection('users')">المستخدمين</a>
-        <a id="btn-logout" onclick="alert('تم تسجيل الخروج')">تسجيل خروج</a>
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="section active">
+      <h1>لوحة التحكم</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>إجمالي الطلبات</h3>
+          <p id="totalOrders">0</p>
+        </div>
+        <div class="card">
+          <h3>الطلبات المقبولة</h3>
+          <p id="acceptedOrders">0</p>
+        </div>
+        <div class="card">
+          <h3>الشكاوي</h3>
+          <p id="complaintsCount">0</p>
+        </div>
+        <div class="card">
+          <h3>آراء العملاء</h3>
+          <p id="reviewsCount">0</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Content -->
-    <div class="content">
-
-        <!-- Dashboard -->
-        <div id="dashboard" class="section active">
-            <h1>لوحة التحكم</h1>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>إجمالي الطلبات</h3>
-                    <p id="totalOrders">0</p>
-                </div>
-
-                <div class="card">
-                    <h3>الطلبات المقبولة</h3>
-                    <p id="acceptedOrders">0</p>
-                </div>
-
-                <div class="card">
-                    <h3>الشكاوي</h3>
-                    <p id="complaintsCount">0</p>
-                </div>
-
-                <div class="card">
-                    <h3>آراء العملاء</h3>
-                    <p id="reviewsCount">0</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Orders -->
-        <div id="orders" class="section">
-            <h1>الطلبات</h1>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>الجوال</th>
-                        <th>التصنيف</th>
-                        <th>الخدمة</th>
-                        <th>الحالة</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Reviews -->
-        <div id="reviews" class="section">
-            <h1>آراء العملاء</h1>
-            <p>سيتم إضافة هذا القسم لاحقًا.</p>
-        </div>
-
-        <!-- Complaints -->
-        <div id="complaints" class="section">
-            <h1>الشكاوي</h1>
-            <p>سيتم إضافة هذا القسم لاحقًا.</p>
-        </div>
-
-        <!-- Users -->
-        <div id="users" class="section">
-            <h1>المستخدمين</h1>
-            <p>قسم المستخدمين اختياري ويمكن تطويره لاحقًا.</p>
-        </div>
-
+    <!-- Orders -->
+    <div id="orders" class="section">
+      <h1>الطلبات</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الجوال</th>
+            <th>التصنيف</th>
+            <th>الخدمة</th>
+            <th>الحالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody"></tbody>
+      </table>
     </div>
+
+    <!-- Reviews -->
+    <div id="reviews" class="section">
+      <h1>آراء العملاء</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>التقييم</th>
+            <th>التعليق</th>
+            <th>التاريخ</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="reviewsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Complaints -->
+    <div id="complaints" class="section">
+      <h1>الشكاوي</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الجوال</th>
+            <th>نوع الشكوى</th>
+            <th>الشكوى</th>
+            <th>التاريخ</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="complaintsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Users (placeholder) -->
+    <div id="users" class="section">
+      <h1>المستخدمين</h1>
+      <p>يمكن تطوير هذا القسم لاحقًا لإدارة مستخدمي لوحة التحكم.</p>
+    </div>
+
+  </div>
+
+  <!-- Order Details Modal -->
+  <div id="orderDetailsModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('orderDetailsModal')">×</span>
+      <h3>تفاصيل الطلب</h3>
+      <div class="modal-row"><b>الاسم:</b> <span id="orderDetailsName"></span></div>
+      <div class="modal-row"><b>الجوال:</b> <span id="orderDetailsPhone"></span></div>
+      <div class="modal-row"><b>التصنيف:</b> <span id="orderDetailsCategory"></span></div>
+      <div class="modal-row"><b>الخدمة:</b> <span id="orderDetailsService"></span></div>
+      <div class="modal-row"><b>الملاحظة:</b> <span id="orderDetailsNote"></span></div>
+      <div class="modal-row"><b>كود الخصم:</b> <span id="orderDetailsDiscount"></span></div>
+      <div class="modal-row"><b>كيف عرف عنا:</b> <span id="orderDetailsKnow"></span></div>
+      <div class="modal-row"><b>الحالة:</b> <span id="orderDetailsStatus"></span></div>
+      <div class="modal-row"><b>التاريخ:</b> <span id="orderDetailsDate"></span></div>
+      <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap">
+        <button id="orderDetailsAcceptBtn" class="accept-btn">قبول</button>
+        <button id="orderDetailsDeleteBtn" class="delete-btn">حذف</button>
+        <button id="orderDetailsWhatsBtn" class="whatsapp-btn">واتساب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Details Modal -->
+  <div id="reviewDetailsModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('reviewDetailsModal')">×</span>
+      <h3>تفاصيل التقييم</h3>
+      <div class="modal-row"><b>الاسم:</b> <span id="reviewDetailsName"></span></div>
+      <div class="modal-row"><b>التقييم:</b> <span id="reviewDetailsStars" class="stars"></span></div>
+      <div class="modal-row"><b>التعليق:</b> <span id="reviewDetailsComment"></span></div>
+      <div class="modal-row"><b>التاريخ:</b> <span id="reviewDetailsDate"></span></div>
+      <div style="margin-top:15px">
+        <button id="reviewDetailsDeleteBtn" class="delete-btn">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaint Details Modal -->
+  <div id="complaintDetailsModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('complaintDetailsModal')">×</span>
+      <h3>تفاصيل الشكوى</h3>
+      <div class="modal-row"><b>الاسم:</b> <span id="complaintDetailsName"></span></div>
+      <div class="modal-row"><b>الجوال:</b> <span id="complaintDetailsPhone"></span></div>
+      <div class="modal-row"><b>نوع الشكوى:</b> <span id="complaintDetailsType"></span></div>
+      <div class="modal-row"><b>الشكوى:</b> <span id="complaintDetailsMessage"></span></div>
+      <div class="modal-row"><b>التاريخ:</b> <span id="complaintDetailsDate"></span></div>
+      <div style="margin-top:15px">
+        <button id="complaintDetailsDeleteBtn" class="delete-btn">حذف</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
