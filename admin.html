@@ -1,220 +1,360 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>لوحة التحكم – سهل للخدمات</title>
-<style>
-  body {
-    margin: 0;
-    font-family: "Tajawal", sans-serif;
-    background: #f0f4ff;
-  }
+  <meta charset="UTF-8" />
+  <title>لوحة التحكم – سهل للخدمات</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f3f6ff;
+      color: #222;
+    }
 
-  /* Sidebar */
-  .sidebar {
-    width: 260px;
-    height: 100vh;
-    background: linear-gradient(180deg, #007bff, #00c6ff);
-    color: white;
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 25px;
-  }
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #007bff, #00c6ff);
+      color: #fff;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-  .sidebar h2 {
-    margin-bottom: 30px;
-    text-align: center;
-  }
+    .sidebar h2 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 22px;
+    }
 
-  .sidebar a {
-    display: block;
-    padding: 12px;
-    margin: 8px 0;
-    background: rgba(255,255,255,0.15);
-    border-radius: 8px;
-    color: white;
-    text-decoration: none;
-    font-size: 17px;
-  }
+    .sidebar .section-title {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 10px;
+    }
 
-  .sidebar a:hover {
-    background: rgba(255,255,255,0.3);
-  }
+    .nav-link {
+      display: block;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      cursor: pointer;
+    }
 
-  /* Content */
-  .content {
-    margin-right: 280px;
-    padding: 25px;
-  }
+    .nav-link.active,
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
 
-  .box {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
+    /* Content */
+    .content {
+      margin-right: 260px;
+      padding: 24px;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
+    .page-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
 
-  th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-  }
+    .hint {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+    }
 
-  th {
-    background: #e9f2ff;
-  }
+    .box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 18px 10px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
 
-  button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+    .box h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
 
-  .delete { background: #e74c3c; color: white; }
-  .accept { background: #27ae60; color: white; }
+    .status-message {
+      font-size: 14px;
+      margin-top: 6px;
+      color: #888;
+    }
 
-</style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #e2e6f0;
+      text-align: right;
+    }
+
+    th {
+      background: #e9f2ff;
+      font-weight: 600;
+    }
+
+    tr:hover td {
+      background: #f8fbff;
+    }
+
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-accept { background: #27ae60; color: #fff; }
+    .btn-delete { background: #e74c3c; color: #fff; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #e9f2ff;
+      color: #1f4fa3;
+    }
+
+    .badge-pending { background: #fff4d6; color: #b88700; }
+    .badge-accepted { background: #d9f7e5; color: #1f8a4d; }
+
+    .error-text {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .content {
+        margin-right: 0;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-  <h2>لوحة التحكم</h2>
-  <a href="#orders">الطلبات</a>
-  <a href="#reviews">آراء العملاء</a>
-</div>
-
-<div class="content">
-
-  <div class="box" id="orders">
-    <h2>الطلبات</h2>
-    <table id="ordersTable">
-      <thead>
-        <tr>
-          <th>الاسم</th>
-          <th>الجوال</th>
-          <th>الخدمة</th>
-          <th>ملاحظة</th>
-          <th>الحالة</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <!-- الشريط الجانبي -->
+  <div class="sidebar">
+    <h2>لوحة التحكم</h2>
+    <div class="section-title">الأقسام</div>
+    <a class="nav-link active" data-target="section-orders">الطلبات</a>
+    <a class="nav-link" data-target="section-reviews">آراء العملاء</a>
   </div>
 
-  <div class="box" id="reviews">
-    <h2>آراء العملاء</h2>
-    <table id="reviewsTable">
-      <thead>
-        <tr>
-          <th>الاسم</th>
-          <th>التقييم</th>
-          <th>الرسالة</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <!-- المحتوى -->
+  <div class="content">
+    <div class="page-title">سهل للخدمات – لوحة التحكم</div>
+    <div class="hint">يمكنك إدارة الطلبات وآراء العملاء من هنا. التحديث يتم مباشرة من قاعدة بيانات Firebase.</div>
+
+    <!-- قسم الطلبات -->
+    <div class="box section" id="section-orders">
+      <h3>الطلبات</h3>
+      <div id="ordersStatus" class="status-message">جاري تحميل الطلبات...</div>
+      <table id="ordersTable">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الجوال</th>
+            <th>الخدمة</th>
+            <th>ملاحظة</th>
+            <th>الحالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- قسم آراء العملاء -->
+    <div class="box section" id="section-reviews" style="display:none;">
+      <h3>آراء العملاء</h3>
+      <div id="reviewsStatus" class="status-message">جاري تحميل التعليقات...</div>
+      <table id="reviewsTable">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>التقييم</th>
+            <th>الرسالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
   </div>
 
-</div>
+  <script type="module">
+    // تبديل الأقسام في الصفحة الواحدة
+    const navLinks = document.querySelectorAll(".nav-link");
+    const sections = document.querySelectorAll(".section");
 
-<script type="module">
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { 
-    getFirestore, collection, getDocs, deleteDoc, doc, updateDoc 
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-    authDomain: "sahl-services-94183.firebaseapp.com",
-    projectId: "sahl-services-94183",
-    storageBucket: "sahl-services-94183.firebasestorage.app",
-    messagingSenderId: "926677469615",
-    appId: "1:926677469615:web:6ba21a1e73752f5271875a"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  /* تحميل الطلبات */
-  async function loadOrders() {
-    const table = document.querySelector("#ordersTable tbody");
-    table.innerHTML = "";
-
-    const snapshot = await getDocs(collection(db, "orders"));
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-
-      const row = `
-        <tr>
-          <td>${data.name}</td>
-          <td>${data.phone}</td>
-          <td>${data.category}</td>
-          <td>${data.note || "-"}</td>
-          <td>${data.status}</td>
-          <td>
-            <button class="accept" onclick="acceptOrder('${docSnap.id}')">قبول</button>
-            <button class="delete" onclick="deleteOrder('${docSnap.id}')">حذف</button>
-          </td>
-        </tr>
-      `;
-      table.innerHTML += row;
+        const targetId = link.getAttribute("data-target");
+        sections.forEach(sec => {
+          sec.style.display = (sec.id === targetId) ? "block" : "none";
+        });
+      });
     });
-  }
 
-  window.acceptOrder = async function(id) {
-    await updateDoc(doc(db, "orders", id), { status: "تم القبول" });
+    // Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, getDocs, deleteDoc, doc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+      authDomain: "sahl-services-94183.firebaseapp.com",
+      projectId: "sahl-services-94183",
+      storageBucket: "sahl-services-94183.firebasestorage.app",
+      messagingSenderId: "926677469615",
+      appId: "1:926677469615:web:6ba21a1e73752f5271875a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // تحميل الطلبات
+    async function loadOrders() {
+      const tbody = document.querySelector("#ordersTable tbody");
+      const statusEl = document.getElementById("ordersStatus");
+      tbody.innerHTML = "";
+      statusEl.textContent = "جاري تحميل الطلبات...";
+
+      try {
+        const snapshot = await getDocs(collection(db, "orders"));
+        if (snapshot.empty) {
+          statusEl.textContent = "لا توجد طلبات حتى الآن.";
+          return;
+        }
+
+        statusEl.textContent = "";
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const statusText = data.status || "قيد المراجعة";
+          const badgeClass = statusText === "تم القبول" ? "badge badge-accepted" : "badge badge-pending";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${data.name || "-"}</td>
+            <td>${data.phone || "-"}</td>
+            <td>${data.category || "-"}</td>
+            <td>${data.note || "-"}</td>
+            <td><span class="${badgeClass}">${statusText}</span></td>
+            <td>
+              <button class="btn-accept" onclick="acceptOrder('${docSnap.id}')">قبول</button>
+              <button class="btn-delete" onclick="deleteOrder('${docSnap.id}')">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Error loading orders:", e);
+        statusEl.innerHTML = `<span class="error-text">حدث خطأ أثناء تحميل الطلبات. تأكدي من إعدادات Firebase وقواعد Firestore.</span>`;
+      }
+    }
+
+    // تحميل التعليقات
+    async function loadReviews() {
+      const tbody = document.querySelector("#reviewsTable tbody");
+      const statusEl = document.getElementById("reviewsStatus");
+      tbody.innerHTML = "";
+      statusEl.textContent = "جاري تحميل التعليقات...";
+
+      try {
+        const snapshot = await getDocs(collection(db, "reviews"));
+        if (snapshot.empty) {
+          statusEl.textContent = "لا توجد تعليقات حتى الآن.";
+          return;
+        }
+
+        statusEl.textContent = "";
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${data.name || "-"}</td>
+            <td>${data.rating || "-"}</td>
+            <td>${data.message || "-"}</td>
+            <td>
+              <button class="btn-delete" onclick="deleteReview('${docSnap.id}')">حذف</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Error loading reviews:", e);
+        statusEl.innerHTML = `<span class="error-text">حدث خطأ أثناء تحميل التعليقات. تأكدي من إعدادات Firebase وقواعد Firestore.</span>`;
+      }
+    }
+
+    // دوال الحذف والتحديث (تُربط على window)
+    window.acceptOrder = async function(id) {
+      try {
+        await updateDoc(doc(db, "orders", id), { status: "تم القبول" });
+        await loadOrders();
+      } catch (e) {
+        console.error("Error updating order:", e);
+        alert("حدث خطأ أثناء تحديث حالة الطلب.");
+      }
+    };
+
+    window.deleteOrder = async function(id) {
+      if (!confirm("هل أنت متأكدة من حذف هذا الطلب؟")) return;
+      try {
+        await deleteDoc(doc(db, "orders", id));
+        await loadOrders();
+      } catch (e) {
+        console.error("Error deleting order:", e);
+        alert("حدث خطأ أثناء حذف الطلب.");
+      }
+    };
+
+    window.deleteReview = async function(id) {
+      if (!confirm("هل أنت متأكدة من حذف هذا التعليق؟")) return;
+      try {
+        await deleteDoc(doc(db, "reviews", id));
+        await loadReviews();
+      } catch (e) {
+        console.error("Error deleting review:", e);
+        alert("حدث خطأ أثناء حذف التعليق.");
+      }
+    };
+
+    // تشغيل أولي
     loadOrders();
-  };
-
-  window.deleteOrder = async function(id) {
-    await deleteDoc(doc(db, "orders", id));
-    loadOrders();
-  };
-
-  /* تحميل التعليقات */
-  async function loadReviews() {
-    const table = document.querySelector("#reviewsTable tbody");
-    table.innerHTML = "";
-
-    const snapshot = await getDocs(collection(db, "reviews"));
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-
-      const row = `
-        <tr>
-          <td>${data.name}</td>
-          <td>${data.rating}</td>
-          <td>${data.message}</td>
-          <td>
-            <button class="delete" onclick="deleteReview('${docSnap.id}')">حذف</button>
-          </td>
-        </tr>
-      `;
-      table.innerHTML += row;
-    });
-  }
-
-  window.deleteReview = async function(id) {
-    await deleteDoc(doc(db, "reviews", id));
     loadReviews();
-  };
-
-  loadOrders();
-  loadReviews();
-
-</script>
-
+  </script>
 </body>
 </html>
