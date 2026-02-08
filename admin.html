@@ -3,648 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم</title>
+    <title>لوحة التحكم – سهل للخدمات</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Quill Editor -->
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-
     <style>
-        :root {
-            color-scheme: light dark;
-        }
-
         body {
             margin: 0;
             font-family: 'Cairo', sans-serif;
-            display: flex;
-            background-color: light-dark(#f5f5f5, #1e1e1e);
-            color: light-dark(#000, #fff);
+            background-color: #f5f5f5;
         }
 
-        /* شاشة تسجيل الدخول */
-        #loginScreen {
-            position: fixed;
-            inset: 0;
-            background: light-dark(#f5f5f5, #1e1e1e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
         }
 
-        .login-box {
-            background: light-dark(#fff, #2c2c2c);
-            padding: 30px;
-            border-radius: 12px;
-            width: 320px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #27415d;
+            margin-bottom: 10px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        select, input {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
             text-align: center;
         }
 
-        .login-box input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        th {
+            background-color: #27415d;
+            color: white;
         }
 
-        .login-box button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            background: #e17c1b;
+        tr.accepted {
+            background-color: #d4edda;
+        }
+
+        button {
+            padding: 8px 12px;
             border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        /* القائمة الجانبية */
-        .sidebar {
-            width: 240px;
-            background: light-dark(#ffffff, #2c2c2c);
-            height: 100vh;
-            border-left: 1px solid light-dark(#ddd, #444);
-            transition: 0.3s;
-            position: fixed;
-            right: 0;
-            top: 0;
-            padding-top: 20px;
-            z-index: 1000;
-        }
-
-        .sidebar.collapsed {
-            width: 70px;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 14px 20px;
-            text-decoration: none;
-            color: inherit;
-            font-size: 18px;
-            border-bottom: 1px solid light-dark(#eee, #444);
-            transition: 0.2s;
-        }
-
-        .sidebar a:hover {
-            background: light-dark(#f0f0f0, #3a3a3a);
-        }
-
-        .toggle-btn {
-            position: absolute;
-            left: -35px;
-            top: 20px;
-            background: #e17c1b;
-            color: white;
-            padding: 8px 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-family: 'Cairo';
         }
 
-        /* منطقة المحتوى */
-        .content {
-            flex: 1;
-            padding: 30px;
-            margin-right: 240px;
-            transition: 0.3s;
+        .accept-btn {
+            background-color: #28a745;
+            color: white;
         }
 
-        .content.collapsed {
-            margin-right: 70px;
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
         }
 
-        .section {
+        .whatsapp-btn {
+            background-color: #25d366;
+            color: white;
+        }
+
+        .modal {
             display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
         }
 
-        .section.active {
-            display: block;
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 450px;
+            border-radius: 10px;
         }
 
-        /* محرر الصفحات */
-        #pageSelect {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            min-width: 220px;
-        }
-
-        #editorContainer {
-            margin-top: 15px;
-        }
-
-        #editor {
-            height: 300px;
-            background: light-dark(#fff, #333);
-        }
-
-        .editor-actions {
-            margin-top: 15px;
-        }
-
-        .editor-actions button {
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: none;
+        .close-modal {
+            float: left;
             cursor: pointer;
-            margin-inline-start: 5px;
-        }
-
-        .btn-save {
-            background: #27ae60;
-            color: #fff;
-        }
-
-        .btn-reload {
-            background: #2980b9;
-            color: #fff;
+            font-size: 22px;
+            color: #333;
         }
     </style>
-</head>
-<body>
 
-    <!-- شاشة تسجيل الدخول -->
-    <div id="loginScreen">
-        <div class="login-box">
-            <h2>تسجيل الدخول</h2>
-            <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
-            <button onclick="login()">دخول</button>
-        </div>
-    </div>
-
-    <!-- القائمة الجانبية -->
-    <div class="sidebar" id="sidebar">
-        <div class="toggle-btn" onclick="toggleSidebar()">≡</div>
-
-        <a href="#" onclick="showSection('comments')">التعليقات</a>
-        <a href="#" onclick="showSection('contentEdit')">تعديل الصفحات</a>
-        <a href="#" onclick="showSection('stats')">الإحصائيات</a>
-        <a href="#" onclick="showSection('settings')">الإعدادات</a>
-        <a href="#" onclick="logout()">تسجيل الخروج</a>
-    </div>
-
-    <!-- منطقة المحتوى -->
-    <div class="content" id="contentArea">
-
-        <!-- قسم التعليقات -->
-        <div id="comments" class="section active">
-            <h1>إدارة التعليقات</h1>
-
-            <div style="margin: 15px 0;">
-                <input id="searchInput" type="text" placeholder="بحث بالاسم أو بالكلمة…" 
-                    style="padding:10px;width:60%;border-radius:8px;border:1px solid #ccc;">
-                
-                <select id="filterRating" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
-                    <option value="">كل التقييمات</option>
-                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐">⭐⭐⭐</option>
-                    <option value="⭐⭐">⭐⭐</option>
-                    <option value="⭐">⭐</option>
-                </select>
-
-                <select id="sortOrder" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
-                    <option value="newest">الأحدث أولاً</option>
-                    <option value="oldest">الأقدم أولاً</option>
-                </select>
-
-                <button onclick="loadComments()" 
-                        style="padding:10px 15px;background:#e17c1b;color:white;border:none;border-radius:8px;">
-                    تحديث
-                </button>
-            </div>
-
-            <div id="commentsList"></div>
-        </div>
-
-        <!-- قسم تعديل الصفحات -->
-        <div id="contentEdit" class="section">
-            <h1>تعديل محتوى الصفحات</h1>
-<div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeSidebar()">×</span>
-
-    <a href="index.html">الرئيسية</a>
-    <a href="about.html">من نحن</a>
-    <a href="services.html">الخدمات</a>
-    <a href="clients.html">آراء العملاء</a>
-    <a href="add-review.html">إضافة تعليق</a>
-    <a href="complaints.html">الشكاوي والاقتراحات</a>
-    <a href="contact.html">تواصل معنا</a>
-    <a href="order.html">طلب خدمة</a>
-</div>
-
-            </select>
-
-            <div id="editorContainer">
-                <div id="toolbar">
-                    <!-- شريط أدوات Quill الكامل تقريبًا -->
-                    <span class="ql-formats">
-                        <select class="ql-font"></select>
-                        <select class="ql-size"></select>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-bold"></button>
-                        <button class="ql-italic"></button>
-                        <button class="ql-underline"></button>
-                        <button class="ql-strike"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <select class="ql-color"></select>
-                        <select class="ql-background"></select>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-script" value="sub"></button>
-                        <button class="ql-script" value="super"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-header" value="1"></button>
-                        <button class="ql-header" value="2"></button>
-                        <button class="ql-blockquote"></button>
-                        <button class="ql-code-block"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-list" value="ordered"></button>
-                        <button class="ql-list" value="bullet"></button>
-                        <button class="ql-indent" value="-1"></button>
-                        <button class="ql-indent" value="+1"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-direction" value="rtl"></button>
-                        <select class="ql-align"></select>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-link"></button>
-                        <button class="ql-clean"></button>
-                    </span>
-                </div>
-
-                <div id="editor"></div>
-            </div>
-
-            <div class="editor-actions">
-                <button class="btn-save" onclick="savePageContent()">حفظ التعديلات</button>
-                <button class="btn-reload" onclick="loadPageContent()">إعادة تحميل النص</button>
-            </div>
-
-            <p style="margin-top:10px;font-size:14px;color:#777;">
-                ملاحظة: التعديلات تُحفظ في قاعدة البيانات، وتُستخدم في صفحات الموقع بعد ربطها بالقراءة من Firestore.
-            </p>
-        </div>
-
-
-<div id="settings" class="section">
-    <h1>الإعدادات</h1>
-
-    <h2>تغيير الشعار</h2>
-    <input type="file" id="logoInput" accept="image/*">
-    <button onclick="uploadLogo()" style="padding:10px 15px;background:#e17c1b;color:white;border:none;border-radius:8px;">رفع الشعار</button>
-
-    <hr style="margin:25px 0;">
-
-    <h2>تغيير الألوان</h2>
-
-    <label>اللون الأساسي:</label>
-    <input type="color" id="primaryColor">
-
-    <label>لون الشريط الجانبي:</label>
-    <input type="color" id="sidebarColor">
-
-    <label>لون الأزرار:</label>
-    <input type="color" id="buttonColor">
-
-    <label>لون النصوص:</label>
-    <input type="color" id="textColor">
-
-    <button onclick="saveColors()" style="padding:10px 15px;background:#27ae60;color:white;border:none;border-radius:8px;margin-top:15px;">حفظ الألوان</button>
-
-    <hr style="margin:25px 0;">
-
-    <h2>لوحة تحكم متقدمة</h2>
-
-    <div class="stats-grid">
-
-        <div class="stat-card">
-            <div class="stat-title">عدد الأجهزة</div>
-            <div class="stat-number" id="devicesCount">0</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-title">عدد التعليقات</div>
-            <div class="stat-number" id="reviewsCount">0</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-title">عدد الشكاوى</div>
-            <div class="stat-number" id="complaintsCount">0</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-title">عدد الزيارات</div>
-            <div class="stat-number" id="visitsCount">0</div>
-        </div>
-
-    </div>
-
-</div>
-
-
-    </div>
-
-    <!-- Quill JS -->
-    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-
-    <!-- سكربت -->
+    <!-- Firebase -->
     <script type="module">
-
-        /* تسجيل الدخول */
-        const ADMIN_PASSWORD = "sahl 911";
-
-        window.login = function () {
-            const pass = document.getElementById("passwordInput").value.trim();
-            if (pass === ADMIN_PASSWORD) {
-                sessionStorage.setItem("adminLogged", "true");
-                document.getElementById("loginScreen").style.display = "none";
-            } else {
-                alert("كلمة المرور غير صحيحة");
-            }
-        }
-
-        if (sessionStorage.getItem("adminLogged") === "true") {
-            document.getElementById("loginScreen").style.display = "none";
-        }
-
-        window.logout = function () {
-            sessionStorage.removeItem("adminLogged");
-            location.reload();
-        }
-
-        window.showSection = function (id) {
-            document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-            document.getElementById(id).classList.add("active");
-        }
-
-        window.toggleSidebar = function () {
-            document.getElementById("sidebar").classList.toggle("collapsed");
-            document.getElementById("contentArea").classList.toggle("collapsed");
-        }
-
-        /* Firebase */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getFirestore, collection, getDocs, deleteDoc, updateDoc, doc,
-            getDoc, setDoc
+            getFirestore, collection, getDocs, updateDoc, deleteDoc, doc 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        /* قسم التعليقات */
+        async function loadOrders() {
+            const tableBody = document.getElementById("ordersTableBody");
+            tableBody.innerHTML = "";
 
-        window.loadComments = async function () {
-            const list = document.getElementById("commentsList");
-            list.innerHTML = "جاري التحميل…";
-
-            const search = document.getElementById("searchInput").value.trim();
-            const filterRating = document.getElementById("filterRating").value;
-            const sortOrder = document.getElementById("sortOrder").value;
-
-            const querySnapshot = await getDocs(collection(db, "reviews"));
-            let reviews = [];
+            const querySnapshot = await getDocs(collection(db, "orders"));
 
             querySnapshot.forEach(docSnap => {
-                let data = docSnap.data();
-                data.id = docSnap.id;
-                reviews.push(data);
-            });
+                const data = docSnap.data();
+                const row = document.createElement("tr");
 
-            if (search) {
-                reviews = reviews.filter(r =>
-                    (r.name || "").includes(search) ||
-                    (r.message || "").includes(search)
-                );
-            }
+                if (data.status === "مقبول") row.classList.add("accepted");
 
-            if (filterRating) {
-                reviews = reviews.filter(r => r.rating === filterRating);
-            }
-
-            reviews.sort((a, b) => {
-                const da = a.date ? new Date(a.date) : new Date(0);
-                const dbb = b.date ? new Date(b.date) : new Date(0);
-                if (sortOrder === "newest") {
-                    return dbb - da;
-                } else {
-                    return da - dbb;
-                }
-            });
-
-            list.innerHTML = "";
-            reviews.forEach(r => {
-                const box = document.createElement("div");
-                box.style = `
-                    background: light-dark(#fff,#333);
-                    padding:15px;
-                    margin:10px 0;
-                    border-radius:10px;
-                    border:1px solid #ccc;
+                row.innerHTML = `
+                    <td>${data.name}</td>
+                    <td>${data.phone}</td>
+                    <td>${data.category}</td>
+                    <td>${data.serviceDetails}</td>
+                    <td>${data.status}</td>
+                    <td>
+                        <button class="whatsapp-btn" onclick="sendWhatsApp('${data.phone}', '${data.serviceDetails}')">واتساب</button>
+                        <button class="accept-btn" onclick="acceptOrder('${docSnap.id}')">قبول</button>
+                        <button class="delete-btn" onclick="deleteOrder('${docSnap.id}')">حذف</button>
+                    </td>
                 `;
 
-                const safeMessage = r.message || "";
-                const safeName = r.name || "بدون اسم";
-                const safeGender = r.gender || "";
-                const safeRating = r.rating || "";
-
-                box.innerHTML = `
-                    <h3>${safeName} ${safeGender ? "(" + safeGender + ")" : ""} — ${safeRating}</h3>
-                    <p>${safeMessage}</p>
-                    <small>${r.date ? new Date(r.date).toLocaleString() : ""}</small>
-                    <br><br>
-
-                    <button onclick="deleteComment('${r.id}')" 
-                        style="background:#c0392b;color:white;padding:8px 12px;border:none;border-radius:6px;">
-                        حذف
-                    </button>
-
-                    <button onclick="editComment('${r.id}', ${JSON.stringify(safeMessage)})" 
-                        style="background:#2980b9;color:white;padding:8px 12px;border:none;border-radius:6px;">
-                        تعديل
-                    </button>
-                `;
-
-                list.appendChild(box);
+                tableBody.appendChild(row);
             });
         }
 
-        window.deleteComment = async function (id) {
-            if (!confirm("هل تريدين حذف هذا التعليق؟")) return;
+        window.sendWhatsApp = function(phone, service) {
+            const msg =
+`السلام عليكم، معك فريق سهل للخدمات.
+بخصوص طلبك:
 
-            await deleteDoc(doc(db, "reviews", id));
-            alert("تم حذف التعليق");
-            loadComments();
-        }
+الخدمة: ${service}
+رقم الجوال: ${phone}
 
-        window.editComment = async function (id, oldMessage) {
-            const newMessage = prompt("اكتبي النص الجديد:", oldMessage);
-            if (!newMessage) return;
+نود إبلاغك بأنه تم قبول طلبك وسنتواصل معك لإكمال التفاصيل.`;
 
-            await updateDoc(doc(db, "reviews", id), {
-                message: newMessage
-            });
+            window.open(`https://wa.me/966${phone.slice(1)}?text=${encodeURIComponent(msg)}`, "_blank");
+        };
 
-            alert("تم تعديل التعليق");
-            loadComments();
-        }
+        window.acceptOrder = async function(id) {
+            await updateDoc(doc(db, "orders", id), { status: "مقبول" });
+            loadOrders();
+        };
 
-        /* محرر الصفحات – Quill */
+        window.deleteOrder = async function(id) {
+            await deleteDoc(doc(db, "orders", id));
+            loadOrders();
+        };
 
-        let quill;
-        let currentPage = "home";
-
-        function initEditor() {
-            quill = new Quill('#editor', {
-                theme: 'snow',
-                modules: {
-                    toolbar: '#toolbar'
-                }
-            });
-        }
-
-        window.loadPageContent = async function () {
-            currentPage = document.getElementById("pageSelect").value;
-            if (!currentPage || !quill) return;
-
-            const ref = doc(db, "siteContent", currentPage);
-            const snap = await getDoc(ref);
-
-            if (snap.exists()) {
-                const data = snap.data();
-                const html = data.content || "";
-                quill.root.innerHTML = html;
-            } else {
-                quill.root.innerHTML = "";
-            }
-        }
-
-        window.savePageContent = async function () {
-            if (!quill) return;
-            currentPage = document.getElementById("pageSelect").value;
-            const html = quill.root.innerHTML;
-
-            const ref = doc(db, "siteContent", currentPage);
-            await setDoc(ref, { content: html }, { merge: true });
-
-            alert("تم حفظ محتوى الصفحة بنجاح");
-        }
-
-        document.getElementById("pageSelect").addEventListener("change", () => {
-            loadPageContent();
-        });
-
-        /* تشغيل أولي */
-        window.addEventListener("DOMContentLoaded", () => {
-            initEditor();
-            loadComments();
-            loadPageContent();
-        });
-
+        window.onload = loadOrders;
     </script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-    getFirestore, doc, setDoc, getDoc, collection, getDocs 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { 
-    getStorage, ref, uploadBytes, getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-    authDomain: "sahl-services-94183.firebaseapp.com",
-    projectId: "sahl-services-94183",
-    storageBucket: "sahl-services-94183.firebasestorage.app",
-    messagingSenderId: "926677469615",
-    appId: "1:926677469615:web:fc2b910ca660838071875a"
-};
+</head>
+<body>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+<header>لوحة التحكم – سهل للخدمات</header>
 
-// رفع الشعار
-window.uploadLogo = async function () {
-    const file = document.getElementById("logoInput").files[0];
-    if (!file) return alert("اختر صورة أولاً");
+<div class="container">
 
-    const storageRef = ref(storage, "logo.png");
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
+    <h2>الطلبات</h2>
 
-    await setDoc(doc(db, "siteConfig", "settings"), { logo: url }, { merge: true });
+    <table>
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>الجوال</th>
+                <th>التصنيف</th>
+                <th>الخدمة</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody id="ordersTableBody"></tbody>
+    </table>
 
-    alert("تم تحديث الشعار");
-};
-
-// حفظ الألوان
-window.saveColors = async function () {
-    const data = {
-        primaryColor: document.getElementById("primaryColor").value,
-        sidebarColor: document.getElementById("sidebarColor").value,
-        buttonColor: document.getElementById("buttonColor").value,
-        textColor: document.getElementById("textColor").value
-    };
-
-    await setDoc(doc(db, "siteConfig", "settings"), data, { merge: true });
-
-    alert("تم حفظ الألوان");
-};
-
-// تحميل الإعدادات عند فتح الصفحة
-async function loadSettings() {
-    const snap = await getDoc(doc(db, "siteConfig", "settings"));
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-
-    if (data.primaryColor) document.documentElement.style.setProperty("--primary", data.primaryColor);
-    if (data.sidebarColor) document.documentElement.style.setProperty("--sidebar", data.sidebarColor);
-    if (data.buttonColor) document.documentElement.style.setProperty("--button", data.buttonColor);
-    if (data.textColor) document.documentElement.style.setProperty("--text", data.textColor);
-}
-
-loadSettings();
-
-// الإحصائيات
-async function count(col, id) {
-    try {
-        const snap = await getDocs(collection(db, col));
-        document.getElementById(id).textContent = snap.size;
-    } catch {
-        document.getElementById(id).textContent = "0";
-    }
-}
-
-count("devices", "devicesCount");
-count("reviews", "reviewsCount");
-count("complaints", "complaintsCount");
-count("visits", "visitsCount");
-
-</script>
+</div>
 
 </body>
 </html>
