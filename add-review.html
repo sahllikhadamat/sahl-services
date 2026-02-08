@@ -144,6 +144,7 @@
         <a href="add-review.html">إضافة تعليق</a>
         <a href="complaints.html">الشكاوي والاقتراحات</a>
         <a href="contact.html">تواصل معنا</a>
+        <a href="order.html">طلب خدمة</a>
     </div>
 
     <header>
@@ -222,7 +223,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ⭐ إنشاء deviceId إذا لم يكن موجود
     if (!localStorage.getItem("deviceId")) {
         localStorage.setItem("deviceId", crypto.randomUUID());
     }
@@ -245,7 +245,7 @@
             rating: rating,
             serviceType: serviceType,
             message: message,
-            deviceId: localStorage.getItem("deviceId"),  // ⭐ مهم جداً
+            deviceId: localStorage.getItem("deviceId"),
             date: new Date().toISOString()
         });
 
