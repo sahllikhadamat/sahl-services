@@ -131,6 +131,43 @@
         }
     </style>
 
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        function saveReview() {
+            let name = document.getElementById("name").value;
+            let gender = document.getElementById("gender").value;
+            let rating = document.getElementById("rating").value;
+            let message = document.getElementById("message").value;
+
+            if (message.length > 300) {
+                alert("الحد الأقصى للكتابة هو 300 كلمة");
+                return;
+            }
+
+            let review = {
+                name: name,
+                gender: gender,
+                rating: rating,
+                message: message,
+                date: new Date().toLocaleDateString()
+            };
+
+            let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+            reviews.push(review);
+            localStorage.setItem("reviews", JSON.stringify(reviews));
+
+            alert("تم إرسال تعليقك بنجاح!");
+            window.location.href = "clients.html";
+        }
+    </script>
+
 </head>
 <body>
 
@@ -185,62 +222,7 @@
     </footer>
 
     <script>
-        function openSidebar() {
-            document.getElementById("sidebar").style.width = "250px";
-        }
-
-        function closeSidebar() {
-            document.getElementById("sidebar").style.width = "0";
-        }
-
         document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-
-    <!-- ⭐ Firebase + Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } 
-            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function saveReview() {
-            let name = document.getElementById("name").value.trim();
-            let gender = document.getElementById("gender").value;
-            let rating = document.getElementById("rating").value;
-            let message = document.getElementById("message").value.trim();
-
-            if (!name || !message) {
-                alert("الرجاء تعبئة جميع الحقول");
-                return;
-            }
-
-            if (message.length > 300) {
-                alert("الحد الأقصى للكتابة هو 300 كلمة");
-                return;
-            }
-
-            await addDoc(collection(db, "reviews"), {
-                name: name,
-                gender: gender,
-                rating: rating,
-                message: message,
-                date: new Date().toISOString()
-            });
-
-            alert("تم إرسال تعليقك بنجاح!");
-            window.location.href = "clients.html";
-        }
     </script>
 
 </body>
