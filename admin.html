@@ -11,47 +11,89 @@
         body {
             margin: 0;
             font-family: 'Cairo', sans-serif;
-            background-color: #f5f5f5;
+            background-color: #f4f4f4;
+            display: flex;
         }
 
-        header {
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
             background-color: #27415d;
             color: white;
-            padding: 15px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar h2 {
             text-align: center;
-            font-size: 26px;
-            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 24px;
         }
 
-        .container {
-            padding: 20px;
+        .sidebar a {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        h2 {
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #e17c1b;
+        }
+
+        /* Content */
+        .content {
+            margin-left: 260px;
+            padding: 25px;
+            width: calc(100% - 260px);
+        }
+
+        h1 {
             color: #27415d;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
-        .filters {
+        /* Dashboard Cards */
+        .cards {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        select, input {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Cairo';
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 220px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
+        .card h3 {
+            margin: 0;
+            color: #27415d;
+        }
+
+        .card p {
+            font-size: 28px;
+            margin-top: 10px;
+            color: #e17c1b;
+        }
+
+        /* Orders Table */
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
+            margin-top: 20px;
         }
 
         th, td {
@@ -77,45 +119,13 @@
             font-family: 'Cairo';
         }
 
-        .accept-btn {
-            background-color: #28a745;
-            color: white;
-        }
+        .accept-btn { background-color: #28a745; color: white; }
+        .delete-btn { background-color: #dc3545; color: white; }
+        .whatsapp-btn { background-color: #25d366; color: white; }
 
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .whatsapp-btn {
-            background-color: #25d366;
-            color: white;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 10px;
-        }
-
-        .close-modal {
-            float: left;
-            cursor: pointer;
-            font-size: 22px;
-            color: #333;
-        }
+        /* Hidden sections */
+        .section { display: none; }
+        .section.active { display: block; }
     </style>
 
     <!-- Firebase -->
@@ -136,6 +146,21 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        async function loadDashboardStats() {
+            const orders = await getDocs(collection(db, "orders"));
+            let total = 0, accepted = 0, complaints = 0, reviews = 0;
+
+            orders.forEach(doc => {
+                total++;
+                if (doc.data().status === "مقبول") accepted++;
+            });
+
+            document.getElementById("totalOrders").textContent = total;
+            document.getElementById("acceptedOrders").textContent = accepted;
+            document.getElementById("complaintsCount").textContent = complaints;
+            document.getElementById("reviewsCount").textContent = reviews;
+        }
 
         async function loadOrders() {
             const tableBody = document.getElementById("ordersTableBody");
@@ -182,40 +207,114 @@
         window.acceptOrder = async function(id) {
             await updateDoc(doc(db, "orders", id), { status: "مقبول" });
             loadOrders();
+            loadDashboardStats();
         };
 
         window.deleteOrder = async function(id) {
             await deleteDoc(doc(db, "orders", id));
             loadOrders();
+            loadDashboardStats();
         };
 
-        window.onload = loadOrders;
+        window.onload = () => {
+            loadDashboardStats();
+            loadOrders();
+        };
+    </script>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+
+            document.querySelectorAll(".sidebar a").forEach(a => a.classList.remove("active"));
+            document.getElementById("btn-" + id).classList.add("active");
+        }
     </script>
 
 </head>
 <body>
 
-<header>لوحة التحكم – سهل للخدمات</header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>لوحة التحكم</h2>
 
-<div class="container">
+        <a id="btn-dashboard" class="active" onclick="showSection('dashboard')">الرئيسية</a>
+        <a id="btn-orders" onclick="showSection('orders')">الطلبات</a>
+        <a id="btn-reviews" onclick="showSection('reviews')">آراء العملاء</a>
+        <a id="btn-complaints" onclick="showSection('complaints')">الشكاوي</a>
+        <a id="btn-users" onclick="showSection('users')">المستخدمين</a>
+        <a id="btn-logout" onclick="alert('تم تسجيل الخروج')">تسجيل خروج</a>
+    </div>
 
-    <h2>الطلبات</h2>
+    <!-- Content -->
+    <div class="content">
 
-    <table>
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>الجوال</th>
-                <th>التصنيف</th>
-                <th>الخدمة</th>
-                <th>الحالة</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody id="ordersTableBody"></tbody>
-    </table>
+        <!-- Dashboard -->
+        <div id="dashboard" class="section active">
+            <h1>لوحة التحكم</h1>
 
-</div>
+            <div class="cards">
+                <div class="card">
+                    <h3>إجمالي الطلبات</h3>
+                    <p id="totalOrders">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>الطلبات المقبولة</h3>
+                    <p id="acceptedOrders">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>الشكاوي</h3>
+                    <p id="complaintsCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>آراء العملاء</h3>
+                    <p id="reviewsCount">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders -->
+        <div id="orders" class="section">
+            <h1>الطلبات</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الجوال</th>
+                        <th>التصنيف</th>
+                        <th>الخدمة</th>
+                        <th>الحالة</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Reviews -->
+        <div id="reviews" class="section">
+            <h1>آراء العملاء</h1>
+            <p>سيتم إضافة هذا القسم لاحقًا.</p>
+        </div>
+
+        <!-- Complaints -->
+        <div id="complaints" class="section">
+            <h1>الشكاوي</h1>
+            <p>سيتم إضافة هذا القسم لاحقًا.</p>
+        </div>
+
+        <!-- Users -->
+        <div id="users" class="section">
+            <h1>المستخدمين</h1>
+            <p>قسم المستخدمين اختياري ويمكن تطويره لاحقًا.</p>
+        </div>
+
+    </div>
 
 </body>
 </html>
