@@ -173,7 +173,6 @@
             <option value="⭐">⭐</option>
         </select>
 
-        <!-- ⭐ خانة نوع الخدمة الجديدة -->
         <label>نوع الخدمة</label>
         <select id="serviceType">
             <option value="">اختر نوع الخدمة</option>
@@ -223,6 +222,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // ⭐ إنشاء هوية جهاز إذا لم تكن موجودة
+    if (!localStorage.getItem("deviceId")) {
+        localStorage.setItem("deviceId", crypto.randomUUID());
+    }
+
     async function saveReview() {
         let name = document.getElementById("name").value.trim();
         let gender = document.getElementById("gender").value;
@@ -241,6 +245,7 @@
             rating: rating,
             serviceType: serviceType,
             message: message,
+            deviceId: localStorage.getItem("deviceId"),  // ⭐ تمت إضافتها
             date: new Date().toISOString()
         });
 
