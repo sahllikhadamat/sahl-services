@@ -173,6 +173,15 @@
             <option value="⭐">⭐</option>
         </select>
 
+        <!-- ⭐ خانة نوع الخدمة الجديدة -->
+        <label>نوع الخدمة</label>
+        <select id="serviceType">
+            <option value="">اختر نوع الخدمة</option>
+            <option value="خدمات التصميم">خدمات التصميم</option>
+            <option value="التعليم والمهام">التعليم والمهام</option>
+            <option value="الخدمات الإلكترونية">الخدمات الإلكترونية</option>
+        </select>
+
         <label>التعليق (حد أقصى 300 كلمة)</label>
         <textarea id="message" maxlength="300" placeholder="اكتب تعليقك هنا..."></textarea>
 
@@ -218,9 +227,10 @@
         let name = document.getElementById("name").value.trim();
         let gender = document.getElementById("gender").value;
         let rating = document.getElementById("rating").value;
+        let serviceType = document.getElementById("serviceType").value;
         let message = document.getElementById("message").value.trim();
 
-        if (!name || !message) {
+        if (!name || !message || !serviceType) {
             alert("الرجاء تعبئة جميع الحقول");
             return;
         }
@@ -229,6 +239,7 @@
             name: name,
             gender: gender,
             rating: rating,
+            serviceType: serviceType,
             message: message,
             date: new Date().toISOString()
         });
@@ -237,6 +248,8 @@
         window.location.href = "clients.html";
     }
 
-    // ⭐ هذا السطر هو اللي يحل مشكلة "saveReview is not defined"
     window.saveReview = saveReview;
 </script>
+
+</body>
+</html>
