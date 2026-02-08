@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب خدمة – سهل للخدمات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .menu-btn {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #e17c1b;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #27415d;
+            margin-top: 25px;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .logo-box i {
+            font-size: 60px;
+            color: #e17c1b;
+        }
+
+        .form-box {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
+        }
+
+        textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #e17c1b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c96b17;
+        }
+
+        footer {
+            background-color: #27415d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .small-note {
+            text-align: center;
+            font-size: 13px;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+
+</head>
+<body>
+
+    <!-- القائمة الجانبية -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="contact.html">تواصل معنا</a>
+        <a href="order.html">طلب خدمة</a>
+    </div>
+
+    <!-- الهيدر -->
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+    </header>
+
+    <h1>طلب خدمة</h1>
+
+    <div class="logo-box">
+        <i class="fa-solid fa-file-signature"></i>
+    </div>
+
+    <div class="form-box">
+
+        <label>الاسم</label>
+        <input type="text" id="name" required>
+
+        <label>الجنس</label>
+        <select id="gender" required>
+            <option value="">اختر الجنس</option>
+            <option value="ذكر">ذكر</option>
+            <option value="أنثى">أنثى</option>
+        </select>
+
+        <label>رقم الجوال</label>
+        <input type="text" id="phone" maxlength="10" required>
+
+        <label>نوع الخدمة المطلوبة</label>
+        <select id="category" required onchange="loadServices()">
+            <option value="">اختر نوع الخدمة</option>
+            <option value="design">خدمات التصميم</option>
+            <option value="education">التعليم والمهام</option>
+            <option value="electronic">الخدمات الإلكترونية</option>
+        </select>
+
+        <label>تفاصيل الخدمة</label>
+        <select id="service" required>
+            <option value="">اختر الخدمة</option>
+        </select>
+
+        <label>ملاحظة (اختياري – 300 كلمة)</label>
+        <textarea id="note" maxlength="300"></textarea>
+
+        <label>كيف عرفت عنا؟</label>
+        <select id="source" onchange="toggleOther()">
+            <option value="">اختر</option>
+            <option value="انستغرام">انستغرام</option>
+            <option value="سناب شات">سناب شات</option>
+            <option value="تيك توك">تيك توك</option>
+            <option value="اكس">إكس</option>
+            <option value="واتساب">واتساب</option>
+            <option value="الاهل">الأهل</option>
+            <option value="الاصدقاء">الأصدقاء</option>
+            <option value="اخرى">أخرى</option>
+        </select>
+
+        <input type="text" id="otherSource" placeholder="اذكر المصدر (20 كلمة)" style="display:none;" maxlength="100">
+
+        <label>كود الخصم (اختياري)</label>
+        <input type="text" id="discount">
+
+        <label>
+            <input type="checkbox" id="terms" required>
+            أوافق على الشروط والأحكام
+        </label>
+
+        <label>
+            <input type="checkbox" id="confirm" required>
+            أقر بأن جميع المعلومات صحيحة
+        </label>
+
+        <button onclick="sendOrder()">إرسال الطلب</button>
+
+        <div class="small-note">
+            عدد الطلبات المنجزة – نضمن الخصوصية التامة – تنفيذ سريع – دعم مباشر
+        </div>
+
+    </div>
+
+    <footer>
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        const services = {
+            design: [
+                "تصميم سيرة ذاتية (العربية فقط)",
+                "تصميم سيرة ذاتية (الإنجليزية فقط)",
+                "تصميم سيرة ذاتية (العربي - الإنجليزي)",
+                "تصميم منشور (1)",
+                "تصميم بوست (1)",
+                "تصميم فيديو (1 دقيقة)",
+                "تصميم فيديو (2 دقيقة)",
+                "تصميم فيديو (3 دقيقة)",
+                "تصميم فيديو (4 دقيقة)",
+                "تصميم فيديو (5 دقيقة)",
+                "تصميم قائمة طعام (1-5 صفحات)",
+                "تصميم شهادات شكر (1-5)",
+                "تصميم شهادات شكر (1-10)",
+                "تصميم شهادات شكر (1-20)"
+            ],
+            education: [
+                "دورات تدريبية (دروب)",
+                "دورات تدريبية (إثرائي)",
+                "دورات تدريبية (إبعاد)",
+                "دورات تدريبية (إدراك)",
+                "دورات تدريبية (معهد الإدارة)",
+                "دورات تدريبية (ذكاء اصطناعي سماي)",
+                "دورات تدريبية (المعهد الوطني التربوي)",
+                "بحث (صفحتين)",
+                "بحث (5 صفحات)",
+                "بحث (8 صفحات)",
+                "بحث (10 صفحات)",
+                "بحث (15 صفحة)",
+                "ورقة عمل (1)",
+                "ورقتين عمل",
+                "3 أوراق عمل",
+                "4 أوراق عمل",
+                "5 أوراق عمل",
+                "8 أوراق عمل",
+                "10 أوراق عمل",
+                "مهام أدائية",
+                "ملف إنجاز (5 صفحات)",
+                "ملف إنجاز (8 صفحات)",
+                "ملف إنجاز (10 صفحات)",
+                "ملف إنجاز (15 صفحة)",
+                "ملف إنجاز (20 صفحة)",
+                "مشروع تخرج (5 صفحات)",
+                "مشروع تخرج (10 صفحات)",
+                "مشروع تخرج (15 صفحة)",
+                "مشروع تخرج (20 صفحة)",
+                "عرض تقديمي (5 صفحات)",
+                "عرض تقديمي (10 صفحات)",
+                "عرض تقديمي (15 صفحة)"
+            ],
+            electronic: [
+                "ساعات تطوعية (40)",
+                "ساعات تطوعية (45)",
+                "ساعات تطوعية (50)",
+                "ساعات تطوعية (55)",
+                "ساعات تطوعية (60)",
+                "ساعات تطوعية (70)",
+                "ساعات تطوعية (80)",
+                "ساعات تطوعية (90)",
+                "ساعات تطوعية (100)",
+                "ساعات تطوعية (120)",
+                "ساعات تطوعية (150)",
+                "ساعات تطوعية (200)",
+                "إنشاء متجر سلة",
+                "إصدار وثيقة العمل الحر (بدون شهادات)",
+                "إصدار وثيقة العمل الحر (مع شهادات)",
+                "إصدار رخصة فال العقارية"
+            ]
+        };
+
+        function loadServices() {
+            const category = document.getElementById("category").value;
+            const serviceSelect = document.getElementById("service");
+
+            serviceSelect.innerHTML = "<option value=''>اختر الخدمة</option>";
+
+            if (services[category]) {
+                services[category].forEach(s => {
+                    const option = document.createElement("option");
+                    option.value = s;
+                    option.textContent = s;
+                    serviceSelect.appendChild(option);
+                });
+            }
+        }
+
+        function toggleOther() {
+            const source = document.getElementById("source").value;
+            const other = document.getElementById("otherSource");
+            other.style.display = source === "اخرى" ? "block" : "none";
+        }
+
+        function sendOrder() {
+            const name = document.getElementById("name").value.trim();
+            const gender = document.getElementById("gender").value;
+            const phone = document.getElementById("phone").value.trim();
+            const category = document.getElementById("category").value;
+            const service = document.getElementById("service").value;
+            const note = document.getElementById("note").value.trim();
+            const source = document.getElementById("source").value;
+            const otherSource = document.getElementById("otherSource").value.trim();
+            const discount = document.getElementById("discount").value.trim();
+            const terms = document.getElementById("terms").checked;
+            const confirm = document.getElementById("confirm").checked;
+
+            if (!name || !gender || !phone || !category || !service || !source || !terms || !confirm) {
+                alert("الرجاء تعبئة جميع الحقول الإلزامية");
+                return;
+            }
+
+            if (phone.length !== 10 || isNaN(phone)) {
+                alert("رقم الجوال يجب أن يكون 10 أرقام بدون حروف");
+                return;
+            }
+
+            let finalSource = source === "اخرى" ? otherSource : source;
+
+            const message =
+                `طلب خدمة جديد:\n\n` +
+                `الاسم: ${name}\n` +
+                `الجنس: ${gender}\n` +
+                `رقم الجوال: ${phone}\n` +
+                `نوع الخدمة: ${category}\n` +
+                `الخدمة المطلوبة: ${service}\n` +
+                `الملاحظة: ${note || "لا يوجد"}\n` +
+                `كيف عرفت عنا: ${finalSource}\n` +
+                `كود الخصم: ${discount || "لا يوجد"}\n`;
+
+            fetch("https://api.whatsapp.com/send?phone=966532225735&text=" + encodeURIComponent(message));
+
+            alert("تم استلام طلبك، ننفذ طلبك بسرعة البرق ⚡");
+        }
+    </script>
+
+</body>
+</html>
