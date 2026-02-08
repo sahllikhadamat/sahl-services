@@ -130,14 +130,6 @@
             background-color: #c96b17;
         }
 
-        footer {
-            background-color: #27415d;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            margin-top: 30px;
-        }
-
         .checkbox-row {
             display: flex;
             align-items: center;
@@ -148,6 +140,18 @@
         .checkbox-row input[type="checkbox"] {
             width: 20px;
             height: 20px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+            font-size: 18px;
+            text-align: center;
         }
     </style>
 
@@ -176,7 +180,6 @@
                 document.getElementById("ordersCount").textContent =
                     "عدد الطلبات المنجزة: " + querySnapshot.size;
             } catch (e) {
-                console.error("Error loading count: ", e);
                 document.getElementById("ordersCount").textContent =
                     "عدد الطلبات المنجزة: -";
             }
@@ -293,6 +296,7 @@
 
         async function sendOrder() {
             let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
             let category = document.getElementById("category").value;
             let serviceDetails = document.getElementById("serviceDetails").value;
             let note = document.getElementById("note").value.trim();
@@ -302,8 +306,13 @@
             let agree1 = document.getElementById("agree1").checked;
             let agree2 = document.getElementById("agree2").checked;
 
-            if (!name || !category || !serviceDetails) {
+            if (!name || !phone || !category || !serviceDetails) {
                 alert("الرجاء تعبئة جميع الحقول المطلوبة");
+                return;
+            }
+
+            if (phone.length !== 10 || !phone.startsWith("05")) {
+                alert("الرجاء إدخال رقم جوال صحيح مكون من 10 أرقام ويبدأ بـ 05");
                 return;
             }
 
@@ -314,39 +323,30 @@
 
             const orderData = {
                 name,
+                phone,
                 category,
                 serviceDetails,
                 note: note || "",
                 know,
                 discount: discount || "",
+                status: "جديد",
                 createdAt: new Date().toISOString()
             };
 
             if (window.saveOrderToFirebase) {
-                window.saveOrderToFirebase(orderData);
+                await window.saveOrderToFirebase(orderData);
             }
 
-            let phone = "966532225735";
+            document.getElementById("successBox").style.display = "block";
 
-            let text =
-`طلب جديد من موقع سهل للخدمات:
-
-الاسم: ${name}
-التصنيف: ${category}
-تفاصيل الخدمة: ${serviceDetails}
-
-ملاحظة:
-${note || "لا يوجد"}
-
-كيف عرفت عنا:
-${know}
-
-كود الخصم:
-${discount || "لا يوجد"}
-
-تم إرسال الطلب من صفحة الموقع`;
-
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("category").value = "";
+            document.getElementById("serviceDetails").innerHTML = '<option value="">اختر تفاصيل الخدمة</option>';
+            document.getElementById("note").value = "";
+            document.getElementById("discount").value = "";
+            document.getElementById("agree1").checked = false;
+            document.getElementById("agree2").checked = false;
         }
 
         window.onload = function () {
@@ -383,8 +383,15 @@ ${discount || "لا يوجد"}
 
     <div class="form-box">
 
+        <div id="successBox" class="success-box">
+            تم استلام طلبك، سيتم تنفيذه بسرعة البرق
+        </div>
+
         <label>الاسم</label>
         <input type="text" id="name" placeholder="اكتب اسمك">
+
+        <label>رقم الجوال</label>
+        <input type="text" id="phone" placeholder="05XXXXXXXX" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
 
         <label>تصنيف الخدمة</label>
         <select id="category" onchange="updateDetailsOptions()">
