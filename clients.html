@@ -96,13 +96,13 @@
             font-weight: 600;
         }
 
-        .review-box .rating {
+        .rating {
             color: #e17c1b;
             font-size: 22px;
             margin: 5px 0;
         }
 
-        .review-box .date {
+        .date {
             font-size: 14px;
             color: gray;
         }
@@ -189,9 +189,13 @@
             const reviewsList = document.getElementById("reviewsList");
             reviewsList.innerHTML = "";
 
+            const myDeviceId = localStorage.getItem("deviceId");
+
             const querySnapshot = await getDocs(collection(db, "reviews"));
             querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
+
+                const canEdit = data.deviceId === myDeviceId;
 
                 const item = `
                     <div class="review-box">
@@ -203,7 +207,7 @@
                         <p>${data.message}</p>
                         <div class="date">${new Date(data.date).toLocaleDateString()}</div>
 
-                        <button class="edit-btn" onclick="editReview('${docSnap.id}', \`${data.message}\`)">تعديل</button>
+                        ${canEdit ? `<button class="edit-btn" onclick="editReview('${docSnap.id}', \`${data.message}\`)">تعديل</button>` : ""}
                     </div>
                 `;
 
