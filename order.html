@@ -442,6 +442,56 @@
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
     </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+    authDomain: "sahl-services-94183.firebaseapp.com",
+    projectId: "sahl-services-94183",
+    storageBucket: "sahl-services-94183.firebasestorage.app",
+    messagingSenderId: "926677469615",
+    appId: "1:926677469615:web:6ba21a1e73752f5271875a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  document.getElementById("orderForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const category = document.getElementById("category").value;
+    const serviceDetails = document.getElementById("serviceDetails").value;
+    const note = document.getElementById("note").value;
+    const discount = document.getElementById("discount").value;
+    const know = document.getElementById("know").value;
+
+    try {
+      await addDoc(collection(db, "orders"), {
+        name,
+        phone,
+        category,
+        serviceDetails,
+        note,
+        discount,
+        know,
+        status: "قيد المراجعة",
+        createdAt: serverTimestamp()
+      });
+
+      alert("تم إرسال الطلب بنجاح");
+      document.getElementById("orderForm").reset();
+
+    } catch (error) {
+      alert("حدث خطأ أثناء إرسال الطلب");
+      console.log(error);
+    }
+  });
+</script>
 
 </body>
 </html>
