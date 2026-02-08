@@ -1,342 +1,305 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - سهل للخدمات</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background-color: #f7f7f7;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f7f7f7;
+    }
 
-        header {
-            background-color: #27415d;
-            color: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    header {
+      background-color: #27415d;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        header img {
-            height: 60px;
-        }
+    header img {
+      height: 60px;
+    }
 
-        .menu-btn {
-            font-size: 28px;
-            cursor: pointer;
-            color: white;
-        }
+    .menu-btn {
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+    }
 
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            right: 0;
-            background-color: #27415d;
-            overflow-x: hidden;
-            transition: 0.4s;
-            padding-top: 60px;
-            z-index: 1000;
-        }
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #27415d;
+      overflow-x: hidden;
+      transition: 0.3s;
+      z-index: 1000;
+    }
 
-        .sidebar a {
-            padding: 12px 25px;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
+    .sidebar a {
+      padding: 12px 25px;
+      text-decoration: none;
+      font-size: 18px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
 
-        .sidebar a:hover {
-            background-color: #e17c1b;
-        }
+    .sidebar a:hover {
+      background-color: #e17c1b;
+    }
 
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 30px;
-            cursor: pointer;
-            color: white;
-        }
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
+    }
 
-        h1 {
-            text-align: center;
-            color: #27415d;
-            margin-top: 20px;
-        }
+    h1 {
+      text-align: center;
+      color: #27415d;
+      margin-top: 20px;
+    }
 
-        .dashboard-container {
-            padding: 15px;
-        }
+    .dashboard-container {
+      padding: 15px;
+    }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
 
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            text-align: center;
-        }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
+      text-align: center;
+    }
 
-        .stat-title {
-            font-size: 15px;
-            color: #555;
-            margin-bottom: 8px;
-        }
+    .stat-title {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 8px;
+    }
 
-        .stat-number {
-            font-size: 26px;
-            font-weight: 700;
-            color: #e17c1b;
-        }
+    .stat-number {
+      font-size: 26px;
+      font-weight: 700;
+      color: #e17c1b;
+    }
 
-        .section-box {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
+    .section-box {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
 
-        .section-box h2 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: #27415d;
-        }
+    .section-box h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #27415d;
+    }
 
-        .list-item {
-            border-bottom: 1px solid #eee;
-            padding: 8px 0;
-            font-size: 14px;
-        }
+    .list-item {
+      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+      font-size: 14px;
+    }
 
-        .list-item:last-child {
-            border-bottom: none;
-        }
+    .list-item:last-child {
+      border-bottom: none;
+    }
 
-        .list-item .date {
-            color: gray;
-            font-size: 12px;
-        }
+    .list-item .date {
+      color: gray;
+      font-size: 12px;
+    }
 
-        footer {
-            background-color: #27415d;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            margin-top: 25px;
-        }
-    </style>
+    footer {
+      background-color: #27415d;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 25px;
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- الشريط الجانبي -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="closeSidebar()">×</span>
+  <!-- الشريط الجانبي -->
+  <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="closeSidebar()">×</span>
+    <a href="admin.html">لوحة الإدارة</a>
+    <a href="index.html">الرئيسية</a>
+    <a href="devices.html">الأجهزة</a>
+    <a href="clients.html">العملاء</a>
+    <a href="complaints.html">الشكاوى</a>
+    <a href="contact.html">اتصل بنا</a>
+  </div>
 
-        <a href="admin.html">لوحة التحكم</a>
-        <a href="index.html">الرئيسية</a>
-        <a href="services.html">الخدمات</a>
-        <a href="clients.html">آراء العملاء</a>
-        <a href="add-review.html">إضافة تعليق</a>
-        <a href="complaints.html">الشكاوي والاقتراحات</a>
-        <a href="contact.html">تواصل معنا</a>
+  <!-- رأس الصفحة -->
+  <header>
+    <span class="menu-btn" onclick="openSidebar()">☰</span>
+    <img src="logo-menu.png" alt="شعار لوحة التحكم">
+  </header>
+
+  <h1>لوحة التحكم</h1>
+
+  <div class="dashboard-container">
+
+    <!-- إحصائيات -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-title">عدد النسخ</div>
+        <div class="stat-number" id="revisedCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">عدد الأجهزة</div>
+        <div class="stat-number" id="deviceCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">عدد العملاء</div>
+        <div class="stat-number" id="clientsCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">عدد الشكاوي</div>
+        <div class="stat-number" id="complaintsCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">عدد الطلبات</div>
+        <div class="stat-number" id="ordersCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">عدد الخدمات</div>
+        <div class="stat-number" id="servicesCount">0</div>
+      </div>
     </div>
 
-    <!-- الهيدر -->
-    <header>
-        <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
-    </header>
-
-    <h1>لوحة التحكم</h1>
-
-    <div class="dashboard-container">
-
-        <!-- كروت الإحصائيات -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-title">عدد التعليقات</div>
-                <div class="stat-number" id="reviewsCount">0</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">عدد الشكاوي</div>
-                <div class="stat-number" id="complaintsCount">0</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">عدد المستخدمين</div>
-                <div class="stat-number" id="usersCount">0</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">عدد الطلبات</div>
-                <div class="stat-number" id="ordersCount">0</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">عدد الخدمات</div>
-                <div class="stat-number" id="servicesCount">0</div>
-            </div>
-        </div>
-
-        <!-- آخر 5 تعليقات -->
-        <div class="section-box">
-            <h2>آخر 5 تعليقات</h2>
-            <div id="lastReviews"></div>
-        </div>
-
-        <!-- آخر 5 شكاوي -->
-        <div class="section-box">
-            <h2>آخر 5 شكاوي</h2>
-            <div id="lastComplaints"></div>
-        </div>
+    <!-- آخر 5 تعليقات -->
+    <div class="section-box">
+      <h2>آخر 5 تعليقات</h2>
+      <div id="lastReviews"></div>
     </div>
 
-    <footer>
-        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
-    </footer>
+    <!-- آخر 5 شكاوي -->
+    <div class="section-box">
+      <h2>آخر 5 شكاوي</h2>
+      <div id="lastComplaints"></div>
+    </div>
 
-    <script>
-        function openSidebar() {
-            document.getElementById("sidebar").style.width = "250px";
+  </div>
+
+  <footer>
+    © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+  </footer>
+
+  <script>
+    function openSidebar() {
+      document.getElementById("sidebar").style.width = "250px";
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").style.width = "0";
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy,
+      limit
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+      authDomain: "sahl-services-94183.firebaseapp.com",
+      projectId: "sahl-services-94183",
+      storageBucket: "sahl-services-94183.firebasestorage.app",
+      messagingSenderId: "926677469615",
+      appId: "1:926677469615:web:fc2b910ca660838071875a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function count(col, id) {
+      try {
+        const snap = await getDocs(collection(db, col));
+        document.getElementById(id).textContent = snap.size;
+      } catch {
+        document.getElementById(id).textContent = "0";
+      }
+    }
+
+    async function loadLast(col, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+
+      try {
+        const q = query(collection(db, col), orderBy("date", "desc"), limit(5));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          container.innerHTML = "<div class='list-item'>لا يوجد بيانات.</div>";
+          return;
         }
 
-        function closeSidebar() {
-            document.getElementById("sidebar").style.width = "0";
-        }
+        snap.forEach(docSnap => {
+          const d = docSnap.data();
+          container.innerHTML += `
+            <div class="list-item">
+              <strong>${d.name}</strong><br>
+              <span>${d.message}</span><br>
+              <span class="date">${new Date(d.date).toLocaleDateString()}</span>
+            </div>
+          `;
+        });
+      } catch {
+        container.innerHTML = "<div class='list-item'>خطأ في التحميل.</div>";
+      }
+    }
 
-        document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
+    count("revised", "revisedCount");
+    count("devices", "deviceCount");
+    count("clients", "clientsCount");
+    count("complaints", "complaintsCount");
+    count("orders", "ordersCount");
+    count("services", "servicesCount");
 
-    <!-- Firebase + Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import {
-            getFirestore,
-            collection,
-            getDocs,
-            query,
-            orderBy,
-            limit
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function countCollection(colName, elementId) {
-            try {
-                const snap = await getDocs(collection(db, colName));
-                document.getElementById(elementId).textContent = snap.size;
-            } catch (e) {
-                // لو ما فيه مجموعة، نخليها 0
-                document.getElementById(elementId).textContent = "0";
-            }
-        }
-
-        async function loadLastReviews() {
-            const container = document.getElementById("lastReviews");
-            container.innerHTML = "";
-
-            try {
-                const q = query(
-                    collection(db, "reviews"),
-                    orderBy("date", "desc"),
-                    limit(5)
-                );
-                const snap = await getDocs(q);
-
-                if (snap.empty) {
-                    container.innerHTML = "<div class='list-item'>لا توجد تعليقات حتى الآن.</div>";
-                    return;
-                }
-
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const item = document.createElement("div");
-                    item.className = "list-item";
-                    item.innerHTML = `
-                        <strong>${d.name}</strong> - التقييم: ${d.rating}<br>
-                        <span>${d.message}</span><br>
-                        <span class="date">${new Date(d.date).toLocaleDateString()}</span>
-                    `;
-                    container.appendChild(item);
-                });
-            } catch (e) {
-                container.innerHTML = "<div class='list-item'>حدث خطأ في تحميل التعليقات.</div>";
-            }
-        }
-
-        async function loadLastComplaints() {
-            const container = document.getElementById("lastComplaints");
-            container.innerHTML = "";
-
-            try {
-                const q = query(
-                    collection(db, "complaints"),
-                    orderBy("date", "desc"),
-                    limit(5)
-                );
-                const snap = await getDocs(q);
-
-                if (snap.empty) {
-                    container.innerHTML = "<div class='list-item'>لا توجد شكاوي حتى الآن.</div>";
-                    return;
-                }
-
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const item = document.createElement("div");
-                    item.className = "list-item";
-                    item.innerHTML = `
-                        <strong>${d.name}</strong><br>
-                        <span>${d.message}</span><br>
-                        <span class="date">${new Date(d.date).toLocaleDateString()}</span>
-                    `;
-                    container.appendChild(item);
-                });
-            } catch (e) {
-                container.innerHTML = "<div class='list-item'>حدث خطأ في تحميل الشكاوي.</div>";
-            }
-        }
-
-        // تشغيل الإحصائيات
-        countCollection("reviews", "reviewsCount");
-        countCollection("complaints", "complaintsCount");
-        countCollection("users", "usersCount");
-        countCollection("orders", "ordersCount");
-        countCollection("services", "servicesCount");
-
-        loadLastReviews();
-        loadLastComplaints();
-    </script>
+    loadLast("reviews", "lastReviews");
+    loadLast("complaints", "lastComplaints");
+  </script>
 
 </body>
 </html>
