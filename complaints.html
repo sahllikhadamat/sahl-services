@@ -1,205 +1,272 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>سهل للخدمات – الشكاوي والاقتراحات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <!-- خط بسيط + تنسيق عام -->
     <style>
         body {
             margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background-color: #f7f7f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f7fa;
+            color: #222;
         }
 
         header {
-            background-color: #27415d;
-            color: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            padding: 18px 20px;
+            text-align: center;
         }
 
-        header img {
-            height: 60px;
-            border-radius: 50%;
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
         }
 
-        .menu-btn {
-            font-size: 30px;
-            cursor: pointer;
-            color: white;
+        header p {
+            margin: 6px 0 0;
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
 
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            right: 0;
-            background-color: #27415d;
-            overflow-x: hidden;
-            transition: 0.4s;
-            padding-top: 60px;
-            z-index: 1000;
+        .container {
+            max-width: 900px;
+            margin: 24px auto 40px;
+            padding: 0 16px;
         }
 
-        .sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-            color: white;
-            display: block;
-        }
-
-        .sidebar a:hover {
-            background-color: #e17c1b;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 30px;
-            cursor: pointer;
-            color: white;
-        }
-
-        .section {
-            background-color: white;
-            margin: 15px;
-            padding: 20px;
+        .card {
+            background-color: #fff;
             border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            padding: 22px 20px 24px;
         }
 
-        .section h1 {
-            font-size: 26px;
-            color: #27415d;
+        .card h2 {
             margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #111827;
         }
 
-        .section p {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.8;
+        .card p {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            color: #4b5563;
         }
 
-        .complaint-box {
-            margin-top: 15px;
-            padding: 15px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 18px;
         }
 
-        .complaint-box div {
-            margin-bottom: 12px;
-            font-size: 16px;
-            color: #333;
+        .full-width {
+            grid-column: 1 / -1;
         }
 
-        .complaint-box i {
-            color: #e17c1b;
-            margin-left: 8px;
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 9px 10px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+            background-color: #f9fafb;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+            background-color: #fff;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 9px 22px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status.success {
+            color: #15803d;
+        }
+
+        .status.error {
+            color: #b91c1c;
+        }
+
+        .contact-box {
+            margin-top: 22px;
+            padding: 14px 14px 12px;
+            border-radius: 10px;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            font-size: 0.9rem;
+            color: #1e3a8a;
+        }
+
+        .contact-box strong {
+            display: inline-block;
+            margin-left: 4px;
         }
 
         footer {
-            background-color: #27415d;
-            color: white;
             text-align: center;
-            padding: 12px;
-            margin-top: 20px;
-            font-size: 14px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            padding: 16px 10px 20px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 640px) {
+            form {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-
-    <script>
-        function openSidebar() {
-            document.getElementById("sidebar").style.width = "250px";
-        }
-
-        function closeSidebar() {
-            document.getElementById("sidebar").style.width = "0";
-        }
-    </script>
-
 </head>
 <body>
 
-    <!-- القائمة الجانبية -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="closeSidebar()">×</span>
+<header>
+    <h1>سهل للخدمات – الشكاوي والاقتراحات</h1>
+    <p>يسعدنا استقبال ملاحظاتكم واقتراحاتكم لتحسين جودة خدماتنا.</p>
+</header>
 
-        <a href="index.html">الرئيسية</a>
-        <a href="about.html">من نحن</a>
-        <a href="services.html">الخدمات</a>
-        <a href="clients.html">آراء العملاء</a>
-        <a href="complaints.html">الشكاوي والاقتراحات</a>
-        <a href="add-review.html">إضافة تعليق</a>
-        <a href="contact.html">تواصل معنا</a>
-    </div>
+<div class="container">
+    <div class="card">
+        <h2>نموذج الشكاوي والاقتراحات</h2>
+        <p>فضلاً عبّئ البيانات التالية بدقة، وسيتم التعامل مع طلبك في أقرب وقت ممكن.</p>
 
-    <!-- الهيدر -->
-    <header>
-        <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo.png" alt="شعار سهل للخدمات">
-    </header>
+        <form id="complaintsForm">
+            <div>
+                <label for="name">الاسم الكامل</label>
+                <input type="text" id="name" name="name" placeholder="اكتب اسمك هنا" required />
+            </div>
 
-    <!-- المحتوى -->
-    <section class="section">
-        <h1 id="complaints_title">الشكاوي والاقتراحات</h1>
-        <p id="complaints_text">
-            يسعدنا استقبال ملاحظاتكم واقتراحاتكم لتحسين جودة خدماتنا.
-        </p>
+            <div>
+                <label for="phone">رقم الجوال</label>
+                <input type="text" id="phone" name="phone" placeholder="05XXXXXXXX" />
+                <div class="hint">اختياري، لكن يساعدنا في التواصل معك بشكل أسرع.</div>
+            </div>
 
-        <div class="complaint-box" id="complaints_info">
-            <div><i class="fa-solid fa-envelope"></i> example@email.com</div>
-            <div><i class="fa-brands fa-whatsapp"></i> 0500000000</div>
+            <div>
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" name="email" placeholder="name@example.com" />
+            </div>
+
+            <div>
+                <label for="type">نوع الرسالة</label>
+                <select id="type" name="type" required>
+                    <option value="">اختر نوع الرسالة</option>
+                    <option value="complaint">شكوى</option>
+                    <option value="suggestion">اقتراح</option>
+                    <option value="inquiry">استفسار</option>
+                </select>
+            </div>
+
+            <div class="full-width">
+                <label for="subject">عنوان مختصر</label>
+                <input type="text" id="subject" name="subject" placeholder="مثال: تأخير في تنفيذ الخدمة" />
+            </div>
+
+            <div class="full-width">
+                <label for="message">تفاصيل الشكوى أو الاقتراح</label>
+                <textarea id="message" name="message" placeholder="اكتب تفاصيل رسالتك هنا..." required></textarea>
+            </div>
+
+            <div class="full-width actions">
+                <button type="submit" class="btn-primary">إرسال</button>
+                <button type="reset" class="btn-secondary">مسح الحقول</button>
+            </div>
+
+            <div id="status" class="status"></div>
+        </form>
+
+        <div class="contact-box">
+            <div><strong>البريد الإلكتروني:</strong> example@email.com</div>
+            <div><strong>واتساب:</strong> 0500000000</div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <footer>
-        © 2026 سهل للخدمات – جميع الحقوق محفوظة
-    </footer>
+<footer>
+    © 2026 سهل للخدمات - جميع الحقوق محفوظة
+</footer>
 
-    <!-- ربط Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script>
+    // مبدئياً: منع التحديث وعرض رسالة نجاح فقط
+    const form = document.getElementById('complaintsForm');
+    const statusEl = document.getElementById('status');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // هنا لاحقاً نربط مع Firebase أو أي باك إند
+        statusEl.style.display = 'block';
+        statusEl.className = 'status success';
+        statusEl.textContent = 'تم إرسال الشكوى / الاقتراح بنجاح. شكرًا لتواصلك معنا.';
 
-        async function loadComplaintsContent() {
-            const ref = doc(db, "siteContent", "complaints");
-            const snap = await getDoc(ref);
-
-            if (snap.exists()) {
-                const data = snap.data();
-
-                if (data.title) document.getElementById("complaints_title").innerHTML = data.title;
-                if (data.text) document.getElementById("complaints_text").innerHTML = data.text;
-                if (data.info) document.getElementById("complaints_info").innerHTML = data.info;
-            }
-        }
-
-        loadComplaintsContent();
-    </script>
+        form.reset();
+    });
+</script>
 
 </body>
 </html>
