@@ -88,6 +88,14 @@
             color: #27415d;
         }
 
+        .service-type {
+            font-size: 15px;
+            color: #e17c1b;
+            margin: 6px 0;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+
         .review-box .rating {
             color: #e17c1b;
             font-size: 22px;
@@ -188,11 +196,13 @@
                 const item = `
                     <div class="review-box">
                         <h3>${data.name} (${data.gender})</h3>
+
+                        <p class="service-type">نوع الخدمة: ${data.serviceType || "غير محدد"}</p>
+
                         <div class="rating">${data.rating}</div>
                         <p>${data.message}</p>
                         <div class="date">${new Date(data.date).toLocaleDateString()}</div>
 
-                        <!-- زر التعديل فقط -->
                         <button class="edit-btn" onclick="editReview('${docSnap.id}', \`${data.message}\`)">تعديل</button>
                     </div>
                 `;
