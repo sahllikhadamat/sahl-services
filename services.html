@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سهل للخدمات – الخدمات</title>
+    <title>الخدمات – سهل للخدمات</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,12 +25,11 @@
         }
 
         header img {
-            height: 60px;
-            border-radius: 50%;
+            height: 55px;
         }
 
         .menu-btn {
-            font-size: 30px;
+            font-size: 28px;
             cursor: pointer;
             color: white;
         }
@@ -49,12 +48,12 @@
         }
 
         .sidebar a {
-            padding: 15px 25px;
+            padding: 12px 25px;
             text-decoration: none;
             font-size: 20px;
-            font-weight: 600;
             color: white;
             display: block;
+            transition: 0.3s;
         }
 
         .sidebar a:hover {
@@ -70,40 +69,39 @@
             color: white;
         }
 
-        .section {
-            background-color: white;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        .title {
+            text-align: center;
+            padding: 25px;
         }
 
-        .section h1 {
-            font-size: 26px;
+        .title h1 {
             color: #27415d;
-            margin-top: 0;
+            font-size: 28px;
         }
 
-        .section p {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.8;
+        /* كروت التصنيفات */
+        .cards {
+            padding: 20px;
         }
 
-        .services-list {
-            margin-top: 15px;
-            padding: 0;
-            list-style: none;
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 12px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 20px;
+            color: #27415d;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .services-list li {
-            background: #fff;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            border-right: 4px solid #e17c1b;
-            font-size: 16px;
-            color: #333;
+        .card i {
+            font-size: 26px;
+            color: #e17c1b;
         }
 
         footer {
@@ -112,7 +110,6 @@
             text-align: center;
             padding: 12px;
             margin-top: 20px;
-            font-size: 14px;
         }
     </style>
 
@@ -129,75 +126,49 @@
 </head>
 <body>
 
-    <!-- القائمة الجانبية -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="closeSidebar()">×</span>
+   <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="closeSidebar()">×</span>
 
-        <a href="index.html">الرئيسية</a>
-        <a href="about.html">من نحن</a>
-        <a href="services.html">الخدمات</a>
-        <a href="clients.html">آراء العملاء</a>
-        <a href="complaints.html">الشكاوي والاقتراحات</a>
-        <a href="add-review.html">إضافة تعليق</a>
-        <a href="contact.html">تواصل معنا</a>
-    </div>
+    <a href="home.html" style="font-size:22px; font-weight:600;">الرئيسية</a>
+    <a href="about.html" style="font-size:22px; font-weight:600;">من نحن</a>
+    <a href="services.html" style="font-size:22px; font-weight:600;">الخدمات</a>
+    <a href="clients.html" style="font-size:22px; font-weight:600;">آراء العملاء</a>
+    <a href="add-review.html" style="font-size:22px; font-weight:600;">إضافة تعليق</a>
+    <a href="contact.html" style="font-size:22px; font-weight:600;">تواصل معنا</a>
+</div>
 
-    <!-- الهيدر -->
+
     <header>
         <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo.png" alt="شعار سهل للخدمات">
+        <img src="logo.png.png" alt="شعار سهل للخدمات">
     </header>
 
-    <!-- المحتوى -->
-    <section class="section">
-        <h1 id="services_title">خدماتنا</h1>
-        <p id="services_description">
-            نقدم مجموعة متنوعة من الخدمات الرقمية والطلابية والحكومية باحترافية عالية.
-        </p>
-
-        <ul class="services-list" id="services_list">
-            <li>خدمة 1</li>
-            <li>خدمة 2</li>
-            <li>خدمة 3</li>
-        </ul>
+    <section class="title">
+        <h1>تصنيفات الخدمات</h1>
     </section>
 
+    <div class="cards">
+
+        <a href="design-services.html" class="card">
+            خدمات التصميم
+            <i class="fa-solid fa-pen-nib"></i>
+        </a>
+
+        <a href="education-services.html" class="card">
+            التعليم والمهام
+            <i class="fa-solid fa-graduation-cap"></i>
+        </a>
+
+        <a href="e-services.html" class="card">
+            الخدمات الإلكترونية
+            <i class="fa-solid fa-laptop"></i>
+        </a>
+
+    </div>
+
     <footer>
-        © 2026 سهل للخدمات – جميع الحقوق محفوظة
+        © 2024 سهل للخدمات – جميع الحقوق محفوظة
     </footer>
-
-    <!-- ربط Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function loadServicesContent() {
-            const ref = doc(db, "siteContent", "services");
-            const snap = await getDoc(ref);
-
-            if (snap.exists()) {
-                const data = snap.data();
-
-                if (data.title) document.getElementById("services_title").innerHTML = data.title;
-                if (data.description) document.getElementById("services_description").innerHTML = data.description;
-                if (data.list) document.getElementById("services_list").innerHTML = data.list;
-            }
-        }
-
-        loadServicesContent();
-    </script>
 
 </body>
 </html>
