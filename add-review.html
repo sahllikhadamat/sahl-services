@@ -2,206 +2,246 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>سهل للخدمات – الشكاوي والاقتراحات</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة تعليق</title>
 
-    <!-- نفس الخط المستخدم في موقعك -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
             margin: 0;
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f5f7fa;
-            color: #222;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f7f7f7;
         }
 
-        /* الهيدر */
         header {
-            background-color: #1e3a8a;
-            color: #fff;
-            padding: 18px 20px;
-            text-align: center;
-        }
-
-        /* المنيو */
-        nav {
-            background-color: #ffffff;
-            padding: 12px 20px;
+            background-color: #27415d;
+            color: white;
+            padding: 15px;
             display: flex;
-            justify-content: center;
-            gap: 25px;
-            border-bottom: 1px solid #e5e7eb;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        nav a {
+        header img {
+            height: 70px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #27415d;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 12px 25px;
             text-decoration: none;
-            color: #1e3a8a;
-            font-weight: 500;
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            display: block;
+            transition: 0.3s;
         }
 
-        nav a:hover {
-            color: #2563eb;
+        .sidebar a:hover {
+            background-color: #e17c1b;
         }
 
-        /* المحتوى */
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 16px;
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
         }
 
-        .card {
-            background-color: #fff;
+        h1 {
+            text-align: center;
+            color: #27415d;
+            margin-top: 25px;
+        }
+
+        .form-box {
+            background: white;
+            margin: 20px;
+            padding: 20px;
             border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         label {
-            font-size: 0.9rem;
-            margin-bottom: 6px;
-            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
         }
 
-        input, textarea, select {
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
             border-radius: 8px;
-            border: 1px solid #d1d5db;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-            background-color: #f9fafb;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Cairo';
         }
 
         textarea {
-            min-height: 130px;
+            height: 140px;
+            resize: none;
         }
 
         button {
-            background-color: #1e3a8a;
-            color: #fff;
+            width: 100%;
+            padding: 14px;
+            background-color: #e17c1b;
+            color: white;
             border: none;
-            padding: 10px 22px;
             border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 1rem;
         }
 
         button:hover {
-            background-color: #2563eb;
+            background-color: #c96b17;
         }
 
-        /* صندوق التواصل */
-        .contact-box {
-            margin-top: 20px;
-            padding: 14px;
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 10px;
-            color: #1e3a8a;
-        }
-
-        /* الفوتر */
         footer {
+            background-color: #27415d;
+            color: white;
             text-align: center;
-            padding: 16px;
-            margin-top: 40px;
-            background-color: #f1f5f9;
-            color: #555;
-            font-size: 0.85rem;
+            padding: 12px;
+            margin-top: 30px;
         }
     </style>
-</head>
 
+</head>
 <body>
 
-<header>
-    <h1>سهل للخدمات – الشكاوي والاقتراحات</h1>
-    <p>يسعدنا استقبال ملاحظاتكم واقتراحاتكم لتحسين جودة خدماتنا.</p>
-</header>
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
 
-<!-- المنيو نفس الموجود في موقعك -->
-<nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="services.html">الخدمات</a>
-    <a href="clients.html">آراء العملاء</a>
-    <a href="complaints.html">الشكاوي والاقتراحات</a>
-    <a href="contact.html">تواصل معنا</a>
-    <a href="about.html">من نحن</a>
-</nav>
+        <a href="index.html">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="services.html">الخدمات</a>
+        <a href="clients.html">آراء العملاء</a>
+        <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
+        <a href="contact.html">تواصل معنا</a>
+    </div>
 
-<div class="container">
-    <div class="card">
+    <header>
+        <span class="menu-btn" onclick="openSidebar()">☰</span>
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
+    </header>
 
-        <h2>نموذج الشكاوي والاقتراحات</h2>
-        <p>فضلاً عبّئ البيانات التالية بدقة، وسيتم التعامل مع طلبك في أقرب وقت.</p>
+    <h1>إضافة تعليق</h1>
 
-        <form id="form">
-            <label>الاسم الكامل</label>
-            <input type="text" id="name" placeholder="اكتب اسمك هنا" required>
+    <div class="form-box">
 
-            <label>رقم الجوال</label>
-            <input type="text" id="phone" placeholder="05XXXXXXXX">
+        <label>الاسم</label>
+        <input type="text" id="name" placeholder="اكتب اسمك">
 
-            <label>البريد الإلكتروني</label>
-            <input type="email" id="email" placeholder="name@example.com">
+        <label>الجنس</label>
+        <select id="gender">
+            <option value="ذكر">ذكر</option>
+            <option value="أنثى">أنثى</option>
+        </select>
 
-            <label>نوع الرسالة</label>
-            <select id="type" required>
-                <option value="">اختر نوع الرسالة</option>
-                <option value="شكوى">شكوى</option>
-                <option value="اقتراح">اقتراح</option>
-                <option value="استفسار">استفسار</option>
-            </select>
+        <label>التقييم</label>
+        <select id="rating">
+            <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+            <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+            <option value="⭐⭐⭐">⭐⭐⭐</option>
+            <option value="⭐⭐">⭐⭐</option>
+            <option value="⭐">⭐</option>
+        </select>
 
-            <label>عنوان مختصر</label>
-            <input type="text" id="subject" placeholder="مثال: تأخير في تنفيذ الخدمة">
+        <label>التعليق (حد أقصى 300 كلمة)</label>
+        <textarea id="message" maxlength="300" placeholder="اكتب تعليقك هنا..."></textarea>
 
-            <label>تفاصيل الرسالة</label>
-            <textarea id="message" placeholder="اكتب تفاصيل رسالتك هنا..." required></textarea>
-
-            <button type="submit">إرسال عبر واتساب</button>
-        </form>
-
-        <div class="contact-box">
-            <div><strong>البريد الإلكتروني:</strong> sahllilkhadamat@gmail.com</div>
-            <div><strong>واتساب:</strong> 0532225735</div>
-        </div>
+        <button onclick="saveReview()">إرسال</button>
 
     </div>
-</div>
 
-<footer>
-    © 2026 سهل للخدمات - جميع الحقوق محفوظة
-</footer>
+    <footer>
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
+    </footer>
 
-<script>
-    document.getElementById("form").addEventListener("submit", function(e) {
-        e.preventDefault();
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
 
-        let name = document.getElementById("name").value;
-        let phone = document.getElementById("phone").value;
-        let email = document.getElementById("email").value;
-        let type = document.getElementById("type").value;
-        let subject = document.getElementById("subject").value;
-        let message = document.getElementById("message").value;
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
 
-        let text =
-            "مرحباً، لدي " + type + "%0A" +
-            "------------------------%0A" +
-            "الاسم: " + name + "%0A" +
-            "الجوال: " + phone + "%0A" +
-            "البريد: " + email + "%0A" +
-            "العنوان: " + subject + "%0A" +
-            "------------------------%0A" +
-            "التفاصيل:%0A" + message;
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
-        let whatsapp = "https://wa.me/966532225735?text=" + text;
+    <!-- ⭐ Firebase + Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } 
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        window.location.href = whatsapp;
-    });
-</script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function saveReview() {
+            let name = document.getElementById("name").value.trim();
+            let gender = document.getElementById("gender").value;
+            let rating = document.getElementById("rating").value;
+            let message = document.getElementById("message").value.trim();
+
+            if (!name || !message) {
+                alert("الرجاء تعبئة جميع الحقول");
+                return;
+            }
+
+            if (message.length > 300) {
+                alert("الحد الأقصى للكتابة هو 300 كلمة");
+                return;
+            }
+
+            await addDoc(collection(db, "reviews"), {
+                name: name,
+                gender: gender,
+                rating: rating,
+                message: message,
+                date: new Date().toISOString()
+            });
+
+            alert("تم إرسال تعليقك بنجاح!");
+            window.location.href = "clients.html";
+        }
+    </script>
 
 </body>
 </html>
