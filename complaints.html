@@ -16,22 +16,35 @@
             color: #111827;
         }
 
-        /* الشريط الجانبي نفس الصفحة الرئيسية */
+        /* زر القائمة للجوال */
+        .menu-toggle {
+            display: none;
+            background-color: #0f172a;
+            color: #fff;
+            padding: 12px;
+            width: 100%;
+            text-align: center;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* الشريط الجانبي */
         .sidebar {
             width: 260px;
-            background-color: #1e3a8a;
+            background-color: #0f172a;
             padding: 20px;
             min-height: 100vh;
             box-sizing: border-box;
             position: fixed;
             right: 0;
             top: 0;
+            transition: 0.3s;
         }
 
         .sidebar h2 {
             color: #fff;
             margin: 0 0 20px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             text-align: center;
         }
 
@@ -42,19 +55,21 @@
         }
 
         .menu a {
-            background-color: #2563eb;
-            color: #fff;
+            background-color: #ffffff;
+            color: #0f172a;
             padding: 12px;
             text-decoration: none;
             border-radius: 10px;
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
+            border: 1px solid #e5e7eb;
         }
 
         .menu a:hover,
         .menu a.active {
-            background-color: #1e40af;
+            background-color: #1e3a8a;
+            color: #fff;
         }
 
         /* المحتوى */
@@ -82,7 +97,7 @@
             border-radius: 8px;
             border: 1px solid #d1d5db;
             margin-bottom: 14px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             background-color: #f9fafb;
         }
 
@@ -122,11 +137,16 @@
             margin-top: 30px;
         }
 
+        /* الجوال */
         @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
             .sidebar {
-                position: relative;
-                width: 100%;
-                min-height: auto;
+                right: -300px;
+            }
+            .sidebar.open {
+                right: 0;
             }
             .content {
                 margin-right: 0;
@@ -137,8 +157,11 @@
 
 <body>
 
-<!-- الشريط الجانبي نفس الصفحة الرئيسية -->
-<div class="sidebar">
+<!-- زر القائمة للجوال -->
+<div class="menu-toggle" onclick="toggleMenu()">القائمة</div>
+
+<!-- الشريط الجانبي -->
+<div class="sidebar" id="sidebar">
     <h2>سهل للخدمات</h2>
     <div class="menu">
         <a href="index.html">الرئيسية</a>
@@ -197,6 +220,10 @@
 </div>
 
 <script>
+    function toggleMenu() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
+
     document.getElementById("form").addEventListener("submit", function(e) {
         e.preventDefault();
 
