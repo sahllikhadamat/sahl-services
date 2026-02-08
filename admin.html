@@ -1,305 +1,519 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-      background-color: #f7f7f7;
-    }
+    <!-- Quill Editor -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 
-    header {
-      background-color: #27415d;
-      color: white;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header img {
-      height: 60px;
-    }
-
-    .menu-btn {
-      font-size: 28px;
-      cursor: pointer;
-      color: white;
-    }
-
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background-color: #27415d;
-      overflow-x: hidden;
-      transition: 0.3s;
-      z-index: 1000;
-    }
-
-    .sidebar a {
-      padding: 12px 25px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-
-    .sidebar a:hover {
-      background-color: #e17c1b;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      left: 25px;
-      font-size: 30px;
-      cursor: pointer;
-      color: white;
-    }
-
-    h1 {
-      text-align: center;
-      color: #27415d;
-      margin-top: 20px;
-    }
-
-    .dashboard-container {
-      padding: 15px;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
-      text-align: center;
-    }
-
-    .stat-title {
-      font-size: 15px;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .stat-number {
-      font-size: 26px;
-      font-weight: 700;
-      color: #e17c1b;
-    }
-
-    .section-box {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-    }
-
-    .section-box h2 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #27415d;
-    }
-
-    .list-item {
-      border-bottom: 1px solid #eee;
-      padding: 8px 0;
-      font-size: 14px;
-    }
-
-    .list-item:last-child {
-      border-bottom: none;
-    }
-
-    .list-item .date {
-      color: gray;
-      font-size: 12px;
-    }
-
-    footer {
-      background-color: #27415d;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 25px;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- الشريط الجانبي -->
-  <div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeSidebar()">×</span>
-    <a href="admin.html">لوحة الإدارة</a>
-    <a href="index.html">الرئيسية</a>
-    <a href="devices.html">الأجهزة</a>
-    <a href="clients.html">العملاء</a>
-    <a href="complaints.html">الشكاوى</a>
-    <a href="contact.html">اتصل بنا</a>
-  </div>
-
-  <!-- رأس الصفحة -->
-  <header>
-    <span class="menu-btn" onclick="openSidebar()">☰</span>
-    <img src="logo-menu.png" alt="شعار لوحة التحكم">
-  </header>
-
-  <h1>لوحة التحكم</h1>
-
-  <div class="dashboard-container">
-
-    <!-- إحصائيات -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-title">عدد النسخ</div>
-        <div class="stat-number" id="revisedCount">0</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-title">عدد الأجهزة</div>
-        <div class="stat-number" id="deviceCount">0</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-title">عدد العملاء</div>
-        <div class="stat-number" id="clientsCount">0</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-title">عدد الشكاوي</div>
-        <div class="stat-number" id="complaintsCount">0</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-title">عدد الطلبات</div>
-        <div class="stat-number" id="ordersCount">0</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-title">عدد الخدمات</div>
-        <div class="stat-number" id="servicesCount">0</div>
-      </div>
-    </div>
-
-    <!-- آخر 5 تعليقات -->
-    <div class="section-box">
-      <h2>آخر 5 تعليقات</h2>
-      <div id="lastReviews"></div>
-    </div>
-
-    <!-- آخر 5 شكاوي -->
-    <div class="section-box">
-      <h2>آخر 5 شكاوي</h2>
-      <div id="lastComplaints"></div>
-    </div>
-
-  </div>
-
-  <footer>
-    © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
-  </footer>
-
-  <script>
-    function openSidebar() {
-      document.getElementById("sidebar").style.width = "250px";
-    }
-
-    function closeSidebar() {
-      document.getElementById("sidebar").style.width = "0";
-    }
-
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      orderBy,
-      limit
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-      authDomain: "sahl-services-94183.firebaseapp.com",
-      projectId: "sahl-services-94183",
-      storageBucket: "sahl-services-94183.firebasestorage.app",
-      messagingSenderId: "926677469615",
-      appId: "1:926677469615:web:fc2b910ca660838071875a"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function count(col, id) {
-      try {
-        const snap = await getDocs(collection(db, col));
-        document.getElementById(id).textContent = snap.size;
-      } catch {
-        document.getElementById(id).textContent = "0";
-      }
-    }
-
-    async function loadLast(col, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-
-      try {
-        const q = query(collection(db, col), orderBy("date", "desc"), limit(5));
-        const snap = await getDocs(q);
-
-        if (snap.empty) {
-          container.innerHTML = "<div class='list-item'>لا يوجد بيانات.</div>";
-          return;
+    <style>
+        :root {
+            color-scheme: light dark;
         }
 
-        snap.forEach(docSnap => {
-          const d = docSnap.data();
-          container.innerHTML += `
-            <div class="list-item">
-              <strong>${d.name}</strong><br>
-              <span>${d.message}</span><br>
-              <span class="date">${new Date(d.date).toLocaleDateString()}</span>
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            background-color: light-dark(#f5f5f5, #1e1e1e);
+            color: light-dark(#000, #fff);
+        }
+
+        /* شاشة تسجيل الدخول */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: light-dark(#f5f5f5, #1e1e1e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: light-dark(#fff, #2c2c2c);
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #e17c1b;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 240px;
+            background: light-dark(#ffffff, #2c2c2c);
+            height: 100vh;
+            border-left: 1px solid light-dark(#ddd, #444);
+            transition: 0.3s;
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: inherit;
+            font-size: 18px;
+            border-bottom: 1px solid light-dark(#eee, #444);
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: light-dark(#f0f0f0, #3a3a3a);
+        }
+
+        .toggle-btn {
+            position: absolute;
+            left: -35px;
+            top: 20px;
+            background: #e17c1b;
+            color: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* منطقة المحتوى */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-right: 240px;
+            transition: 0.3s;
+        }
+
+        .content.collapsed {
+            margin-right: 70px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* محرر الصفحات */
+        #pageSelect {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            min-width: 220px;
+        }
+
+        #editorContainer {
+            margin-top: 15px;
+        }
+
+        #editor {
+            height: 300px;
+            background: light-dark(#fff, #333);
+        }
+
+        .editor-actions {
+            margin-top: 15px;
+        }
+
+        .editor-actions button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-inline-start: 5px;
+        }
+
+        .btn-save {
+            background: #27ae60;
+            color: #fff;
+        }
+
+        .btn-reload {
+            background: #2980b9;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2>تسجيل الدخول</h2>
+            <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
+            <button onclick="login()">دخول</button>
+        </div>
+    </div>
+
+    <!-- القائمة الجانبية -->
+    <div class="sidebar" id="sidebar">
+        <div class="toggle-btn" onclick="toggleSidebar()">≡</div>
+
+        <a href="#" onclick="showSection('comments')">التعليقات</a>
+        <a href="#" onclick="showSection('contentEdit')">تعديل الصفحات</a>
+        <a href="#" onclick="showSection('stats')">الإحصائيات</a>
+        <a href="#" onclick="showSection('settings')">الإعدادات</a>
+        <a href="#" onclick="logout()">تسجيل الخروج</a>
+    </div>
+
+    <!-- منطقة المحتوى -->
+    <div class="content" id="contentArea">
+
+        <!-- قسم التعليقات -->
+        <div id="comments" class="section active">
+            <h1>إدارة التعليقات</h1>
+
+            <div style="margin: 15px 0;">
+                <input id="searchInput" type="text" placeholder="بحث بالاسم أو بالكلمة…" 
+                    style="padding:10px;width:60%;border-radius:8px;border:1px solid #ccc;">
+                
+                <select id="filterRating" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="">كل التقييمات</option>
+                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                    <option value="⭐⭐⭐">⭐⭐⭐</option>
+                    <option value="⭐⭐">⭐⭐</option>
+                    <option value="⭐">⭐</option>
+                </select>
+
+                <select id="sortOrder" style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+                    <option value="newest">الأحدث أولاً</option>
+                    <option value="oldest">الأقدم أولاً</option>
+                </select>
+
+                <button onclick="loadComments()" 
+                        style="padding:10px 15px;background:#e17c1b;color:white;border:none;border-radius:8px;">
+                    تحديث
+                </button>
             </div>
-          `;
+
+            <div id="commentsList"></div>
+        </div>
+
+        <!-- قسم تعديل الصفحات -->
+        <div id="contentEdit" class="section">
+            <h1>تعديل محتوى الصفحات</h1>
+
+            <label for="pageSelect">اختاري الصفحة:</label>
+            <select id="pageSelect">
+                <option value="home">الصفحة الرئيسية</option>
+                <option value="services">صفحة الخدمات</option>
+                <option value="about">صفحة من نحن</option>
+                <option value="clients">صفحة آراء العملاء</option>
+                <option value="contact">صفحة تواصل معنا</option>
+            </select>
+
+            <div id="editorContainer">
+                <div id="toolbar">
+                    <!-- شريط أدوات Quill الكامل تقريبًا -->
+                    <span class="ql-formats">
+                        <select class="ql-font"></select>
+                        <select class="ql-size"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-script" value="sub"></button>
+                        <button class="ql-script" value="super"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1"></button>
+                        <button class="ql-header" value="2"></button>
+                        <button class="ql-blockquote"></button>
+                        <button class="ql-code-block"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                        <button class="ql-indent" value="-1"></button>
+                        <button class="ql-indent" value="+1"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-direction" value="rtl"></button>
+                        <select class="ql-align"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                        <button class="ql-clean"></button>
+                    </span>
+                </div>
+
+                <div id="editor"></div>
+            </div>
+
+            <div class="editor-actions">
+                <button class="btn-save" onclick="savePageContent()">حفظ التعديلات</button>
+                <button class="btn-reload" onclick="loadPageContent()">إعادة تحميل النص</button>
+            </div>
+
+            <p style="margin-top:10px;font-size:14px;color:#777;">
+                ملاحظة: التعديلات تُحفظ في قاعدة البيانات، وتُستخدم في صفحات الموقع بعد ربطها بالقراءة من Firestore.
+            </p>
+        </div>
+
+        <!-- قسم الإحصائيات -->
+        <div id="stats" class="section">
+            <h1>إحصائيات الزوار</h1>
+            <p>سيتم إضافة الرسم البياني والإحصائيات في مرحلة لاحقة.</p>
+        </div>
+
+        <!-- قسم الإعدادات -->
+        <div id="settings" class="section">
+            <h1>الإعدادات</h1>
+            <p>سيتم إضافة إعدادات لوحة التحكم لاحقًا.</p>
+        </div>
+
+    </div>
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+    <!-- سكربت -->
+    <script type="module">
+
+        /* تسجيل الدخول */
+        const ADMIN_PASSWORD = "sahl 911";
+
+        window.login = function () {
+            const pass = document.getElementById("passwordInput").value.trim();
+            if (pass === ADMIN_PASSWORD) {
+                sessionStorage.setItem("adminLogged", "true");
+                document.getElementById("loginScreen").style.display = "none";
+            } else {
+                alert("كلمة المرور غير صحيحة");
+            }
+        }
+
+        if (sessionStorage.getItem("adminLogged") === "true") {
+            document.getElementById("loginScreen").style.display = "none";
+        }
+
+        window.logout = function () {
+            sessionStorage.removeItem("adminLogged");
+            location.reload();
+        }
+
+        window.showSection = function (id) {
+            document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+        }
+
+        window.toggleSidebar = function () {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("contentArea").classList.toggle("collapsed");
+        }
+
+        /* Firebase */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, collection, getDocs, deleteDoc, updateDoc, doc,
+            getDoc, setDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        /* قسم التعليقات */
+
+        window.loadComments = async function () {
+            const list = document.getElementById("commentsList");
+            list.innerHTML = "جاري التحميل…";
+
+            const search = document.getElementById("searchInput").value.trim();
+            const filterRating = document.getElementById("filterRating").value;
+            const sortOrder = document.getElementById("sortOrder").value;
+
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            let reviews = [];
+
+            querySnapshot.forEach(docSnap => {
+                let data = docSnap.data();
+                data.id = docSnap.id;
+                reviews.push(data);
+            });
+
+            if (search) {
+                reviews = reviews.filter(r =>
+                    (r.name || "").includes(search) ||
+                    (r.message || "").includes(search)
+                );
+            }
+
+            if (filterRating) {
+                reviews = reviews.filter(r => r.rating === filterRating);
+            }
+
+            reviews.sort((a, b) => {
+                const da = a.date ? new Date(a.date) : new Date(0);
+                const dbb = b.date ? new Date(b.date) : new Date(0);
+                if (sortOrder === "newest") {
+                    return dbb - da;
+                } else {
+                    return da - dbb;
+                }
+            });
+
+            list.innerHTML = "";
+            reviews.forEach(r => {
+                const box = document.createElement("div");
+                box.style = `
+                    background: light-dark(#fff,#333);
+                    padding:15px;
+                    margin:10px 0;
+                    border-radius:10px;
+                    border:1px solid #ccc;
+                `;
+
+                const safeMessage = r.message || "";
+                const safeName = r.name || "بدون اسم";
+                const safeGender = r.gender || "";
+                const safeRating = r.rating || "";
+
+                box.innerHTML = `
+                    <h3>${safeName} ${safeGender ? "(" + safeGender + ")" : ""} — ${safeRating}</h3>
+                    <p>${safeMessage}</p>
+                    <small>${r.date ? new Date(r.date).toLocaleString() : ""}</small>
+                    <br><br>
+
+                    <button onclick="deleteComment('${r.id}')" 
+                        style="background:#c0392b;color:white;padding:8px 12px;border:none;border-radius:6px;">
+                        حذف
+                    </button>
+
+                    <button onclick="editComment('${r.id}', ${JSON.stringify(safeMessage)})" 
+                        style="background:#2980b9;color:white;padding:8px 12px;border:none;border-radius:6px;">
+                        تعديل
+                    </button>
+                `;
+
+                list.appendChild(box);
+            });
+        }
+
+        window.deleteComment = async function (id) {
+            if (!confirm("هل تريدين حذف هذا التعليق؟")) return;
+
+            await deleteDoc(doc(db, "reviews", id));
+            alert("تم حذف التعليق");
+            loadComments();
+        }
+
+        window.editComment = async function (id, oldMessage) {
+            const newMessage = prompt("اكتبي النص الجديد:", oldMessage);
+            if (!newMessage) return;
+
+            await updateDoc(doc(db, "reviews", id), {
+                message: newMessage
+            });
+
+            alert("تم تعديل التعليق");
+            loadComments();
+        }
+
+        /* محرر الصفحات – Quill */
+
+        let quill;
+        let currentPage = "home";
+
+        function initEditor() {
+            quill = new Quill('#editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: '#toolbar'
+                }
+            });
+        }
+
+        window.loadPageContent = async function () {
+            currentPage = document.getElementById("pageSelect").value;
+            if (!currentPage || !quill) return;
+
+            const ref = doc(db, "siteContent", currentPage);
+            const snap = await getDoc(ref);
+
+            if (snap.exists()) {
+                const data = snap.data();
+                const html = data.content || "";
+                quill.root.innerHTML = html;
+            } else {
+                quill.root.innerHTML = "";
+            }
+        }
+
+        window.savePageContent = async function () {
+            if (!quill) return;
+            currentPage = document.getElementById("pageSelect").value;
+            const html = quill.root.innerHTML;
+
+            const ref = doc(db, "siteContent", currentPage);
+            await setDoc(ref, { content: html }, { merge: true });
+
+            alert("تم حفظ محتوى الصفحة بنجاح");
+        }
+
+        document.getElementById("pageSelect").addEventListener("change", () => {
+            loadPageContent();
         });
-      } catch {
-        container.innerHTML = "<div class='list-item'>خطأ في التحميل.</div>";
-      }
-    }
 
-    count("revised", "revisedCount");
-    count("devices", "deviceCount");
-    count("clients", "clientsCount");
-    count("complaints", "complaintsCount");
-    count("orders", "ordersCount");
-    count("services", "servicesCount");
+        /* تشغيل أولي */
+        window.addEventListener("DOMContentLoaded", () => {
+            initEditor();
+            loadComments();
+            loadPageContent();
+        });
 
-    loadLast("reviews", "lastReviews");
-    loadLast("complaints", "lastComplaints");
-  </script>
+    </script>
 
 </body>
 </html>
