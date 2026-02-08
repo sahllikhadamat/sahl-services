@@ -76,14 +76,12 @@
             margin-top: 25px;
         }
 
-        .logo-box {
+        .counter {
             text-align: center;
-            margin-top: 10px;
-        }
-
-        .logo-box i {
-            font-size: 60px;
             color: #e17c1b;
+            font-size: 20px;
+            margin-top: -10px;
+            margin-bottom: 20px;
         }
 
         .form-box {
@@ -138,14 +136,6 @@
             text-align: center;
             padding: 12px;
             margin-top: 30px;
-            font-size: 14px;
-        }
-
-        .small-note {
-            text-align: center;
-            font-size: 13px;
-            color: #555;
-            margin-top: 20px;
         }
     </style>
 
@@ -157,12 +147,57 @@
         function closeSidebar() {
             document.getElementById("sidebar").style.width = "0";
         }
+
+        function sendOrder() {
+            let name = document.getElementById("name").value.trim();
+            let service = document.getElementById("service").value;
+            let details = document.getElementById("details").value.trim();
+            let note = document.getElementById("note").value.trim();
+            let know = document.getElementById("know").value;
+            let discount = document.getElementById("discount").value.trim();
+
+            let agree1 = document.getElementById("agree1").checked;
+            let agree2 = document.getElementById("agree2").checked;
+
+            if (!name || !service || !details) {
+                alert("الرجاء تعبئة جميع الحقول المطلوبة");
+                return;
+            }
+
+            if (!agree1 || !agree2) {
+                alert("يجب الموافقة على الشروط قبل إرسال الطلب");
+                return;
+            }
+
+            let phone = "966532225735";
+
+            let text =
+`طلب جديد من موقع سهل للخدمات:
+
+الاسم: ${name}
+الخدمة المطلوبة: ${service}
+
+تفاصيل الخدمة:
+${details}
+
+ملاحظة:
+${note || "لا يوجد"}
+
+كيف عرفت عنا:
+${know}
+
+كود الخصم:
+${discount || "لا يوجد"}
+
+تم إرسال الطلب من صفحة الموقع`;
+
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+        }
     </script>
 
 </head>
 <body>
 
-    <!-- القائمة الجانبية -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="closeSidebar()">×</span>
 
@@ -176,7 +211,6 @@
         <a href="order.html">طلب خدمة</a>
     </div>
 
-    <!-- الهيدر -->
     <header>
         <span class="menu-btn" onclick="openSidebar()">☰</span>
         <img src="logo-new.png.png" alt="شعار سهل للخدمات">
@@ -184,74 +218,50 @@
 
     <h1>طلب خدمة</h1>
 
-    <div class="logo-box">
-        <i class="fa-solid fa-file-signature"></i>
-    </div>
+    <div class="counter">عدد الطلبات المنجزة: 124</div>
 
     <div class="form-box">
 
         <label>الاسم</label>
-        <input type="text" id="name" required>
+        <input type="text" id="name" placeholder="اكتب اسمك">
 
-        <label>الجنس</label>
-        <select id="gender" required>
-            <option value="">اختر الجنس</option>
-            <option value="ذكر">ذكر</option>
-            <option value="أنثى">أنثى</option>
-        </select>
-
-        <label>رقم الجوال</label>
-        <input type="text" id="phone" maxlength="10" required>
-
-        <label>نوع الخدمة المطلوبة</label>
-        <select id="category" required onchange="loadServices()">
+        <label>نوع الخدمة</label>
+        <select id="service">
             <option value="">اختر نوع الخدمة</option>
-            <option value="design">خدمات التصميم</option>
-            <option value="education">التعليم والمهام</option>
-            <option value="electronic">الخدمات الإلكترونية</option>
+            <option value="خدمات التصميم">خدمات التصميم</option>
+            <option value="التعليم والمهام">التعليم والمهام</option>
+            <option value="الخدمات الإلكترونية">الخدمات الإلكترونية</option>
         </select>
 
         <label>تفاصيل الخدمة</label>
-        <select id="service" required>
-            <option value="">اختر الخدمة</option>
-        </select>
+        <textarea id="details" placeholder="اكتب تفاصيل الخدمة المطلوبة..."></textarea>
 
         <label>ملاحظة (اختياري – 300 كلمة)</label>
-        <textarea id="note" maxlength="300"></textarea>
+        <textarea id="note" maxlength="300" placeholder="اكتب ملاحظتك هنا..."></textarea>
 
         <label>كيف عرفت عنا؟</label>
-        <select id="source" onchange="toggleOther()">
-            <option value="">اختر</option>
-            <option value="انستغرام">انستغرام</option>
+        <select id="know">
             <option value="سناب شات">سناب شات</option>
             <option value="تيك توك">تيك توك</option>
-            <option value="اكس">إكس</option>
-            <option value="واتساب">واتساب</option>
-            <option value="الاهل">الأهل</option>
-            <option value="الاصدقاء">الأصدقاء</option>
-            <option value="اخرى">أخرى</option>
+            <option value="إنستغرام">إنستغرام</option>
+            <option value="صديق">صديق</option>
+            <option value="بحث">بحث</option>
         </select>
 
-        <input type="text" id="otherSource" placeholder="اذكر المصدر (20 كلمة)" style="display:none;" maxlength="100">
-
         <label>كود الخصم (اختياري)</label>
-        <input type="text" id="discount">
+        <input type="text" id="discount" placeholder="مثال: SAHL10">
 
-        <label>
-            <input type="checkbox" id="terms" required>
-            أوافق على الشروط والأحكام
-        </label>
+        <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
+            <input type="checkbox" id="agree1" style="width:20px; height:20px;">
+            <label for="agree1">أوافق على الشروط والأحكام</label>
+        </div>
 
-        <label>
-            <input type="checkbox" id="confirm" required>
-            أقر بأن جميع المعلومات صحيحة
-        </label>
+        <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
+            <input type="checkbox" id="agree2" style="width:20px; height:20px;">
+            <label for="agree2">أقر بأن جميع المعلومات صحيحة</label>
+        </div>
 
         <button onclick="sendOrder()">إرسال الطلب</button>
-
-        <div class="small-note">
-            عدد الطلبات المنجزة – نضمن الخصوصية التامة – تنفيذ سريع – دعم مباشر
-        </div>
 
     </div>
 
@@ -261,140 +271,6 @@
 
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
-
-        const services = {
-            design: [
-                "تصميم سيرة ذاتية (العربية فقط)",
-                "تصميم سيرة ذاتية (الإنجليزية فقط)",
-                "تصميم سيرة ذاتية (العربي - الإنجليزي)",
-                "تصميم منشور (1)",
-                "تصميم بوست (1)",
-                "تصميم فيديو (1 دقيقة)",
-                "تصميم فيديو (2 دقيقة)",
-                "تصميم فيديو (3 دقيقة)",
-                "تصميم فيديو (4 دقيقة)",
-                "تصميم فيديو (5 دقيقة)",
-                "تصميم قائمة طعام (1-5 صفحات)",
-                "تصميم شهادات شكر (1-5)",
-                "تصميم شهادات شكر (1-10)",
-                "تصميم شهادات شكر (1-20)"
-            ],
-            education: [
-                "دورات تدريبية (دروب)",
-                "دورات تدريبية (إثرائي)",
-                "دورات تدريبية (إبعاد)",
-                "دورات تدريبية (إدراك)",
-                "دورات تدريبية (معهد الإدارة)",
-                "دورات تدريبية (ذكاء اصطناعي سماي)",
-                "دورات تدريبية (المعهد الوطني التربوي)",
-                "بحث (صفحتين)",
-                "بحث (5 صفحات)",
-                "بحث (8 صفحات)",
-                "بحث (10 صفحات)",
-                "بحث (15 صفحة)",
-                "ورقة عمل (1)",
-                "ورقتين عمل",
-                "3 أوراق عمل",
-                "4 أوراق عمل",
-                "5 أوراق عمل",
-                "8 أوراق عمل",
-                "10 أوراق عمل",
-                "مهام أدائية",
-                "ملف إنجاز (5 صفحات)",
-                "ملف إنجاز (8 صفحات)",
-                "ملف إنجاز (10 صفحات)",
-                "ملف إنجاز (15 صفحة)",
-                "ملف إنجاز (20 صفحة)",
-                "مشروع تخرج (5 صفحات)",
-                "مشروع تخرج (10 صفحات)",
-                "مشروع تخرج (15 صفحة)",
-                "مشروع تخرج (20 صفحة)",
-                "عرض تقديمي (5 صفحات)",
-                "عرض تقديمي (10 صفحات)",
-                "عرض تقديمي (15 صفحة)"
-            ],
-            electronic: [
-                "ساعات تطوعية (40)",
-                "ساعات تطوعية (45)",
-                "ساعات تطوعية (50)",
-                "ساعات تطوعية (55)",
-                "ساعات تطوعية (60)",
-                "ساعات تطوعية (70)",
-                "ساعات تطوعية (80)",
-                "ساعات تطوعية (90)",
-                "ساعات تطوعية (100)",
-                "ساعات تطوعية (120)",
-                "ساعات تطوعية (150)",
-                "ساعات تطوعية (200)",
-                "إنشاء متجر سلة",
-                "إصدار وثيقة العمل الحر (بدون شهادات)",
-                "إصدار وثيقة العمل الحر (مع شهادات)",
-                "إصدار رخصة فال العقارية"
-            ]
-        };
-
-        function loadServices() {
-            const category = document.getElementById("category").value;
-            const serviceSelect = document.getElementById("service");
-
-            serviceSelect.innerHTML = "<option value=''>اختر الخدمة</option>";
-
-            if (services[category]) {
-                services[category].forEach(s => {
-                    const option = document.createElement("option");
-                    option.value = s;
-                    option.textContent = s;
-                    serviceSelect.appendChild(option);
-                });
-            }
-        }
-
-        function toggleOther() {
-            const source = document.getElementById("source").value;
-            const other = document.getElementById("otherSource");
-            other.style.display = source === "اخرى" ? "block" : "none";
-        }
-
-        function sendOrder() {
-            const name = document.getElementById("name").value.trim();
-            const gender = document.getElementById("gender").value;
-            const phone = document.getElementById("phone").value.trim();
-            const category = document.getElementById("category").value;
-            const service = document.getElementById("service").value;
-            const note = document.getElementById("note").value.trim();
-            const source = document.getElementById("source").value;
-            const otherSource = document.getElementById("otherSource").value.trim();
-            const discount = document.getElementById("discount").value.trim();
-            const terms = document.getElementById("terms").checked;
-            const confirm = document.getElementById("confirm").checked;
-
-            if (!name || !gender || !phone || !category || !service || !source || !terms || !confirm) {
-                alert("الرجاء تعبئة جميع الحقول الإلزامية");
-                return;
-            }
-
-            if (phone.length !== 10 || isNaN(phone)) {
-                alert("رقم الجوال يجب أن يكون 10 أرقام بدون حروف");
-                return;
-            }
-
-            let finalSource = source === "اخرى" ? otherSource : source;
-
-            const message =
-                `طلب خدمة جديد:\n\n` +
-                `الاسم: ${name}\n` +
-                `الجنس: ${gender}\n` +
-                `رقم الجوال: ${phone}\n` +
-                `نوع الخدمة: ${category}\n` +
-                `الخدمة المطلوبة: ${service}\n` +
-                `الملاحظة: ${note || "لا يوجد"}\n` +
-                `كيف عرفت عنا: ${finalSource}\n` +
-                `كود الخصم: ${discount || "لا يوجد"}\n`;
-
-            fetch("https://api.whatsapp.com/send?phone=966532225735&text=" + encodeURIComponent(message));
-
-            alert("تم استلام طلبك، ننفذ طلبك بسرعة البرق ⚡");
-        }
     </script>
 
 </body>
