@@ -198,10 +198,45 @@
 
     <!-- ⭐ Firebase + Firestore -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } 
-            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
+    const firebaseConfig = {
+        apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+        authDomain: "sahl-services-94183.firebaseapp.com",
+        projectId: "sahl-services-94183",
+        storageBucket: "sahl-services-94183.firebasestorage.app",
+        messagingSenderId: "926677469615",
+        appId: "1:926677469615:web:fc2b910ca660838071875a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function saveReview() {
+        let name = document.getElementById("name").value.trim();
+        let gender = document.getElementById("gender").value;
+        let rating = document.getElementById("rating").value;
+        let message = document.getElementById("message").value.trim();
+
+        if (!name || !message) {
+            alert("الرجاء تعبئة جميع الحقول");
+            return;
+        }
+
+        await addDoc(collection(db, "reviews"), {
+            name: name,
+            gender: gender,
+            rating: rating,
+            message: message,
+            date: new Date().toISOString()
+        });
+
+        alert("تم إرسال تعليقك بنجاح!");
+        window.location.href = "clients.html";
+    }
+
+    // ⭐ هذا السطر هو اللي يحل مشكلة "saveReview is not defined"
+    window.saveReview = saveReview;
+</script>
