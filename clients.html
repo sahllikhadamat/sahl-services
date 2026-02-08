@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سهل للخدمات – آراء العملاء</title>
+    <title>آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -25,12 +25,11 @@
         }
 
         header img {
-            height: 60px;
-            border-radius: 50%;
+            height: 70px;
         }
 
         .menu-btn {
-            font-size: 30px;
+            font-size: 28px;
             cursor: pointer;
             color: white;
         }
@@ -49,12 +48,13 @@
         }
 
         .sidebar a {
-            padding: 15px 25px;
+            padding: 12px 25px;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             color: white;
             display: block;
+            transition: 0.3s;
         }
 
         .sidebar a:hover {
@@ -70,45 +70,61 @@
             color: white;
         }
 
-        .section {
-            background-color: white;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-        }
-
-        .section h1 {
-            font-size: 26px;
+        h1 {
+            text-align: center;
             color: #27415d;
-            margin-top: 0;
+            margin-top: 25px;
         }
 
-        .section p {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.8;
+        .reviews-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .review-box {
-            background: #fff;
-            padding: 15px;
+            background: white;
+            padding: 20px;
             border-radius: 12px;
-            margin-bottom: 12px;
-            border-right: 4px solid #e17c1b;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        .review-box h3 {
-            margin: 0;
-            font-size: 18px;
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .review-header i {
+            font-size: 28px;
+            color: #e17c1b;
+        }
+
+        .review-name {
+            font-size: 20px;
+            font-weight: 700;
             color: #27415d;
         }
 
-        .review-box p {
-            margin: 8px 0 0;
-            font-size: 15px;
+        .review-rating {
+            font-size: 18px;
+            color: #e17c1b;
+            margin-bottom: 8px;
+        }
+
+        .review-message {
+            font-size: 16px;
             color: #333;
+            line-height: 1.6;
+        }
+
+        .review-date {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #777;
+            text-align: left;
         }
 
         footer {
@@ -116,8 +132,7 @@
             color: white;
             text-align: center;
             padding: 12px;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 30px;
         }
     </style>
 
@@ -129,12 +144,42 @@
         function closeSidebar() {
             document.getElementById("sidebar").style.width = "0";
         }
+
+        function loadReviews() {
+            let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+            let container = document.getElementById("reviews");
+
+            if (reviews.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#777;'>لا توجد تعليقات حتى الآن.</p>";
+                return;
+            }
+
+            reviews.forEach(r => {
+                let genderIcon = r.gender === "ذكر" ? "fa-mars" : "fa-venus";
+
+                let box = `
+                    <div class="review-box">
+                        <div class="review-header">
+                            <i class="fa-solid ${genderIcon}"></i>
+                            <span class="review-name">${r.name}</span>
+                        </div>
+
+                        <div class="review-rating">${r.rating}</div>
+
+                        <div class="review-message">${r.message}</div>
+
+                        <div class="review-date">📅 ${r.date}</div>
+                    </div>
+                `;
+
+                container.innerHTML += box;
+            });
+        }
     </script>
 
 </head>
-<body>
+<body onload="loadReviews()">
 
-    <!-- القائمة الجانبية -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="closeSidebar()">×</span>
 
@@ -142,86 +187,26 @@
         <a href="about.html">من نحن</a>
         <a href="services.html">الخدمات</a>
         <a href="clients.html">آراء العملاء</a>
-        <a href="complaints.html">الشكاوي والاقتراحات</a>
         <a href="add-review.html">إضافة تعليق</a>
+        <a href="complaints.html">الشكاوي والاقتراحات</a>
         <a href="contact.html">تواصل معنا</a>
     </div>
 
-    <!-- الهيدر -->
     <header>
         <span class="menu-btn" onclick="openSidebar()">☰</span>
-        <img src="logo.png" alt="شعار سهل للخدمات">
+        <img src="logo-new.png.png" alt="شعار سهل للخدمات">
     </header>
 
-    <!-- المحتوى -->
-    <section class="section">
-        <h1 id="clients_title">آراء العملاء</h1>
-        <p id="clients_intro">
-            هنا تجدون آراء عملائنا الكرام وتجاربهم معنا.
-        </p>
+    <h1>آراء العملاء</h1>
 
-        <div id="reviews_container">
-            <!-- سيتم تحميل التعليقات من Firestore -->
-        </div>
-    </section>
+    <div class="reviews-container" id="reviews"></div>
 
     <footer>
-        © 2026 سهل للخدمات – جميع الحقوق محفوظة
+        © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
     </footer>
 
-    <!-- ربط Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-            authDomain: "sahl-services-94183.firebaseapp.com",
-            projectId: "sahl-services-94183",
-            storageBucket: "sahl-services-94183.firebasestorage.app",
-            messagingSenderId: "926677469615",
-            appId: "1:926677469615:web:fc2b910ca660838071875a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function loadClientsContent() {
-            // تحميل النصوص من لوحة التحكم
-            const ref = doc(db, "siteContent", "clients");
-            const snap = await getDoc(ref);
-
-            if (snap.exists()) {
-                const data = snap.data();
-
-                if (data.title) document.getElementById("clients_title").innerHTML = data.title;
-                if (data.intro) document.getElementById("clients_intro").innerHTML = data.intro;
-            }
-
-            // تحميل التعليقات من Firestore
-            const reviewsRef = collection(db, "reviews");
-            const reviewsSnap = await getDocs(reviewsRef);
-
-            const container = document.getElementById("reviews_container");
-            container.innerHTML = "";
-
-            reviewsSnap.forEach(docSnap => {
-                const r = docSnap.data();
-
-                const box = document.createElement("div");
-                box.className = "review-box";
-
-                box.innerHTML = `
-                    <h3>${r.name || "مستخدم"}</h3>
-                    <p>${r.rating || ""}</p>
-                    <p>${r.message || ""}</p>
-                `;
-
-                container.appendChild(box);
-            });
-        }
-
-        loadClientsContent();
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
 </body>
