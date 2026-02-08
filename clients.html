@@ -6,7 +6,6 @@
     <title>آراء العملاء</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
@@ -76,55 +75,47 @@
             margin-top: 25px;
         }
 
-        .reviews-container {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
         .review-box {
             background: white;
+            margin: 15px;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        .review-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .review-header i {
-            font-size: 28px;
-            color: #e17c1b;
-        }
-
-        .review-name {
-            font-size: 20px;
-            font-weight: 700;
+        .review-box h3 {
+            margin: 0;
             color: #27415d;
         }
 
-        .review-rating {
-            font-size: 18px;
+        .review-box .rating {
             color: #e17c1b;
-            margin-bottom: 8px;
+            font-size: 22px;
+            margin: 5px 0;
         }
 
-        .review-message {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .review-date {
-            margin-top: 10px;
+        .review-box .date {
             font-size: 14px;
-            color: #777;
-            text-align: left;
+            color: gray;
+        }
+
+        .delete-btn, .edit-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #c0392b;
+        }
+
+        .edit-btn {
+            background: #e17c1b;
+            margin-right: 10px;
         }
 
         footer {
@@ -135,50 +126,9 @@
             margin-top: 30px;
         }
     </style>
-
-    <script>
-        function openSidebar() {
-            document.getElementById("sidebar").style.width = "250px";
-        }
-
-        function closeSidebar() {
-            document.getElementById("sidebar").style.width = "0";
-        }
-
-        function loadReviews() {
-            let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-            let container = document.getElementById("reviews");
-
-            if (reviews.length === 0) {
-                container.innerHTML = "<p style='text-align:center; color:#777;'>لا توجد تعليقات حتى الآن.</p>";
-                return;
-            }
-
-            reviews.forEach(r => {
-                let genderIcon = r.gender === "ذكر" ? "fa-mars" : "fa-venus";
-
-                let box = `
-                    <div class="review-box">
-                        <div class="review-header">
-                            <i class="fa-solid ${genderIcon}"></i>
-                            <span class="review-name">${r.name}</span>
-                        </div>
-
-                        <div class="review-rating">${r.rating}</div>
-
-                        <div class="review-message">${r.message}</div>
-
-                        <div class="review-date">📅 ${r.date}</div>
-                    </div>
-                `;
-
-                container.innerHTML += box;
-            });
-        }
-    </script>
-
 </head>
-<body onload="loadReviews()">
+
+<body>
 
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="closeSidebar()">×</span>
@@ -199,14 +149,99 @@
 
     <h1>آراء العملاء</h1>
 
-    <div class="reviews-container" id="reviews"></div>
+    <div id="reviewsList"></div>
 
     <footer>
         © <span id="year"></span> سهل للخدمات – جميع الحقوق محفوظة
     </footer>
 
     <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
         document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+    <!-- ⭐ Firebase + Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc }
+            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+            authDomain: "sahl-services-94183.firebaseapp.com",
+            projectId: "sahl-services-94183",
+            storageBucket: "sahl-services-94183.firebasestorage.app",
+            messagingSenderId: "926677469615",
+            appId: "1:926677469615:web:fc2b910ca660838071875a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const currentUserId = localStorage.getItem("userId");
+
+        async function loadReviews() {
+            const reviewsList = document.getElementById("reviewsList");
+            reviewsList.innerHTML = "";
+
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+
+                const isOwner = data.userId === currentUserId;
+
+                const item = `
+                    <div class="review-box">
+                        <h3>${data.name} (${data.gender})</h3>
+                        <div class="rating">${data.rating}</div>
+                        <p>${data.message}</p>
+                        <div class="date">${new Date(data.date).toLocaleDateString()}</div>
+
+                        ${
+                            isOwner
+                            ? `
+                                <button class="delete-btn" onclick="deleteReview('${docSnap.id}')">حذف</button>
+                                <button class="edit-btn" onclick="editReview('${docSnap.id}', '${data.message}')">تعديل</button>
+                              `
+                            : ""
+                        }
+                    </div>
+                `;
+
+                reviewsList.innerHTML += item;
+            });
+        }
+
+        window.deleteReview = async function(id) {
+            if (!confirm("هل أنت متأكد من حذف تعليقك؟")) return;
+
+            await deleteDoc(doc(db, "reviews", id));
+
+            alert("تم حذف تعليقك");
+            location.reload();
+        };
+
+        window.editReview = async function(id, oldMessage) {
+            const newMessage = prompt("اكتب التعديل الجديد:", oldMessage);
+
+            if (!newMessage || newMessage.trim() === "") return;
+
+            await updateDoc(doc(db, "reviews", id), {
+                message: newMessage.trim()
+            });
+
+            alert("تم تعديل تعليقك");
+            location.reload();
+        };
+
+        loadReviews();
     </script>
 
 </body>
