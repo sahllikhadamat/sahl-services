@@ -991,14 +991,7 @@
 
   <!-- Firebase + منطق الصفحة -->
   <script type="module">
-    // ===== حماية الصفحة: التحقق من تسجيل الدخول =====
-    const adminEmail = localStorage.getItem('adminEmail');
-    if (!adminEmail) {
-      window.location.href = 'login.html';
-    } else {
-      const chip = document.getElementById('adminEmailChip');
-      if (chip) chip.textContent = adminEmail;
-    }
+   
 
     // ===== القائمة الجانبية في الجوال =====
     const sidebar = document.getElementById('sidebar');
