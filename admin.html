@@ -2,360 +2,1516 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>لوحة التحكم – سهل للخدمات</title>
+  <title>لوحة التحكم - سهل للخدمات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- خط تاجوال -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- أيقونات مادية -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f3f6ff;
-      color: #222;
+    :root {
+      --primary: #0A1A2F;
+      --primary-dark: #050d18;
+      --accent: #F57C00;
+      --bg: #f4f6fb;
+      --text: #1f2933;
+      --danger: #e53935;
+      --success: #43a047;
+      --radius: 10px;
     }
 
-    /* Sidebar */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ====== SIDEBAR ====== */
     .sidebar {
-      position: fixed;
-      top: 0;
-      right: 0;
       width: 260px;
-      height: 100vh;
-      background: linear-gradient(180deg, #007bff, #00c6ff);
+      background: var(--primary);
       color: #fff;
-      padding: 24px 18px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      padding: 20px 15px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
     }
 
-    .sidebar h2 {
-      margin: 0 0 10px;
-      text-align: center;
-      font-size: 22px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      padding: 10px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.05);
     }
 
-    .sidebar .section-title {
-      font-size: 13px;
-      opacity: 0.8;
-      margin-top: 10px;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 10px 12px;
-      margin-top: 6px;
+    .brand-logo {
+      width: 40px;
+      height: 40px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      text-decoration: none;
-      font-size: 15px;
-      cursor: pointer;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
-    .nav-link.active,
-    .nav-link:hover {
-      background: rgba(255, 255, 255, 0.28);
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
-    /* Content */
-    .content {
-      margin-right: 260px;
-      padding: 24px;
+    .brand-text {
+      display: flex;
+      flex-direction: column;
     }
 
-    .page-title {
-      font-size: 24px;
-      margin-bottom: 10px;
+    .brand-text span:first-child {
+      font-weight: 700;
+      font-size: 16px;
     }
 
-    .hint {
-      font-size: 13px;
-      color: #666;
+    .brand-text span:last-child {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.6;
+      margin: 10px 5px;
+    }
+
+    .nav-list {
+      list-style: none;
       margin-bottom: 20px;
     }
 
-    .box {
-      background: #fff;
-      border-radius: 14px;
-      padding: 18px 18px 10px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    .nav-item {
+      margin-bottom: 4px;
     }
 
-    .box h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .status-message {
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: #e5e9f0;
+      text-decoration: none;
       font-size: 14px;
-      margin-top: 6px;
-      color: #888;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: right;
+    }
+
+    .nav-link .material-icons {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--accent), #ff9800);
+      color: #fff;
+    }
+
+    .nav-link:hover:not(.active) {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logout-btn {
+      background: rgba(229,57,53,0.12);
+      color: #ffb4aa;
+    }
+
+    .logout-btn:hover {
+      background: rgba(229,57,53,0.25);
+    }
+
+    /* ====== MAIN ====== */
+    .main {
+      flex: 1;
+      margin-right: 260px;
+      padding: 20px 25px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .top-bar-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .top-bar-subtitle {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(10,26,47,0.06);
+      color: var(--primary);
+    }
+
+    /* ====== CARDS ====== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 14px 14px 12px;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+      border: 1px solid rgba(148,163,184,0.25);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .card-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(245,124,0,0.08);
+      color: var(--accent);
+    }
+
+    .card-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card-footer {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    /* ====== SECTIONS ====== */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ff9800);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: rgba(229,57,53,0.1);
+      color: var(--danger);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    /* ====== TABLE ====== */
+    .table-wrapper {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.04);
+      border: 1px solid rgba(148,163,184,0.25);
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     th, td {
-      padding: 10px;
-      border-bottom: 1px solid #e2e6f0;
+      padding: 8px 6px;
       text-align: right;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
     }
 
     th {
-      background: #e9f2ff;
+      background: #f9fafb;
       font-weight: 600;
+      color: #4b5563;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
     }
 
     tr:hover td {
-      background: #f8fbff;
+      background: #f9fafb;
     }
-
-    button {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .btn-accept { background: #27ae60; color: #fff; }
-    .btn-delete { background: #e74c3c; color: #fff; }
 
     .badge {
-      display: inline-block;
       padding: 3px 8px;
       border-radius: 999px;
-      font-size: 12px;
-      background: #e9f2ff;
-      color: #1f4fa3;
+      font-size: 11px;
+      display: inline-block;
     }
 
-    .badge-pending { background: #fff4d6; color: #b88700; }
-    .badge-accepted { background: #d9f7e5; color: #1f8a4d; }
+    .badge-pending {
+      background: rgba(245,124,0,0.12);
+      color: #f57c00;
+    }
 
-    .error-text {
-      color: #e74c3c;
+    .badge-done {
+      background: rgba(67,160,71,0.12);
+      color: #2e7d32;
+    }
+
+    .badge-danger {
+      background: rgba(229,57,53,0.12);
+      color: #c62828;
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 4px;
+      justify-content: flex-start;
+    }
+
+    /* ====== MODAL ====== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 18px 14px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.35);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+
+    .modal-body {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-top: 5px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-label {
       font-size: 13px;
-      margin-top: 6px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 7px 9px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(245,124,0,0.25);
+    }
+
+    .form-textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* ====== ALERT ====== */
+    .alert {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .alert-success {
+      background: rgba(67,160,71,0.08);
+      color: #2e7d32;
+      border: 1px solid rgba(67,160,71,0.4);
+    }
+
+    .alert-error {
+      background: rgba(229,57,53,0.08);
+      color: #c62828;
+      border: 1px solid rgba(229,57,53,0.4);
+    }
+
+    .muted {
+      font-size: 11px;
+      opacity: 0.7;
     }
 
     @media (max-width: 900px) {
       .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
+        position: fixed;
+        width: 220px;
+        transform: translateX(100%);
+        transition: transform 0.25s ease;
+        z-index: 40;
       }
-      .content {
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
         margin-right: 0;
+        padding: 15px;
       }
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .menu-toggle {
+        display: inline-flex;
+      }
+    }
+
+    .menu-toggle {
+      display: none;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 4px 10px;
+      font-size: 13px;
+      background: #fff;
+      cursor: pointer;
+      align-items: center;
+      gap: 5px;
     }
   </style>
 </head>
 <body>
 
-  <!-- الشريط الجانبي -->
-  <div class="sidebar">
-    <h2>لوحة التحكم</h2>
-    <div class="section-title">الأقسام</div>
-    <a class="nav-link active" data-target="section-orders">الطلبات</a>
-    <a class="nav-link" data-target="section-reviews">آراء العملاء</a>
-  </div>
-
-  <!-- المحتوى -->
-  <div class="content">
-    <div class="page-title">سهل للخدمات – لوحة التحكم</div>
-    <div class="hint">يمكنك إدارة الطلبات وآراء العملاء من هنا. التحديث يتم مباشرة من قاعدة بيانات Firebase.</div>
-
-    <!-- قسم الطلبات -->
-    <div class="box section" id="section-orders">
-      <h3>الطلبات</h3>
-      <div id="ordersStatus" class="status-message">جاري تحميل الطلبات...</div>
-      <table id="ordersTable">
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>الجوال</th>
-            <th>الخدمة</th>
-            <th>ملاحظة</th>
-            <th>الحالة</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <!-- لو عندك لوجو حطيه هنا -->
+        <span class="material-icons" style="color:#F57C00;">miscellaneous_services</span>
+      </div>
+      <div class="brand-text">
+        <span>سهل للخدمات</span>
+        <span>لوحة التحكم</span>
+      </div>
     </div>
 
-    <!-- قسم آراء العملاء -->
-    <div class="box section" id="section-reviews" style="display:none;">
-      <h3>آراء العملاء</h3>
-      <div id="reviewsStatus" class="status-message">جاري تحميل التعليقات...</div>
-      <table id="reviewsTable">
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>التقييم</th>
-            <th>الرسالة</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="sidebar-section-title">الرئيسية</div>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <button class="nav-link active" data-section="dashboard">
+          <span class="material-icons">space_dashboard</span>
+          <span>لوحة التحكم</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-section-title">الإدارة</div>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <button class="nav-link" data-section="orders">
+          <span class="material-icons">assignment</span>
+          <span>الطلبات</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="pendingOrders">
+          <span class="material-icons">schedule</span>
+          <span>الطلبات المعلقة</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="completedOrders">
+          <span class="material-icons">task_alt</span>
+          <span>الطلبات المنجزة</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="reviews">
+          <span class="material-icons">thumb_up</span>
+          <span>آراء العملاء</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="complaints">
+          <span class="material-icons">report_problem</span>
+          <span>الشكاوي</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="banners">
+          <span class="material-icons">image</span>
+          <span>البنرات</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-section="services">
+          <span class="material-icons">design_services</span>
+          <span>الخدمات</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-section-title">النظام</div>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <button class="nav-link" data-section="settings">
+          <span class="material-icons">settings</span>
+          <span>الإعدادات</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="nav-link logout-btn" id="logoutBtn">
+        <span class="material-icons">logout</span>
+        <span>تسجيل الخروج</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="top-bar">
+      <div>
+        <div class="top-bar-title">لوحة التحكم</div>
+        <div class="top-bar-subtitle">إدارة موقع سهل للخدمات</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="chip" id="adminEmailChip">مدير النظام</span>
+        <button class="menu-toggle" id="menuToggle">
+          <span class="material-icons">menu</span>
+          القائمة
+        </button>
+      </div>
     </div>
 
+    <!-- CARDS -->
+    <section class="section active" id="dashboard">
+      <div class="cards">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">إجمالي الطلبات</span>
+            <div class="card-icon">
+              <span class="material-icons">assignment</span>
+            </div>
+          </div>
+          <div class="card-value" id="totalOrders">-</div>
+          <div class="card-footer">كل الطلبات المسجلة في النظام</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">الطلبات المعلقة</span>
+            <div class="card-icon" style="background:rgba(245,124,0,0.12);color:#f57c00;">
+              <span class="material-icons">schedule</span>
+            </div>
+          </div>
+          <div class="card-value" id="totalPending">-</div>
+          <div class="card-footer">بانتظار المعالجة</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">الطلبات المنجزة</span>
+            <div class="card-icon" style="background:rgba(67,160,71,0.12);color:#2e7d32;">
+              <span class="material-icons">task_alt</span>
+            </div>
+          </div>
+          <div class="card-value" id="totalCompleted">-</div>
+          <div class="card-footer">تم تنفيذها بنجاح</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">آراء العملاء</span>
+            <div class="card-icon" style="background:rgba(59,130,246,0.12);color:#1d4ed8;">
+              <span class="material-icons">thumb_up</span>
+            </div>
+          </div>
+          <div class="card-value" id="totalReviews">-</div>
+          <div class="card-footer">عدد التقييمات المسجلة</div>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <div class="section-header">
+          <div class="section-title">أحدث الطلبات</div>
+          <div class="muted">آخر 10 طلبات</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>الخدمة</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="latestOrdersBody">
+            <tr><td colspan="4" class="muted">لا توجد بيانات بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الطلبات -->
+    <section class="section" id="orders">
+      <div class="section-header">
+        <div class="section-title">الطلبات</div>
+        <div class="section-actions">
+          <button class="btn btn-primary" data-open-modal="orderModal">
+            <span class="material-icons">add</span>
+            طلب جديد
+          </button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>رقم الجوال</th>
+              <th>الخدمة</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody">
+            <tr><td colspan="6" class="muted">لا توجد طلبات بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الطلبات المعلقة -->
+    <section class="section" id="pendingOrders">
+      <div class="section-header">
+        <div class="section-title">الطلبات المعلقة</div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>الخدمة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="pendingOrdersBody">
+            <tr><td colspan="4" class="muted">لا توجد طلبات معلقة</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الطلبات المنجزة -->
+    <section class="section" id="completedOrders">
+      <div class="section-header">
+        <div class="section-title">الطلبات المنجزة</div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>الخدمة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="completedOrdersBody">
+            <tr><td colspan="4" class="muted">لا توجد طلبات منجزة</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- آراء العملاء -->
+    <section class="section" id="reviews">
+      <div class="section-header">
+        <div class="section-title">آراء العملاء</div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>التقييم</th>
+              <th>التعليق</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="reviewsBody">
+            <tr><td colspan="5" class="muted">لا توجد آراء بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الشكاوي -->
+    <section class="section" id="complaints">
+      <div class="section-header">
+        <div class="section-title">الشكاوي</div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>رقم الجوال</th>
+              <th>الشكوى</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="complaintsBody">
+            <tr><td colspan="5" class="muted">لا توجد شكاوي بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- البنرات -->
+    <section class="section" id="banners">
+      <div class="section-header">
+        <div class="section-title">البنرات</div>
+        <div class="section-actions">
+          <button class="btn btn-primary" data-open-modal="bannerModal">
+            <span class="material-icons">add_photo_alternate</span>
+            بنر جديد
+          </button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>العنوان</th>
+              <th>الوصف</th>
+              <th>الرابط</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="bannersBody">
+            <tr><td colspan="4" class="muted">لا توجد بنرات بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الخدمات -->
+    <section class="section" id="services">
+      <div class="section-header">
+        <div class="section-title">الخدمات</div>
+        <div class="section-actions">
+          <button class="btn btn-primary" data-open-modal="serviceModal">
+            <span class="material-icons">add</span>
+            خدمة جديدة
+          </button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>اسم الخدمة</th>
+              <th>الوصف</th>
+              <th>السعر</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="servicesBody">
+            <tr><td colspan="4" class="muted">لا توجد خدمات بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- الإعدادات -->
+    <section class="section" id="settings">
+      <div class="section-header">
+        <div class="section-title">الإعدادات</div>
+      </div>
+      <div class="table-wrapper">
+        <div class="alert alert-success">
+          هذه النسخة من لوحة التحكم مرتبطة بـ Firebase Firestore.  
+          <br>يمكنك لاحقًا تطويرها أكثر (صلاحيات، مستخدمين، تقارير...).
+        </div>
+        <p class="muted">
+          إذا احتجتِ أي تعديل إضافي على لوحة التحكم أو إضافة أقسام جديدة، تقدرين ترجعين لي في أي وقت.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- طلب جديد -->
+  <div class="modal-backdrop" id="orderModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">إضافة طلب جديد</div>
+        <button class="modal-close" data-close-modal="orderModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="orderModalAlert"></div>
+        <div class="form-group">
+          <label class="form-label">اسم العميل</label>
+          <input type="text" id="orderCustomer" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">رقم الجوال</label>
+          <input type="text" id="orderPhone" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الخدمة</label>
+          <input type="text" id="orderService" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظات</label>
+          <textarea id="orderNotes" class="form-textarea"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveOrderBtn">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+        <button class="btn btn-outline" data-close-modal="orderModal">إلغاء</button>
+      </div>
+    </div>
   </div>
 
+  <!-- بنر جديد -->
+  <div class="modal-backdrop" id="bannerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">إضافة بنر جديد</div>
+        <button class="modal-close" data-close-modal="bannerModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="bannerModalAlert"></div>
+        <div class="form-group">
+          <label class="form-label">العنوان</label>
+          <input type="text" id="bannerTitle" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea id="bannerDescription" class="form-textarea"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الرابط (اختياري)</label>
+          <input type="text" id="bannerLink" class="form-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveBannerBtn">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+        <button class="btn btn-outline" data-close-modal="bannerModal">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- خدمة جديدة -->
+  <div class="modal-backdrop" id="serviceModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">إضافة خدمة جديدة</div>
+        <button class="modal-close" data-close-modal="serviceModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="serviceModalAlert"></div>
+        <div class="form-group">
+          <label class="form-label">اسم الخدمة</label>
+          <input type="text" id="serviceName" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea id="serviceDescription" class="form-textarea"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">السعر (اختياري)</label>
+          <input type="text" id="servicePrice" class="form-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveServiceBtn">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+        <button class="btn btn-outline" data-close-modal="serviceModal">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase + منطق الصفحة -->
   <script type="module">
-    // تبديل الأقسام في الصفحة الواحدة
-    const navLinks = document.querySelectorAll(".nav-link");
-    const sections = document.querySelectorAll(".section");
+    // ===== حماية الصفحة: التحقق من تسجيل الدخول =====
+    const adminEmail = localStorage.getItem('adminEmail');
+    if (!adminEmail) {
+      window.location.href = 'login.html';
+    } else {
+      const chip = document.getElementById('adminEmailChip');
+      if (chip) chip.textContent = adminEmail;
+    }
+
+    // ===== القائمة الجانبية في الجوال =====
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // ===== التنقل بين الأقسام =====
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
+    const sections = document.querySelectorAll('.section');
 
     navLinks.forEach(link => {
-      link.addEventListener("click", () => {
-        navLinks.forEach(l => l.classList.remove("active"));
-        link.classList.add("active");
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
 
-        const targetId = link.getAttribute("data-target");
+        const target = link.getAttribute('data-section');
         sections.forEach(sec => {
-          sec.style.display = (sec.id === targetId) ? "block" : "none";
+          sec.classList.toggle('active', sec.id === target);
         });
       });
     });
 
-    // Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    // ===== تسجيل الخروج =====
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('adminEmail');
+        localStorage.removeItem('adminToken');
+        window.location.href = 'login.html';
+      });
+    }
+
+    // ===== Firebase =====
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-      getFirestore, collection, getDocs, deleteDoc, doc, updateDoc
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      orderBy,
+      limit,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    // TODO: ضعي إعدادات مشروعك من Firebase هنا
     const firebaseConfig = {
-  apiKey: "AIzaSyBCWMTuFTnC1-XerYTt2uT4Hl_WiyQj6E0",
-  authDomain: "sahl-services-94183.firebaseapp.com",
-  projectId: "sahl-services-94183",
-  storageBucket: "sahl-services-94183.firebasestorage.app",
-  messagingSenderId: "926677469615",
-  appId: "1:926677469615:web:6ba21a1e73725f271875a"
-};
-
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // تحميل الطلبات
+    // ===== عناصر DOM =====
+    const totalOrdersEl = document.getElementById('totalOrders');
+    const totalPendingEl = document.getElementById('totalPending');
+    const totalCompletedEl = document.getElementById('totalCompleted');
+    const totalReviewsEl = document.getElementById('totalReviews');
+    const latestOrdersBody = document.getElementById('latestOrdersBody');
+
+    const ordersBody = document.getElementById('ordersBody');
+    const pendingOrdersBody = document.getElementById('pendingOrdersBody');
+    const completedOrdersBody = document.getElementById('completedOrdersBody');
+    const reviewsBody = document.getElementById('reviewsBody');
+    const complaintsBody = document.getElementById('complaintsBody');
+    const bannersBody = document.getElementById('bannersBody');
+    const servicesBody = document.getElementById('servicesBody');
+
+    // ===== مساعد لعرض تنبيه داخل مودال =====
+    function showModalAlert(containerId, message, type = 'success') {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const cls = type === 'success' ? 'alert alert-success' : 'alert alert-error';
+      container.innerHTML = `<div class="${cls}">${message}</div>`;
+      setTimeout(() => { container.innerHTML = ''; }, 2500);
+    }
+
+    // ===== المودالات =====
+    const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-open-modal');
+        const modal = document.getElementById(id);
+        if (modal) modal.classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-close-modal');
+        const modal = document.getElementById(id);
+        if (modal) modal.classList.remove('active');
+      });
+    });
+
+    modalBackdrops.forEach(backdrop => {
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+          backdrop.classList.remove('active');
+        }
+      });
+    });
+
+    // ===== تحميل البيانات من Firestore =====
+    async function loadDashboard() {
+      try {
+        // إجمالي الطلبات
+        const ordersSnap = await getDocs(collection(db, 'orders'));
+        const totalOrders = ordersSnap.size;
+        totalOrdersEl.textContent = totalOrders;
+
+        // الطلبات المعلقة
+        const pendingSnap = await getDocs(collection(db, 'pendingOrders'));
+        totalPendingEl.textContent = pendingSnap.size;
+
+        // الطلبات المنجزة
+        const completedSnap = await getDocs(collection(db, 'completedOrders'));
+        totalCompletedEl.textContent = completedSnap.size;
+
+        // آراء العملاء
+        const reviewsSnap = await getDocs(collection(db, 'reviews'));
+        totalReviewsEl.textContent = reviewsSnap.size;
+
+        // آخر 10 طلبات
+        const latestQ = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
+        const latestSnap = await getDocs(latestQ);
+        let rows = '';
+        latestSnap.forEach(docSnap => {
+          const d = docSnap.data();
+          rows += `
+            <tr>
+              <td>${d.customerName || '-'}</td>
+              <td>${d.serviceName || '-'}</td>
+              <td><span class="badge ${d.status === 'completed' ? 'badge-done' : 'badge-pending'}">
+                ${d.status === 'completed' ? 'منجز' : 'معلق'}
+              </span></td>
+              <td>${d.createdAt || '-'}</td>
+            </tr>
+          `;
+        });
+        latestOrdersBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد بيانات بعد</td></tr>`;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     async function loadOrders() {
-      const tbody = document.querySelector("#ordersTable tbody");
-      const statusEl = document.getElementById("ordersStatus");
-      tbody.innerHTML = "";
-      statusEl.textContent = "جاري تحميل الطلبات...";
-
-      try {
-        const snapshot = await getDocs(collection(db, "orders"));
-        if (snapshot.empty) {
-          statusEl.textContent = "لا توجد طلبات حتى الآن.";
-          return;
-        }
-
-        statusEl.textContent = "";
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const statusText = data.status || "قيد المراجعة";
-          const badgeClass = statusText === "تم القبول" ? "badge badge-accepted" : "badge badge-pending";
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${data.name || "-"}</td>
-            <td>${data.phone || "-"}</td>
-            <td>${data.category || "-"}</td>
-            <td>${data.note || "-"}</td>
-            <td><span class="${badgeClass}">${statusText}</span></td>
+      const snap = await getDocs(collection(db, 'orders'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.customerName || '-'}</td>
+            <td>${d.phone || '-'}</td>
+            <td>${d.serviceName || '-'}</td>
             <td>
-              <button class="btn-accept" onclick="acceptOrder('${docSnap.id}')">قبول</button>
-              <button class="btn-delete" onclick="deleteOrder('${docSnap.id}')">حذف</button>
+              <span class="badge ${d.status === 'completed' ? 'badge-done' : d.status === 'pending' ? 'badge-pending' : ''}">
+                ${d.status === 'completed' ? 'منجز' : d.status === 'pending' ? 'معلق' : (d.status || '-')}
+              </span>
             </td>
-          `;
-          tbody.appendChild(tr);
+            <td>${d.createdAt || '-'}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-outline" data-delete-order="${docSnap.id}">
+                  <span class="material-icons" style="font-size:16px;">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      ordersBody.innerHTML = rows || `<tr><td colspan="6" class="muted">لا توجد طلبات بعد</td></tr>`;
+
+      // حذف طلب
+      document.querySelectorAll('[data-delete-order]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-order');
+          if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
+            await deleteDoc(doc(db, 'orders', id));
+            loadOrders();
+            loadDashboard();
+          }
         });
-      } catch (e) {
-        console.error("Error loading orders:", e);
-        statusEl.innerHTML = `<span class="error-text">حدث خطأ أثناء تحميل الطلبات. تأكدي من إعدادات Firebase وقواعد Firestore.</span>`;
-      }
+      });
     }
 
-    // تحميل التعليقات
+    async function loadPendingOrders() {
+      const snap = await getDocs(collection(db, 'pendingOrders'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.customerName || '-'}</td>
+            <td>${d.serviceName || '-'}</td>
+            <td>${d.createdAt || '-'}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-outline" data-delete-pending="${docSnap.id}">
+                  <span class="material-icons" style="font-size:16px;">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      pendingOrdersBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد طلبات معلقة</td></tr>`;
+
+      document.querySelectorAll('[data-delete-pending]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-pending');
+          if (confirm('حذف هذا الطلب المعلق؟')) {
+            await deleteDoc(doc(db, 'pendingOrders', id));
+            loadPendingOrders();
+            loadDashboard();
+          }
+        });
+      });
+    }
+
+    async function loadCompletedOrders() {
+      const snap = await getDocs(collection(db, 'completedOrders'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.customerName || '-'}</td>
+            <td>${d.serviceName || '-'}</td>
+            <td>${d.createdAt || '-'}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-outline" data-delete-completed="${docSnap.id}">
+                  <span class="material-icons" style="font-size:16px;">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      completedOrdersBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد طلبات منجزة</td></tr>`;
+
+      document.querySelectorAll('[data-delete-completed]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-completed');
+          if (confirm('حذف هذا الطلب المنجز؟')) {
+            await deleteDoc(doc(db, 'completedOrders', id));
+            loadCompletedOrders();
+            loadDashboard();
+          }
+        });
+      });
+    }
+
     async function loadReviews() {
-      const tbody = document.querySelector("#reviewsTable tbody");
-      const statusEl = document.getElementById("reviewsStatus");
-      tbody.innerHTML = "";
-      statusEl.textContent = "جاري تحميل التعليقات...";
+      const snap = await getDocs(collection(db, 'reviews'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.name || '-'}</td>
+            <td>${d.rating || '-'}</td>
+            <td>${d.comment || '-'}</td>
+            <td>${d.createdAt || '-'}</td>
+            <td>
+              <button class="btn btn-outline" data-delete-review="${docSnap.id}">
+                <span class="material-icons" style="font-size:16px;">delete</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+      reviewsBody.innerHTML = rows || `<tr><td colspan="5" class="muted">لا توجد آراء بعد</td></tr>`;
 
-      try {
-        const snapshot = await getDocs(collection(db, "reviews"));
-        if (snapshot.empty) {
-          statusEl.textContent = "لا توجد تعليقات حتى الآن.";
+      document.querySelectorAll('[data-delete-review]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-review');
+          if (confirm('حذف هذا الرأي؟')) {
+            await deleteDoc(doc(db, 'reviews', id));
+            loadReviews();
+            loadDashboard();
+          }
+        });
+      });
+    }
+
+    async function loadComplaints() {
+      const snap = await getDocs(collection(db, 'complaints'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.name || '-'}</td>
+            <td>${d.phone || '-'}</td>
+            <td>${d.message || '-'}</td>
+            <td>${d.createdAt || '-'}</td>
+            <td>
+              <button class="btn btn-outline" data-delete-complaint="${docSnap.id}">
+                <span class="material-icons" style="font-size:16px;">delete</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+      complaintsBody.innerHTML = rows || `<tr><td colspan="5" class="muted">لا توجد شكاوي بعد</td></tr>`;
+
+      document.querySelectorAll('[data-delete-complaint]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-complaint');
+          if (confirm('حذف هذه الشكوى؟')) {
+            await deleteDoc(doc(db, 'complaints', id));
+            loadComplaints();
+          }
+        });
+      });
+    }
+
+    async function loadBanners() {
+      const snap = await getDocs(collection(db, 'banners'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.title || '-'}</td>
+            <td>${d.description || '-'}</td>
+            <td>${d.link || '-'}</td>
+            <td>
+              <button class="btn btn-outline" data-delete-banner="${docSnap.id}">
+                <span class="material-icons" style="font-size:16px;">delete</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+      bannersBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد بنرات بعد</td></tr>`;
+
+      document.querySelectorAll('[data-delete-banner]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-banner');
+          if (confirm('حذف هذا البنر؟')) {
+            await deleteDoc(doc(db, 'banners', id));
+            loadBanners();
+          }
+        });
+      });
+    }
+
+    async function loadServices() {
+      const snap = await getDocs(collection(db, 'services'));
+      let rows = '';
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        rows += `
+          <tr>
+            <td>${d.name || '-'}</td>
+            <td>${d.description || '-'}</td>
+            <td>${d.price || '-'}</td>
+            <td>
+              <button class="btn btn-outline" data-delete-service="${docSnap.id}">
+                <span class="material-icons" style="font-size:16px;">delete</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+      servicesBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد خدمات بعد</td></tr>`;
+
+      document.querySelectorAll('[data-delete-service]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-delete-service');
+          if (confirm('حذف هذه الخدمة؟')) {
+            await deleteDoc(doc(db, 'services', id));
+            loadServices();
+          }
+        });
+      });
+    }
+
+    // ===== حفظ طلب جديد =====
+    const saveOrderBtn = document.getElementById('saveOrderBtn');
+    if (saveOrderBtn) {
+      saveOrderBtn.addEventListener('click', async () => {
+        const customerName = document.getElementById('orderCustomer').value.trim();
+        const phone = document.getElementById('orderPhone').value.trim();
+        const serviceName = document.getElementById('orderService').value.trim();
+        const notes = document.getElementById('orderNotes').value.trim();
+
+        if (!customerName || !phone || !serviceName) {
+          showModalAlert('orderModalAlert', 'الرجاء تعبئة الحقول الأساسية', 'error');
           return;
         }
 
-        statusEl.textContent = "";
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${data.name || "-"}</td>
-            <td>${data.rating || "-"}</td>
-            <td>${data.message || "-"}</td>
-            <td>
-              <button class="btn-delete" onclick="deleteReview('${docSnap.id}')">حذف</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } catch (e) {
-        console.error("Error loading reviews:", e);
-        statusEl.innerHTML = `<span class="error-text">حدث خطأ أثناء تحميل التعليقات. تأكدي من إعدادات Firebase وقواعد Firestore.</span>`;
-      }
+        saveOrderBtn.disabled = true;
+        try {
+          const createdAt = new Date().toLocaleString('ar-SA');
+          await addDoc(collection(db, 'orders'), {
+            customerName,
+            phone,
+            serviceName,
+            notes,
+            status: 'pending',
+            createdAt
+          });
+          showModalAlert('orderModalAlert', 'تم حفظ الطلب بنجاح', 'success');
+          document.getElementById('orderCustomer').value = '';
+          document.getElementById('orderPhone').value = '';
+          document.getElementById('orderService').value = '';
+          document.getElementById('orderNotes').value = '';
+          await loadOrders();
+          await loadDashboard();
+        } catch (err) {
+          console.error(err);
+          showModalAlert('orderModalAlert', 'حدث خطأ أثناء الحفظ', 'error');
+        } finally {
+          saveOrderBtn.disabled = false;
+        }
+      });
     }
 
-    // دوال الحذف والتحديث (تُربط على window)
-    window.acceptOrder = async function(id) {
-      try {
-        await updateDoc(doc(db, "orders", id), { status: "تم القبول" });
-        await loadOrders();
-      } catch (e) {
-        console.error("Error updating order:", e);
-        alert("حدث خطأ أثناء تحديث حالة الطلب.");
-      }
-    };
+    // ===== حفظ بنر جديد =====
+    const saveBannerBtn = document.getElementById('saveBannerBtn');
+    if (saveBannerBtn) {
+      saveBannerBtn.addEventListener('click', async () => {
+        const title = document.getElementById('bannerTitle').value.trim();
+        const description = document.getElementById('bannerDescription').value.trim();
+        const link = document.getElementById('bannerLink').value.trim();
 
-    window.deleteOrder = async function(id) {
-      if (!confirm("هل أنت متأكدة من حذف هذا الطلب؟")) return;
-      try {
-        await deleteDoc(doc(db, "orders", id));
-        await loadOrders();
-      } catch (e) {
-        console.error("Error deleting order:", e);
-        alert("حدث خطأ أثناء حذف الطلب.");
-      }
-    };
+        if (!title) {
+          showModalAlert('bannerModalAlert', 'الرجاء إدخال عنوان البنر', 'error');
+          return;
+        }
 
-    window.deleteReview = async function(id) {
-      if (!confirm("هل أنت متأكدة من حذف هذا التعليق؟")) return;
-      try {
-        await deleteDoc(doc(db, "reviews", id));
-        await loadReviews();
-      } catch (e) {
-        console.error("Error deleting review:", e);
-        alert("حدث خطأ أثناء حذف التعليق.");
-      }
-    };
+        saveBannerBtn.disabled = true;
+        try {
+          await addDoc(collection(db, 'banners'), {
+            title,
+            description,
+            link
+          });
+          showModalAlert('bannerModalAlert', 'تم حفظ البنر بنجاح', 'success');
+          document.getElementById('bannerTitle').value = '';
+          document.getElementById('bannerDescription').value = '';
+          document.getElementById('bannerLink').value = '';
+          await loadBanners();
+        } catch (err) {
+          console.error(err);
+          showModalAlert('bannerModalAlert', 'حدث خطأ أثناء الحفظ', 'error');
+        } finally {
+          saveBannerBtn.disabled = false;
+        }
+      });
+    }
 
-    // تشغيل أولي
-    loadOrders();
-    loadReviews();
+    // ===== حفظ خدمة جديدة =====
+    const saveServiceBtn = document.getElementById('saveServiceBtn');
+    if (saveServiceBtn) {
+      saveServiceBtn.addEventListener('click', async () => {
+        const name = document.getElementById('serviceName').value.trim();
+        const description = document.getElementById('serviceDescription').value.trim();
+        const price = document.getElementById('servicePrice').value.trim();
+
+        if (!name) {
+          showModalAlert('serviceModalAlert', 'الرجاء إدخال اسم الخدمة', 'error');
+          return;
+        }
+
+        saveServiceBtn.disabled = true;
+        try {
+          await addDoc(collection(db, 'services'), {
+            name,
+            description,
+            price
+          });
+          showModalAlert('serviceModalAlert', 'تم حفظ الخدمة بنجاح', 'success');
+          document.getElementById('serviceName').value = '';
+          document.getElementById('serviceDescription').value = '';
+          document.getElementById('servicePrice').value = '';
+          await loadServices();
+        } catch (err) {
+          console.error(err);
+          showModalAlert('serviceModalAlert', 'حدث خطأ أثناء الحفظ', 'error');
+        } finally {
+          saveServiceBtn.disabled = false;
+        }
+      });
+    }
+
+    // ===== تحميل كل شيء عند فتح الصفحة =====
+    (async () => {
+      await loadDashboard();
+      await loadOrders();
+      await loadPendingOrders();
+      await loadCompletedOrders();
+      await loadReviews();
+      await loadComplaints();
+      await loadBanners();
+      await loadServices();
+    })();
   </script>
 </body>
 </html>
