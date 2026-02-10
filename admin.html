@@ -1108,46 +1108,55 @@
 
     // ===== تحميل البيانات من Firestore =====
     async function loadDashboard() {
-      try {
-        // إجمالي الطلبات
-        const ordersSnap = await getDocs(collection(db, 'orders'));
-        const totalOrders = ordersSnap.size;
-        totalOrdersEl.textContent = totalOrders;
+  try {
+    // إجمالي الطلبات
+    const ordersSnap = await getDocs(collection(db, 'orders'));
+    const totalOrders = ordersSnap.size;
+    totalOrdersEl.textContent = totalOrders;
 
-        // الطلبات المعلقة
-        const pendingSnap = await getDocs(collection(db, 'pendingOrders'));
-        totalPendingEl.textContent = pendingSnap.size;
+    // الطلبات المعلقة
+    let pendingCount = 0;
+    let completedCount = 0;
 
-        // الطلبات المنجزة
-        const completedSnap = await getDocs(collection(db, 'completedOrders'));
-        totalCompletedEl.textContent = completedSnap.size;
-
-        // آراء العملاء
-        const reviewsSnap = await getDocs(collection(db, 'reviews'));
-        totalReviewsEl.textContent = reviewsSnap.size;
-
-        // آخر 10 طلبات
-        const latestQ = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
-        const latestSnap = await getDocs(latestQ);
-        let rows = '';
-        latestSnap.forEach(docSnap => {
-          const d = docSnap.data();
-          rows += `
-            <tr>
-              <td>${d.customerName || '-'}</td>
-              <td>${d.serviceName || '-'}</td>
-              <td><span class="badge ${d.status === 'completed' ? 'badge-done' : 'badge-pending'}">
-                ${d.status === 'completed' ? 'منجز' : 'معلق'}
-              </span></td>
-              <td>${d.createdAt || '-'}</td>
-            </tr>
-          `;
-        });
-        latestOrdersBody.innerHTML = rows || `<tr><td colspan="4" class="muted">لا توجد بيانات بعد</td></tr>`;
-      } catch (err) {
-        console.error(err);
+    ordersSnap.forEach(docSnap => {
+      const d = docSnap.data();
+      if (d.status === "قيد المراجعة" || d.status === "جديد") {
+        pendingCount++;
       }
-    }
+      if (d.status === "منجز") {
+        completedCount++;
+      }
+    });
+
+    totalPendingEl.textContent = pendingCount;
+    totalCompletedEl.textContent = completedCount;
+
+    // آخر 10 طلبات
+    const latestQ = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
+    const latestSnap = await getDocs(latestQ);
+    let rows = '';
+    latestSnap.forEach(docSnap => {
+      const d = docSnap.data();
+      rows += `
+        <tr>
+          <td>${d.name || '-'}</td>
+          <td>${d.serviceDetails || '-'}</td>
+          <td><span class="badge ${
+            d.status === 'منجز' ? 'badge-done' : 'badge-pending'
+          }">${d.status}</span></td>
+          <td>${d.createdAt || '-'}</td>
+        </tr>
+      `;
+    });
+
+    latestOrdersBody.innerHTML =
+      rows || `<tr><td colspan="4" class="muted">لا توجد بيانات بعد</td></tr>`;
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 
     async function loadOrders() {
       const snap = await getDocs(collection(db, 'orders'));
