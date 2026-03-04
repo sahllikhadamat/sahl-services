@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة التحكم - سهل للخدمات</title>
+<title>الطلبات - سهل للخدمات</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -97,21 +97,6 @@ header img {
   object-fit: cover;
 }
 
-/* البطاقات */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
-
 /* الجدول */
 table {
   width: 100%;
@@ -192,28 +177,9 @@ td {
 <header>
   <button id="toggleSidebar"><i class="fa-solid fa-bars"></i></button>
   <img src="images/logo.png" alt="logo">
-  <span style="font-size:20px;font-weight:700;">لوحة التحكم - سهل للخدمات</span>
+  <span style="font-size:20px;font-weight:700;">الطلبات</span>
 </header>
 
-<!-- البطاقات -->
-<div class="cards">
-  <div class="card">
-    <h3>إجمالي الطلبات</h3>
-    <span id="totalOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-  </div>
-
-  <div class="card">
-    <h3>الطلبات المعلقة</h3>
-    <span id="pendingOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-  </div>
-
-  <div class="card">
-    <h3>الطلبات المنجزة</h3>
-    <span id="doneOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-  </div>
-</div>
-
-<!-- جدول الطلبات -->
 <h2 style="margin-top:30px;">كل الطلبات</h2>
 
 <table>
@@ -239,8 +205,9 @@ td {
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, orderBy, query } 
-  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, orderBy, query 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
@@ -267,15 +234,10 @@ async function loadOrders() {
     return;
   }
 
-  let total = 0, pending = 0, done = 0;
   table.innerHTML = "";
 
   snapshot.forEach(docSnap => {
     const data = docSnap.data();
-    total++;
-
-    if (data.status === "جديد" || data.status === "قيد المراجعة") pending++;
-    if (data.status === "منجز") done++;
 
     const date = data.createdAt?.toDate().toLocaleString("ar-SA", {
       weekday: "long",
@@ -315,12 +277,9 @@ async function loadOrders() {
 
     table.innerHTML += row;
   });
-
-  document.getElementById("totalOrders").textContent = total;
-  document.getElementById("pendingOrders").textContent = pending;
-  document.getElementById("doneOrders").textContent = done;
 }
 
+/* دوال الأزرار */
 window.updateStatus = async function(id, newStatus) {
   await updateDoc(doc(db, "orders", id), { status: newStatus });
   loadOrders();
