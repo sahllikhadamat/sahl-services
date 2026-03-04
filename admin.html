@@ -1,30 +1,83 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>لوحة التحكم - سهل للخدمات</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body {
+  margin: 0;
   font-family: 'Tajawal', sans-serif;
   background: #f4f6fb;
-  margin: 0;
-  padding: 0;
 }
 
-/* ====== تصميم الجدول الجديد ====== */
+/* الشريط الجانبي */
+.sidebar {
+  width: 240px;
+  background: #0A1A2F;
+  color: white;
+  min-height: 100vh;
+  padding: 20px 15px;
+  position: fixed;
+}
+
+.sidebar img {
+  width: 120px;
+  display: block;
+  margin: 0 auto 15px;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* المحتوى */
+.main {
+  margin-right: 260px;
+  padding: 20px;
+}
+
+header {
+  background: #0A1A2F;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+/* البطاقات */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* الجدول */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
+  background: white;
+  margin-top: 25px;
+  border-radius: 10px;
   overflow: hidden;
-  font-size: 14px;
-  margin-top: 20px;
 }
 
 th {
@@ -40,7 +93,7 @@ td {
   text-align: center;
 }
 
-/* ====== أزرار الإجراءات ====== */
+/* الأزرار */
 .action-btn {
   width: 100%;
   padding: 6px;
@@ -57,9 +110,9 @@ td {
   font-size: 13px;
 }
 
-.accept { background: #1976D2; }   /* أزرق */
-.done   { background: #43A047; }   /* أخضر */
-.delete { background: #E53935; }   /* أحمر */
+.accept { background: #1976D2; }
+.done   { background: #43A047; }
+.delete { background: #E53935; }
 
 .action-btn i {
   font-size: 14px;
@@ -69,54 +122,66 @@ td {
 
 <body>
 
-<header style="background:#0A1A2F;color:white;padding:15px;text-align:center;font-size:22px;font-weight:700;">
-  لوحة التحكم - سهل للخدمات
-</header>
+<!-- الشريط الجانبي -->
+<div class="sidebar">
+  <img src="images/logo.png" alt="سهل للخدمات">
+  <h3 style="text-align:center;">سهل للخدمات</h3>
 
-<div style="padding:20px;">
+  <a href="admin.html">لوحة التحكم</a>
+  <a href="orders.html">الطلبات</a>
+  <a href="services.html">الخدمات</a>
+  <a href="banners.html">البنرات</a>
+  <a href="settings.html">الإعدادات</a>
+  <a href="logout.html">تسجيل الخروج</a>
+</div>
 
-  <!-- ====== البطاقات ====== -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;">
-    <div style="background:white;padding:20px;border-radius:10px;text-align:center;">
-      <h3>إجمالي الطلبات</h3>
-      <span id="totalOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-    </div>
+<!-- المحتوى -->
+<div class="main">
 
-    <div style="background:white;padding:20px;border-radius:10px;text-align:center;">
-      <h3>الطلبات المعلقة</h3>
-      <span id="pendingOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-    </div>
+<header>لوحة التحكم - سهل للخدمات</header>
 
-    <div style="background:white;padding:20px;border-radius:10px;text-align:center;">
-      <h3>الطلبات المنجزة</h3>
-      <span id="doneOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
-    </div>
+<!-- البطاقات -->
+<div class="cards">
+  <div class="card">
+    <h3>إجمالي الطلبات</h3>
+    <span id="totalOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
   </div>
 
-  <!-- ====== الجدول الجديد ====== -->
-  <h2 style="margin-top:30px;">كل الطلبات</h2>
+  <div class="card">
+    <h3>الطلبات المعلقة</h3>
+    <span id="pendingOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>الاسم</th>
-        <th>الجوال</th>
-        <th>التصنيف</th>
-        <th>تفاصيل الخدمة</th>
-        <th>الملاحظة</th>
-        <th>كود الخصم</th>
-        <th>كيف عرف عنا</th>
-        <th>الحالة</th>
-        <th>التاريخ</th>
-        <th>الإجراءات</th>
-      </tr>
-    </thead>
-    <tbody id="ordersTable"></tbody>
-  </table>
+  <div class="card">
+    <h3>الطلبات المنجزة</h3>
+    <span id="doneOrders" style="font-size:22px;color:#F57C00;font-weight:700;">0</span>
+  </div>
+</div>
+
+<!-- جدول الطلبات -->
+<h2 style="margin-top:30px;">كل الطلبات</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>الاسم</th>
+      <th>الجوال</th>
+      <th>التصنيف</th>
+      <th>تفاصيل الخدمة</th>
+      <th>الملاحظة</th>
+      <th>كود الخصم</th>
+      <th>كيف عرف عنا</th>
+      <th>الحالة</th>
+      <th>التاريخ</th>
+      <th>الإجراءات</th>
+    </tr>
+  </thead>
+  <tbody id="ordersTable"></tbody>
+</table>
 
 </div>
 
-<!-- ====== Firebase ====== -->
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, orderBy, query } 
@@ -134,7 +199,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ====== تحميل الطلبات ====== */
+/* تحميل الطلبات */
 async function loadOrders() {
   const table = document.getElementById("ordersTable");
   table.innerHTML = "<tr><td colspan='10'>جاري التحميل...</td></tr>";
@@ -168,7 +233,7 @@ async function loadOrders() {
 
     let actions = "";
 
-    if (data.status === "جديد") {
+    if (!data.status || data.status === "جديد") {
       actions += `
         <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد المراجعة')">
           <i class="fa-solid fa-check"></i> قبول
@@ -199,8 +264,8 @@ async function loadOrders() {
         <td>${data.note || "—"}</td>
         <td>${data.discount || "—"}</td>
         <td>${data.know}</td>
-        <td>${data.status}</td>
-        <td>${date}</td>
+        <td>${data.status || "جديد"}</td>
+        <td>${date || ""}</td>
         <td>${actions}</td>
       </tr>
     `;
