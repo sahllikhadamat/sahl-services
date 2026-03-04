@@ -469,6 +469,7 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // تأكدي أن الفورم في الصفحة يحمل id="orderForm"
   document.getElementById("orderForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
