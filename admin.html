@@ -1,173 +1,3 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8" />
-<title>لوحة التحكم - سهل للخدمات</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --primary: #0A1A2F;
-  --accent: #F57C00;
-  --bg: #f4f6fb;
-  --text: #1f2933;
-  --danger: #e53935;
-  --success: #43a047;
-  --radius: 10px;
-}
-
-body {
-  background: var(--bg);
-  font-family: 'Tajawal', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background: var(--primary);
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.container {
-  padding: 20px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.card h3 {
-  margin-bottom: 10px;
-  color: var(--primary);
-}
-
-.card span {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-}
-
-th {
-  background: var(--primary);
-  color: white;
-}
-
-.status {
-  padding: 6px 10px;
-  border-radius: 6px;
-  color: white;
-  font-weight: 600;
-}
-
-.pending { background: #f39c12; }
-.done { background: #43a047; }
-.new { background: #2980b9; }
-
-.delete-btn {
-  background: var(--danger);
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-</style>
-</head>
-
-<body>
-
-<header>لوحة التحكم - سهل للخدمات</header>
-
-<div class="container">
-
-  <div class="cards">
-    <div class="card">
-      <h3>إجمالي الطلبات</h3>
-      <span id="totalOrders">0</span>
-    </div>
-
-    <div class="card">
-      <h3>الطلبات المعلقة</h3>
-      <span id="pendingOrders">0</span>
-    </div>
-
-    <div class="card">
-      <h3>الطلبات المنجزة</h3>
-      <span id="doneOrders">0</span>
-    </div>
-  </div>
-
-  <h2 style="margin-bottom:10px;">كل الطلبات</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>الاسم</th>
-        <th>الجوال</th>
-        <th>التصنيف</th>
-        <th>تفاصيل الخدمة</th>
-        <th>الملاحظة</th>
-        <th>كود الخصم</th>
-        <th>كيف عرف عنا</th>
-        <th>الحالة</th>
-        <th>التاريخ</th>
-        <th>إجراء</th>
-      </tr>
-    </thead>
-    <tbody id="ordersTable"></tbody>
-  </table>
-
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, orderBy, query } 
-  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
-  authDomain: "sahl-services-94183.firebaseapp.com",
-  projectId: "sahl-services-94183",
-  storageBucket: "sahl-services-94183.firebasestorage.app",
-  messagingSenderId: "926677469615",
-  appId: "1:926677469615:web:6ba21a1e73752f5271875a"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 async function loadOrders() {
   const table = document.getElementById("ordersTable");
   table.innerHTML = "<tr><td colspan='10'>جاري التحميل...</td></tr>";
@@ -180,18 +10,10 @@ async function loadOrders() {
     return;
   }
 
-  let total = 0;
-  let pending = 0;
-  let done = 0;
-
   table.innerHTML = "";
 
   snapshot.forEach(docSnap => {
     const data = docSnap.data();
-    total++;
-
-    if (data.status === "قيد المراجعة" || data.status === "جديد") pending++;
-    if (data.status === "منجز") done++;
 
     const date = data.createdAt?.toDate().toLocaleString("ar-SA", {
       weekday: "long",
@@ -202,6 +24,30 @@ async function loadOrders() {
       minute: "2-digit"
     });
 
+    let actions = "";
+
+    if (data.status === "جديد") {
+      actions += `
+        <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد المراجعة')">
+          <i class="fa-solid fa-check"></i> قبول
+        </button>
+      `;
+    }
+
+    if (data.status === "قيد المراجعة") {
+      actions += `
+        <button class="action-btn done" onclick="updateStatus('${docSnap.id}', 'منجز')">
+          <i class="fa-solid fa-circle-check"></i> إنهاء
+        </button>
+      `;
+    }
+
+    actions += `
+      <button class="action-btn delete" onclick="deleteOrder('${docSnap.id}')">
+        <i class="fa-solid fa-trash"></i> حذف
+      </button>
+    `;
+
     const row = `
       <tr>
         <td>${data.name}</td>
@@ -211,25 +57,20 @@ async function loadOrders() {
         <td>${data.note || "—"}</td>
         <td>${data.discount || "—"}</td>
         <td>${data.know}</td>
-        <td>
-          <span class="status ${data.status === "منجز" ? "done" : data.status === "قيد المراجعة" ? "pending" : "new"}">
-            ${data.status}
-          </span>
-        </td>
+        <td>${data.status}</td>
         <td>${date}</td>
-        <td>
-          <button class="delete-btn" onclick="deleteOrder('${docSnap.id}')">حذف</button>
-        </td>
+        <td>${actions}</td>
       </tr>
     `;
 
     table.innerHTML += row;
   });
-
-  document.getElementById("totalOrders").textContent = total;
-  document.getElementById("pendingOrders").textContent = pending;
-  document.getElementById("doneOrders").textContent = done;
 }
+
+window.updateStatus = async function(id, newStatus) {
+  await updateDoc(doc(db, "orders", id), { status: newStatus });
+  loadOrders();
+};
 
 window.deleteOrder = async function(id) {
   if (confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
@@ -239,7 +80,3 @@ window.deleteOrder = async function(id) {
 };
 
 loadOrders();
-</script>
-
-</body>
-</html>
