@@ -5,31 +5,100 @@
   <title>طلب خدمة – سهل للخدمات</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- الخط -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
   <style>
     body { font-family: 'Tajawal', sans-serif; background:#f7f7f7; margin:0; padding:0; }
-    header { background:#fff; padding:10px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+    /* الشريط الجانبي */
+    .sidebar {
+      width: 250px;
+      background:#0A1A2F;
+      color:#fff;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: -250px;
+      padding: 20px;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+    .sidebar a {
+      display:block;
+      padding:10px;
+      color:#fff;
+      text-decoration:none;
+      margin-bottom:8px;
+      border-radius:6px;
+    }
+    .sidebar a:hover { background:#11263f; }
+    .close-btn { font-size:26px; cursor:pointer; display:block; text-align:left; margin-bottom:20px; }
+
+    /* الهيدر */
+    header {
+      background:#fff;
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
     header img { height:45px; }
+    .menu-btn { font-size:24px; cursor:pointer; }
+
+    /* الصفحة */
     h1 { text-align:center; margin:20px 0; }
-    .form-box { background:#fff; padding:20px; margin:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+    .form-box {
+      background:#fff;
+      padding:20px;
+      margin:20px;
+      border-radius:10px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
     label { display:block; margin-top:10px; font-weight:600; }
-    input, select, textarea { width:100%; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; }
-    button { width:100%; padding:12px; margin-top:20px; background:#0A1A2F; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; }
+    input, select, textarea {
+      width:100%; padding:10px; margin-top:5px;
+      border-radius:8px; border:1px solid #ccc;
+    }
+    button {
+      width:100%; padding:12px; margin-top:20px;
+      background:#0A1A2F; color:#fff; border:none;
+      border-radius:8px; font-size:16px; cursor:pointer;
+    }
     button:hover { background:#071423; }
-    .success-box { display:none; background:#d4edda; color:#155724; padding:10px; border-radius:8px; margin-bottom:15px; text-align:center; }
-    .service-logo { width:120px; height:120px; object-fit:contain; margin:10px auto; display:block; }
+
+    .success-box {
+      display:none; background:#d4edda; color:#155724;
+      padding:10px; border-radius:8px; margin-bottom:15px;
+      text-align:center;
+    }
   </style>
 </head>
 
 <body>
 
+<!-- الشريط الجانبي -->
+<div id="sidebar" class="sidebar">
+  <span class="close-btn" onclick="closeSidebar()">×</span>
+
+  <a href="index.html">الرئيسية</a>
+  <a href="about.html">من نحن</a>
+  <a href="services.html">الخدمات</a>
+  <a href="clients.html">آراء العملاء</a>
+  <a href="add-review.html">إضافة تعليق</a>
+  <a href="complaints.html">الشكاوي والاقتراحات</a>
+  <a href="contact.html">تواصل معنا</a>
+  <a href="order.html">طلب خدمة</a>
+</div>
+
+<!-- الهيدر -->
 <header>
-  <span style="font-size:20px; cursor:pointer;" onclick="openSidebar()">☰</span>
+  <span class="menu-btn" onclick="openSidebar()">☰</span>
   <img src="logo-new.png.png" alt="شعار سهل للخدمات">
 </header>
 
 <h1>طلب خدمة</h1>
-
-<img id="serviceLogo" class="service-logo" src="logo-new.png.png">
 
 <div class="form-box">
 
@@ -83,10 +152,19 @@
 
 </div>
 
+<script>
+  function openSidebar() {
+    document.getElementById("sidebar").style.right = "0";
+  }
+  function closeSidebar() {
+    document.getElementById("sidebar").style.right = "-250px";
+  }
+</script>
+
 <!-- Firebase + إرسال الطلب -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc } 
+  import { getFirestore, collection, addDoc }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
