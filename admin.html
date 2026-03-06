@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة التحكم - سهل للخدمات</title>
+<title>الطلبات - سهل للخدمات</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -97,25 +97,61 @@ header img {
   object-fit: cover;
 }
 
-/* البطاقات */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+/* الجدول */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 25px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
+th {
+  background: #0A1A2F;
+  color: white;
+  padding: 10px;
   text-align: center;
 }
 
-.card span {
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+/* الأزرار */
+.action-btn {
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.accept { background: #1976D2; }
+.done   { background: #43A047; }
+.delete { background: #E53935; }
+
+.action-btn i {
+  font-size: 14px;
+}
+
+/* زر الطي */
+#toggleSidebar {
+  background: none;
+  border: none;
+  color: white;
   font-size: 22px;
-  color: #F57C00;
-  font-weight: 700;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -141,26 +177,28 @@ header img {
 <header>
   <button id="toggleSidebar"><i class="fa-solid fa-bars"></i></button>
   <img src="images/logo.png" alt="logo">
-  <span style="font-size:20px;font-weight:700;">لوحة التحكم - سهل للخدمات</span>
+  <span style="font-size:20px;font-weight:700;">الطلبات</span>
 </header>
 
-<!-- البطاقات -->
-<div class="cards">
-  <div class="card">
-    <h3>إجمالي الطلبات</h3>
-    <span id="totalOrders">0</span>
-  </div>
+<h2 style="margin-top:30px;">كل الطلبات</h2>
 
-  <div class="card">
-    <h3>الطلبات المعلقة</h3>
-    <span id="pendingOrders">0</span>
-  </div>
-
-  <div class="card">
-    <h3>الطلبات المنجزة</h3>
-    <span id="doneOrders">0</span>
-  </div>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>الاسم</th>
+      <th>الجوال</th>
+      <th>التصنيف</th>
+      <th>تفاصيل الخدمة</th>
+      <th>الملاحظة</th>
+      <th>كود الخصم</th>
+      <th>كيف عرف عنا</th>
+      <th>الحالة</th>
+      <th>التاريخ</th>
+      <th>الإجراءات</th>
+    </tr>
+  </thead>
+  <tbody id="ordersTable"></tbody>
+</table>
 
 </div>
 
@@ -168,7 +206,7 @@ header img {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
-  getFirestore, collection, getDocs, orderBy, query 
+  getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, orderBy, query 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -183,27 +221,78 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* تحميل الإحصائيات */
-async function loadStats() {
+/* تحميل الطلبات */
+async function loadOrders() {
+  const table = document.getElementById("ordersTable");
+  table.innerHTML = "<tr><td colspan='10'>جاري التحميل...</td></tr>";
+
   const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
   const snapshot = await getDocs(q);
 
-  let total = 0, pending = 0, done = 0;
+  if (snapshot.empty) {
+    table.innerHTML = "<tr><td colspan='10'>لا توجد طلبات حتى الآن</td></tr>";
+    return;
+  }
+
+  table.innerHTML = "";
 
   snapshot.forEach(docSnap => {
     const data = docSnap.data();
-    total++;
 
-    if (data.status === "منجز") done++;
-    else pending++;
+    const date = data.createdAt?.toDate().toLocaleString("ar-SA", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    let actions = `
+      <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد المراجعة')">
+        <i class="fa-solid fa-check"></i> قبول
+      </button>
+      <button class="action-btn done" onclick="updateStatus('${docSnap.id}', 'منجز')">
+        <i class="fa-solid fa-circle-check"></i> إنهاء
+      </button>
+      <button class="action-btn delete" onclick="deleteOrder('${docSnap.id}')">
+        <i class="fa-solid fa-trash"></i> حذف
+      </button>
+    `;
+
+    const row = `
+      <tr>
+        <td>${data.name}</td>
+        <td>${data.phone}</td>
+        <td>${data.category}</td>
+        <td>${data.serviceDetails}</td>
+        <td>${data.note || "—"}</td>
+        <td>${data.discount || "—"}</td>
+        <td>${data.know}</td>
+        <td>${data.status || "جديد"}</td>
+        <td>${date || ""}</td>
+        <td>${actions}</td>
+      </tr>
+    `;
+
+    table.innerHTML += row;
   });
-
-  document.getElementById("totalOrders").textContent = total;
-  document.getElementById("pendingOrders").textContent = pending;
-  document.getElementById("doneOrders").textContent = done;
 }
 
-loadStats();
+/* دوال الأزرار — يجب إضافتها للـ window */
+window.updateStatus = async function(id, newStatus) {
+  await updateDoc(doc(db, "orders", id), { status: newStatus });
+  loadOrders();
+};
+
+window.deleteOrder = async function(id) {
+  if (confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
+    await deleteDoc(doc(db, "orders", id));
+    loadOrders();
+  }
+};
+
+window.onload = loadOrders;
 </script>
 
 <!-- طي الشريط -->
