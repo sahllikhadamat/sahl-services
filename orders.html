@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>الطلبات - سهل للخدمات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Tajawal', sans-serif;
+  background: #f4f6fb;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+  width: 240px;
+  background: #0A1A2F;
+  color: white;
+  min-height: 100vh;
+  padding: 20px 15px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: width 0.3s;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.sidebar h3 {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  margin: 12px 0;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.sidebar a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sidebar.collapsed a span {
+  display: none;
+}
+
+/* المحتوى */
+.main {
+  margin-right: 260px;
+  padding: 20px;
+  transition: margin-right 0.3s;
+}
+
+.main.collapsed {
+  margin-right: 90px;
+}
+
+/* الهيدر */
+header {
+  background: #0A1A2F;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+}
+
+header img {
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* الجدول */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 25px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th {
+  background: #0A1A2F;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+/* الأزرار */
+.action-btn {
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.accept { background: #1976D2; }
+.done   { background: #43A047; }
+.delete { background: #E53935; }
+
+.action-btn i {
+  font-size: 14px;
+}
+
+/* زر الطي */
+#toggleSidebar {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- الشريط الجانبي -->
+<div class="sidebar" id="sidebar">
+  <img src="images/logo.png" alt="سهل للخدمات">
+  <h3>سهل للخدمات</h3>
+
+  <a href="admin.html"><i class="fa-solid fa-gauge"></i> <span>لوحة التحكم</span></a>
+  <a href="orders.html"><i class="fa-solid fa-list"></i> <span>الطلبات</span></a>
+  <a href="services.html"><i class="fa-solid fa-briefcase"></i> <span>الخدمات</span></a>
+  <a href="banners.html"><i class="fa-solid fa-image"></i> <span>البنرات</span></a>
+  <a href="settings.html"><i class="fa-solid fa-gear"></i> <span>الإعدادات</span></a>
+  <a href="logout.html"><i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل الخروج</span></a>
+</div>
+
+<!-- المحتوى -->
+<div class="main" id="main">
+
+<header>
+  <button id="toggleSidebar"><i class="fa-solid fa-bars"></i></button>
+  <img src="images/logo.png" alt="logo">
+  <span style="font-size:20px;font-weight:700;">الطلبات</span>
+</header>
+
+<h2 style="margin-top:30px;">كل الطلبات</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>الاسم</th>
+      <th>الجوال</th>
+      <th>التصنيف</th>
+      <th>تفاصيل الخدمة</th>
+      <th>الملاحظة</th>
+      <th>كود الخصم</th>
+      <th>كيف عرف عنا</th>
+      <th>الحالة</th>
+      <th>التاريخ</th>
+      <th>الإجراءات</th>
+    </tr>
+  </thead>
+  <tbody id="ordersTable"></tbody>
+</table>
+
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, orderBy, query 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+  authDomain: "sahl-services-94183.firebaseapp.com",
+  projectId: "sahl-services-94183",
+  storageBucket: "sahl-services-94183.firebasestorage.app",
+  messagingSenderId: "926677469615",
+  appId: "1:926677469615:web:6ba21a1e73752f5271875a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* تحميل الطلبات */
+async function loadOrders() {
+  const table = document.getElementById("ordersTable");
+  table.innerHTML = "<tr><td colspan='10'>جاري التحميل...</td></tr>";
+
+  const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    table.innerHTML = "<tr><td colspan='10'>لا توجد طلبات حتى الآن</td></tr>";
+    return;
+  }
+
+  table.innerHTML = "";
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+
+    const date = data.createdAt?.toDate().toLocaleString("ar-SA", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    let actions = `
+      <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد المراجعة')">
+        <i class="fa-solid fa-check"></i> قبول
+      </button>
+      <button class="action-btn done" onclick="updateStatus('${docSnap.id}', 'منجز')">
+        <i class="fa-solid fa-circle-check"></i> إنهاء
+      </button>
+      <button class="action-btn delete" onclick="deleteOrder('${docSnap.id}')">
+        <i class="fa-solid fa-trash"></i> حذف
+      </button>
+    `;
+
+    const row = `
+      <tr>
+        <td>${data.name}</td>
+        <td>${data.phone}</td>
+        <td>${data.category}</td>
+        <td>${data.serviceDetails}</td>
+        <td>${data.note || "—"}</td>
+        <td>${data.discount || "—"}</td>
+        <td>${data.know}</td>
+        <td>${data.status || "جديد"}</td>
+        <td>${date || ""}</td>
+        <td>${actions}</td>
+      </tr>
+    `;
+
+    table.innerHTML += row;
+  });
+}
+
+/* دوال الأزرار */
+window.updateStatus = async function(id, newStatus) {
+  await updateDoc(doc(db, "orders", id), { status: newStatus });
+  loadOrders();
+};
+
+window.deleteOrder = async function(id) {
+  if (confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
+    await deleteDoc(doc(db, "orders", id));
+    loadOrders();
+  }
+};
+
+loadOrders();
+</script>
+
+<!-- طي الشريط -->
+<script>
+const sidebar = document.getElementById('sidebar');
+const main = document.getElementById('main');
+document.getElementById('toggleSidebar').onclick = () => {
+  sidebar.classList.toggle('collapsed');
+  main.classList.toggle('collapsed');
+};
+</script>
+
+</body>
+</html>
