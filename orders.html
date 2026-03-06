@@ -279,7 +279,7 @@ async function loadOrders() {
   });
 }
 
-/* دوال الأزرار */
+/* دوال الأزرار — يجب إضافتها للـ window */
 window.updateStatus = async function(id, newStatus) {
   await updateDoc(doc(db, "orders", id), { status: newStatus });
   loadOrders();
@@ -292,7 +292,7 @@ window.deleteOrder = async function(id) {
   }
 };
 
-loadOrders();
+window.onload = loadOrders;
 </script>
 
 <!-- طي الشريط -->
