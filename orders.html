@@ -279,7 +279,7 @@ async function loadOrders() {
   });
 }
 
-/* دوال الأزرار */
+/*  دوال الأزرار */
 function updateStatus(id, newStatus) {
   db.collection("orders").doc(id).update({ status: newStatus }).then(loadOrders);
 }
