@@ -1,159 +1,158 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>الطلبات - سهل للخدمات</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>الطلبات - سهل للخدمات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Tajawal', sans-serif;
-  background: #f4f6fb;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: #f4f6fb;
+    }
 
-/* الشريط الجانبي */
-.sidebar {
-  width: 240px;
-  background: #0A1A2F;
-  color: white;
-  min-height: 100vh;
-  padding: 20px 15px;
-  position: fixed;
-  right: 0;
-  top: 0;
-  transition: width 0.3s;
-  overflow: hidden;
-}
+    /* الشريط الجانبي */
+    .sidebar {
+      width: 240px;
+      background: #0A1A2F;
+      color: white;
+      min-height: 100vh;
+      padding: 20px 15px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      transition: width 0.3s;
+      overflow: hidden;
+    }
 
-.sidebar.collapsed {
-  width: 70px;
-}
+    .sidebar.collapsed {
+      width: 70px;
+    }
 
-.sidebar img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto 10px;
-}
+    .sidebar img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 10px;
+    }
 
-.sidebar h3 {
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 20px;
-}
+    .sidebar h3 {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
 
-.sidebar a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-  text-decoration: none;
-  margin: 12px 0;
-  font-size: 16px;
-  padding: 8px;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      text-decoration: none;
+      margin: 12px 0;
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
 
-.sidebar a:hover {
-  background: rgba(255,255,255,0.1);
-}
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.1);
+    }
 
-.sidebar.collapsed a span {
-  display: none;
-}
+    .sidebar.collapsed a span {
+      display: none;
+    }
 
-/* المحتوى */
-.main {
-  margin-right: 260px;
-  padding: 20px;
-  transition: margin-right 0.3s;
-}
+    /* المحتوى */
+    .main {
+      margin-right: 260px;
+      padding: 20px;
+      transition: margin-right 0.3s;
+    }
 
-.main.collapsed {
-  margin-right: 90px;
-}
+    .main.collapsed {
+      margin-right: 90px;
+    }
 
-/* الهيدر */
-header {
-  background: #0A1A2F;
-  color: white;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 10px;
-}
+    /* الهيدر */
+    header {
+      background: #0A1A2F;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 10px;
+    }
 
-header img {
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+    header img {
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-/* الجدول */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  margin-top: 25px;
-  border-radius: 10px;
-  overflow: hidden;
-}
+    /* الجدول */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 25px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-th {
-  background: #0A1A2F;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
+    th {
+      background: #0A1A2F;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
 
-td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-}
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
 
-/* الأزرار */
-.action-btn {
-  width: 100%;
-  padding: 6px;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 4px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-}
+    /* الأزرار */
+    .action-btn {
+      width: 100%;
+      padding: 6px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 13px;
+    }
 
-.accept { background: #1976D2; }
-.done   { background: #43A047; }
-.delete { background: #E53935; }
+    .accept { background: #1976D2; }
+    .done   { background: #43A047; }
+    .delete { background: #E53935; }
 
-.action-btn i {
-  font-size: 14px;
-}
+    .action-btn i {
+      font-size: 14px;
+    }
 
-/* زر الطي */
-#toggleSidebar {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-}
-</style>
+    #toggleSidebar {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
@@ -279,7 +278,7 @@ async function loadOrders() {
   });
 }
 
-/*  دوال الأزرار */
+/* دوال الأزرار */
 function updateStatus(id, newStatus) {
   db.collection("orders").doc(id).update({ status: newStatus }).then(loadOrders);
 }
