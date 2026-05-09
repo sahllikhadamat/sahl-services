@@ -1,1 +1,172 @@
-[]
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>التعليقات - سهل للخدمات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: #f4f6fb;
+    }
+
+    .container {
+      width: 90%;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ddd;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #0A1A2F;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      font-weight: 600;
+    }
+
+    .delete { background: #E53935; }
+    .reply { background: #1976D2; }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>إدارة التعليقات</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>اسم العميل</th>
+        <th>التعليق</th>
+        <th>الرد</th>
+        <th>التاريخ</th>
+        <th>الإجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="commentsTable"></tbody>
+  </table>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBCWMTuFTnCl-XerYIt2uT4Hl_WiyQjEO0",
+  authDomain: "sahl-services-94183.firebaseapp.com",
+  projectId: "sahl-services-94183",
+  storageBucket: "sahl-services-94183.firebasestorage.app",
+  messagingSenderId: "926677469615",
+  appId: "1:926677469615:web:6ba21a1e73752f5271875a"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* تحميل كل التعليقات */
+async function loadComments() {
+  const table = document.getElementById("commentsTable");
+  table.innerHTML = "<tr><td colspan='5'>جاري التحميل...</td></tr>";
+
+  const orders = await db.collection("orders").get();
+
+  table.innerHTML = "";
+
+  for (const order of orders.docs) {
+    const comments = await db.collection("orders")
+      .doc(order.id)
+      .collection("comments")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    comments.forEach(comment => {
+      const data = comment.data();
+
+      const date = data.createdAt?.toDate().toLocaleString("ar-SA") || "—";
+
+      const row = `
+        <tr>
+          <td>${data.name || "—"}</td>
+          <td>${data.message || "—"}</td>
+          <td>${data.reply || "—"}</td>
+          <td>${date}</td>
+          <td>
+            <button class="btn reply" onclick="replyComment('${order.id}', '${comment.id}')">رد</button>
+            <button class="btn delete" onclick="deleteComment('${order.id}', '${comment.id}')">حذف</button>
+          </td>
+        </tr>
+      `;
+
+      table.innerHTML += row;
+    });
+  }
+}
+
+/* حذف تعليق */
+function deleteComment(orderId, commentId) {
+  if (!confirm("هل تريد حذف هذا التعليق؟")) return;
+
+  db.collection("orders")
+    .doc(orderId)
+    .collection("comments")
+    .doc(commentId)
+    .delete()
+    .then(loadComments);
+}
+
+/* الرد على تعليق */
+function replyComment(orderId, commentId) {
+  const replyText = prompt("اكتب الرد على التعليق:");
+
+  if (!replyText) return;
+
+  db.collection("orders")
+    .doc(orderId)
+    .collection("comments")
+    .doc(commentId)
+    .update({ reply: replyText })
+    .then(loadComments);
+}
+
+window.onload = loadComments;
+</script>
+
+</body>
+</html>
