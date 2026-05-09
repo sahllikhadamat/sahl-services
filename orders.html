@@ -227,11 +227,13 @@ async function loadOrders() {
       });
     }
 
+    const status = data.status || "معلّق";
+
     const actions = `
-      <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد المراجعة', '${data.phone}')">
+      <button class="action-btn accept" onclick="updateStatus('${docSnap.id}', 'قيد الإنجاز', '${data.phone}', true)">
         <i class="fa-solid fa-check"></i> قبول
       </button>
-      <button class="action-btn done" onclick="updateStatus('${docSnap.id}', 'منجز', '${data.phone}')">
+      <button class="action-btn done" onclick="updateStatus('${docSnap.id}', 'منجز', '${data.phone}', false)">
         <i class="fa-solid fa-circle-check"></i> إنهاء
       </button>
       <button class="action-btn delete" onclick="deleteOrder('${docSnap.id}')">
@@ -248,7 +250,7 @@ async function loadOrders() {
         <td>${data.note || "—"}</td>
         <td>${data.discount || "—"}</td>
         <td>${data.know || ""}</td>
-        <td>${data.status || "جديد"}</td>
+        <td>${status}</td>
         <td>${date}</td>
         <td>${actions}</td>
       </tr>
@@ -259,12 +261,12 @@ async function loadOrders() {
 }
 
 /* دوال الأزرار */
-function updateStatus(id, newStatus, phone) {
+function updateStatus(id, newStatus, phone, openWhatsApp) {
   db.collection("orders").doc(id).update({ status: newStatus }).then(() => {
 
-    if (phone) {
-      const msg = encodeURIComponent("مرحبًا، تم تحديث حالة طلبك من سهل للخدمات 🤍");
-      window.location.href = `https://wa.me/${phone}?text=${msg}`;
+    if (openWhatsApp && phone) {
+      const msg = encodeURIComponent("مرحبًا، تم قبول طلبك من سهل للخدمات 🤍");
+      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
     }
 
     loadOrders();
